@@ -80,7 +80,7 @@ int sendcommand(unsigned char cmd, unsigned char id) {
 
     chipSelect(id);
     wiringPiSPIDataRW(0, (unsigned char *)&data, 2);
-    chipselect(0x0f);
+    chipSelect(0x0f);
     
     return 1;
 }
@@ -106,7 +106,7 @@ int initIO(void)
     pinMode(CS0, OUTPUT);
     pinMode(CS1, OUTPUT);
     pinMode(CS2, OUTPUT);
-    chipselect(0x0f);
+    chipSelect(0x0f);
 
     return 1;
 }
