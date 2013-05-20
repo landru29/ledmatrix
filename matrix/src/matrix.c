@@ -55,6 +55,10 @@ void *reverse_endian(void *p, size_t size) {
  */
 int chipSelect(unsigned char id)
 {
+	/*printf("Selecting %d\n", id);
+	printf("   * CS0 %d\n", id & 0x01);
+	printf("   * CS1 %d\n", (id & 0x02) >>1);
+	printf("   * CS2 %d\n", (id & 0x04) >>2);*/
 	digitalWrite(CS0, id & 0x01);
 	digitalWrite(CS1, (id & 0x02)>>1);
 	digitalWrite(CS2, (id & 0x04)>>2);
@@ -81,7 +85,7 @@ int sendcommand(unsigned char cmd, unsigned char id) {
     chipSelect(id);
     wiringPiSPIDataRW(0, (unsigned char *)&data, 2);
     chipSelect(0x0f);
-    
+
     return 1;
 }
 
