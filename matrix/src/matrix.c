@@ -41,6 +41,10 @@
  */
 int chipSelect(unsigned char id)
 {
+	/*printf("Selecting %d\n", id);
+	printf("   * CS0 %d\n", id & 0x01);
+	printf("   * CS1 %d\n", (id & 0x02) >>1);
+	printf("   * CS2 %d\n", (id & 0x04) >>2);*/
 	digitalWrite(CS0, id & 0x01);
 	digitalWrite(CS1, (id & 0x02)>>1);
 	digitalWrite(CS2, (id & 0x04)>>2);
@@ -119,7 +123,7 @@ int sendData(unsigned char address, unsigned char* data, unsigned char len, unsi
 	chipSelect(id);
     wiringPiSPIDataRW(0, buffer, 2 + len);
     chipSelect(0x0f);
-    
+
     return 1;
 }
 
