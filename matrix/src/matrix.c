@@ -41,20 +41,16 @@
  */
 int chipSelect(unsigned char id)
 {
-	/*printf("Selecting %d\n", id);
-	printf("   * CS0 %d\n", id & 0x01);
-	printf("   * CS1 %d\n", (id & 0x02) >>1);
-	printf("   * CS2 %d\n", (id & 0x04) >>2);*/
-	digitalWrite(CS0, id & 0x01);
-	digitalWrite(CS1, (id & 0x02)>>1);
-	digitalWrite(CS2, (id & 0x04)>>2);
+    digitalWrite(CS0, id & 0x01);
+    digitalWrite(CS1, (id & 0x02)>>1);
+    digitalWrite(CS2, (id & 0x04)>>2);
 #ifdef DEBUG
     printf("Chip select:\n");
     printf("\tPin%d => %d\n", CS0, id & 0x01);
     printf("\tPin%d => %d\n", CS1, (id & 0x02)>>1);
     printf("\tPin%d => %d\n", CS2, (id & 0x04)>>2);
 #endif
-	return 1;
+    return 1;
 }
 
 /**
@@ -67,60 +63,60 @@ int chipSelect(unsigned char id)
  */
 int sendcommand(unsigned char cmd, unsigned char id) 
 {
-	unsigned char data[2];
-	data[0] = COMMAND << 5;
-	data[0] |= cmd>>3;
-	data[1] = cmd << 5;
-    
+    unsigned char data[2];
+    data[0] = COMMAND << 5;
+    data[0] |= cmd>>3;
+    data[1] = cmd << 5;
+
 #ifdef DEBUG
-	printf("Command : ");
-	for(i=0;i<2 + 2;i++)
-	    printf("%04X ", data);
-	printf("\n");
+    printf("Command : ");
+    for(i=0;i<2 + 2;i++)
+        printf("%04X ", data);
+    printf("\n");
 #endif
 
     chipSelect(id);
     wiringPiSPIDataRW(0, data, 2);
     chipSelect(0x0f);
-    
+
     return 1;
 }
 
 /**
  * Send data to the matrix
- * 
+ *
  * @param unsigned char address : address where to send data
  * @param unsigned char* data   : array of byte to write
  * @param unsigned char len     : length of the array
  * @param unsigned char id      : id of the matrix
- * 
+ *
  * @return true
  */
 int sendData(unsigned char address, unsigned char* data, unsigned char len, unsigned char id)
 {
-	unsigned char buffer[BUFFER_SIZE];
-	unsigned char i;
-	
-	/* Sending address */
-	buffer[0] = WR << 5;
-	buffer[0] |= address >> 2;
-	buffer[1] = address << 6;
-	
-	/* Sending data */
-	for(i=0;i<len;i++) {
+    unsigned char buffer[BUFFER_SIZE];
+    unsigned char i;
+
+    /* Sending address */
+    buffer[0] = WR << 5;
+    buffer[0] |= address >> 2;
+    buffer[1] = address << 6;
+
+    /* Sending data */
+    for(i=0;i<len;i++) {
         buffer[i+1] |= data[i] >> 2;
         buffer[i+2] = data[i] << 6;
-	}
-	
+    }
+
 #ifdef DEBUG
-	printf("Writing : ");
-	for(i=1;i<len + 2;i++)
-	    printf("%02X ", buffer[i]);
-	printf("\n");
+    printf("Writing : ");
+    for(i=1;i<len + 2;i++)
+        printf("%02X ", buffer[i]);
+    printf("\n");
 #endif
 	
-	/* Flush the buffer */
-	chipSelect(id);
+    /* Flush the buffer */
+    chipSelect(id);
     wiringPiSPIDataRW(0, buffer, 2 + len);
     chipSelect(0x0f);
 
@@ -169,19 +165,19 @@ int initIO(void)
  */
 int initMatrix(unsigned char nbMatrix)
 {
-	unsigned char i;
-	for(i=0;i<nbMatrix; i++) {
+    unsigned char i;
+    for(i=0;i<nbMatrix; i++) {
 #ifdef DEBUG
-    printf("Init matrix %d\n", i);
+        printf("Init matrix %d\n", i);
 #endif
-		sendcommand(SYS_EN, i);
-	    sendcommand(LED_ON, i);
-	    sendcommand(MASTER_MODE, i);
-	    sendcommand(INT_RC, i);
-	    sendcommand(COMMON_8NMOS, i);
-	    sendcommand(PWM_CONTROL | 15, i);
-	}
-	return 1;
+        sendcommand(SYS_EN, i);
+        sendcommand(LED_ON, i);
+        sendcommand(MASTER_MODE, i);
+        sendcommand(INT_RC, i);
+        sendcommand(COMMON_8NMOS, i);
+        sendcommand(PWM_CONTROL | 15, i);
+    }
+    return 1;
 }
 
 
@@ -203,15 +199,15 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    sscanf(argv[1], "%02x", &data); 
+    sscanf(argv[1], "%02x", &data);
 
     printf("Setting up IO\n");
     if (!initIO())
         return 1;
-        
+
     if (!initMatrix(1))
     	return 1;
-    	
+
     printf("Sending %02X to the matrix\n", data);
     sendData(0, &data, 1, 0);
 
