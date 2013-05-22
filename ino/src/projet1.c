@@ -34,19 +34,33 @@
 
 // HT1632C Commands
 
-#define HT1632C_READ B00000110
-#define HT1632C_WRITE B00000101
-#define HT1632C_CMD B00000100
+#define HT1632C_READ 0b00000110
+#define HT1632C_WRITE 0b00000101
+#define HT1632C_CMD 0b00000100
 
 #define HT1632_CMD_SYSON 0x01
 #define HT1632_CMD_LEDON 0x03
 
-void setup() {
+void ht1632c_send_command(unsigned char command);
+void ht1632c_send_bits(unsigned char bits, unsigned char firstbit);
+
+void init() {
+  // init GPIO
+  if (wiringPiSetup() == -1)
+  {
+    printf("IO is not ready\n");
+    return;
+  }
 
   // All PINs are output
+  printf("1\n");
   pinMode(DISPLAY_CS, OUTPUT);
+  printf("2\n");
   pinMode(DISPLAY_WR, OUTPUT);
+  printf("3\n");
   pinMode(DISPLAY_DATA, OUTPUT);
+  
+  printf("Pin mode OK\n");
   
   // Enable System oscillator and LED duty cycle generator
   ht1632c_send_command(HT1632_CMD_SYSON);
@@ -55,6 +69,7 @@ void setup() {
 }
 
 void loop(int* j) {
+  int i;
 
   // select display
   digitalWrite(DISPLAY_CS, LOW);
@@ -66,9 +81,9 @@ void loop(int* j) {
   ht1632c_send_bits(0x00, 1 << 6);
 
   // send data
-  for(int i = 0; i < 256; i++) {
+  for(i = 0; i < 256; i++) {
     digitalWrite(DISPLAY_WR, LOW);
-    if(i == j) digitalWrite(DISPLAY_DATA, HIGH);
+    if (i == *j) digitalWrite(DISPLAY_DATA, HIGH);
     else digitalWrite(DISPLAY_DATA, LOW);
     digitalWrite(DISPLAY_WR, HIGH);
   }
@@ -77,10 +92,10 @@ void loop(int* j) {
   digitalWrite(DISPLAY_CS, HIGH);
 
   // cycle LED position to be turned on
-  if(j < 255) j++;
-  else j = 0;
+  if(*j < 255) (*j)++;
+  else *j = 0;
   
-  usleep(10000);
+  usleep(5000);
 }
 
 
@@ -88,8 +103,9 @@ void loop(int* j) {
 // HT1632C functions
 // ----------------------------------------
 
-void ht1632c_send_command(byte command) {
-  
+void ht1632c_send_command(unsigned char command) 
+{
+  printf("Sending command %02X\n", command);  
   digitalWrite(DISPLAY_CS, LOW);
   ht1632c_send_bits(HT1632C_CMD, 1 << 2);
   ht1632c_send_bits(command, 1 << 7);
@@ -97,7 +113,7 @@ void ht1632c_send_command(byte command) {
   digitalWrite(DISPLAY_CS, HIGH);
 }
 
-void ht1632c_send_bits(byte bits, byte firstbit) {
+void ht1632c_send_bits(unsigned char bits, unsigned char firstbit) {
   
   while(firstbit) {
     digitalWrite(DISPLAY_WR, LOW);
@@ -111,9 +127,12 @@ void ht1632c_send_bits(byte bits, byte firstbit) {
 int main()
 {
 	int j=0;
-	setup();
+    printf("Setup\n");
+    init();
+    printf("Loop\n");
 	while(1) {
 		loop(&j);
 	}
+    printf("End\n");
 	return 0;
 }
