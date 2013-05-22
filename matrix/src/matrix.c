@@ -13,6 +13,9 @@
 #define CS1 9
 #define CS2 7
 
+#define CLOCKS
+#define DATA_SERIE
+
 /* Matrix commands */
 #define COMMAND 0x4
 #define RD 0x6
@@ -51,6 +54,19 @@ int chipSelect(unsigned char id)
     printf("\tPin%d => %d\n", CS2, (id & 0x04)>>2);
 #endif
     return 1;
+}
+
+void sendBits(unsigned int data, unsigned char len, unsigned char id)
+{
+	unsigned int mask = 1 << (len-1);
+	unsigned int i;
+	chipSelect(id);
+	for(i=0; i<len; i++) {
+		(data & mask)>0
+		mask >>= 1;
+		digitalWrite(, 0);
+	}
+	chipSelect(0x0f);
 }
 
 /**
