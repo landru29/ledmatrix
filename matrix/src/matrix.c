@@ -69,8 +69,9 @@ int sendcommand(unsigned char cmd, unsigned char id)
     data[1] = cmd << 5;
 
 #ifdef DEBUG
+	unsigned char i;
     printf("Command : ");
-    for(i=0;i<2 + 2;i++)
+    for(i=0;i<2;i++)
         printf("%04X ", data);
     printf("\n");
 #endif
