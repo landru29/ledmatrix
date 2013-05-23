@@ -30,7 +30,7 @@
 
 #define DISPLAY_CS 3       /* BCM_GPIO 22 */
 #define DISPLAY_WR 4       /* BCM_GPIO 23 */
-#define DISPLAY_DATA 5     /* BCM_GPIO 24 */
+#define DISPLAY_DATA 6     /* BCM_GPIO 24 */
 
 // HT1632C Commands
 
@@ -95,7 +95,7 @@ void loop(int* j) {
   if(*j < 255) (*j)++;
   else *j = 0;
   
-  usleep(5000);
+  usleep(15000);
 }
 
 
@@ -130,9 +130,12 @@ int main()
     printf("Setup\n");
     init();
     printf("Loop\n");
-	while(1) {
-		loop(&j);
-	}
+    while(1) {
+        loop(&j);
+    }
     printf("End\n");
 	return 0;
 }
+
+/* vim:set ai expandtab nu ts=4 sw=4:
+*/

@@ -9,12 +9,12 @@
  wiringPi pin 9  is BCM_GPIO 3
  wiringPi pin 7  is BCM_GPIO 4
  */
-#define CS0 8
-#define CS1 9
-#define CS2 7
+#define CS0 3
+#define CS1 4
+#define CS2 5
 
-#define CLOCKS
-#define DATA_SERIE
+#define CLOCKS      14
+#define DATA_SERIE  12
 
 /* Matrix commands */
 #define COMMAND 0x4
@@ -34,6 +34,8 @@
 
 /* Size of the buffer for data sending */
 #define BUFFER_SIZE 1024
+
+#define DEBUG
 
 /**
  * Select a matrix
@@ -56,6 +58,7 @@ int chipSelect(unsigned char id)
     return 1;
 }
 
+/*
 void sendBits(unsigned int data, unsigned char len, unsigned char id)
 {
 	unsigned int mask = 1 << (len-1);
@@ -64,10 +67,11 @@ void sendBits(unsigned int data, unsigned char len, unsigned char id)
 	for(i=0; i<len; i++) {
 		(data & mask)>0
 		mask >>= 1;
-		digitalWrite(, 0);
+		digitalWrite(i, 0);
 	}
 	chipSelect(0x0f);
 }
+*/
 
 /**
  * Send a command to a matrix
@@ -189,10 +193,10 @@ int initMatrix(unsigned char nbMatrix)
 #endif
         sendcommand(SYS_EN, i);
         sendcommand(LED_ON, i);
-        sendcommand(MASTER_MODE, i);
-        sendcommand(INT_RC, i);
-        sendcommand(COMMON_8NMOS, i);
-        sendcommand(PWM_CONTROL | 15, i);
+        //sendcommand(MASTER_MODE, i);
+        //sendcommand(INT_RC, i);
+        //sendcommand(COMMON_8NMOS, i);
+        //sendcommand(PWM_CONTROL | 15, i);
     }
     return 1;
 }
@@ -221,6 +225,7 @@ int main(int argc, char** argv)
     printf("Setting up IO\n");
     if (!initIO())
         return 1;
+    //chipSelect(1);return 0;
 
     if (!initMatrix(1))
     	return 1;
@@ -230,3 +235,6 @@ int main(int argc, char** argv)
 
     return 0;
 }
+
+/* vim:set expandtab ai nu ts=4 sw=4:
+*/

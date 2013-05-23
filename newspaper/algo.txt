@@ -1,0 +1,13 @@
+Algo d'affichage d'un texte sur les matrices
+
+- Définir un buffer de la taille des matrices (buffer[nbCols*nbMatrices][nbRows])
+- Récupérer le texte
+- Découper le texte en lettres
+- Pour chaque lettre:
+   * récupérer sa taille d'affichage (largeur et hauteur)
+   * récupérer sa position dans le tableau des fontes
+   * définir sa position sur les matrices
+   * récupérer la fonte correspondante
+   * Pour chaque code binaire de la fonte:
+      - Trouver la position dans le buffer
+      - Remplir le buffer avec le code binaire de la fonte
