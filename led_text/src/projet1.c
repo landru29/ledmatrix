@@ -69,8 +69,31 @@ MATRIX {
 void ht1632c_send_command(unsigned char command, unsigned char id);
 void ht1632c_send_bits(unsigned char bits, unsigned char firstbit);
 void chipSelect(char id);
+int initPi();
 
 
+
+
+
+void initPi()
+{
+  if (wiringPiSetup() == -1)
+  {
+    printf("IO is not ready\n");
+    return 0;
+  }
+  
+   // All PINs are output
+  pinMode(CS0, OUTPUT);
+  pinMode(CS1, OUTPUT);
+  pinMode(CS2, OUTPUT);
+  pinMode(CS_ENABLE, OUTPUT);
+
+  pinMode(DISPLAY_WR, OUTPUT);
+  pinMode(DISPLAY_DATA, OUTPUT);
+  
+  return 1;
+}
 
 void chipSelect(char id)
 {
@@ -82,10 +105,12 @@ void chipSelect(char id)
   digitalWrite(CS0, id & 0x01);
   digitalWrite(CS1, (id & 0x02)>>1);
   digitalWrite(CS2, (id & 0x04)>>2);
-  /*printf("Chip select:\n");
+#ifdef DEBUG
+  printf("Chip select:\n");
   printf("\tPin%d => %d\n", CS0, id & 0x01);
   printf("\tPin%d => %d\n", CS1, (id & 0x02)>>1);
-  printf("\tPin%d => %d\n", CS2, (id & 0x04)>>2);*/
+  printf("\tPin%d => %d\n", CS2, (id & 0x04)>>2);
+#endif
 }
 
 
@@ -102,20 +127,7 @@ void init() {
   unsigned char i;
 
   // init GPIO
-  if (wiringPiSetup() == -1)
-  {
-    printf("IO is not ready\n");
-    return;
-  }
-
-  // All PINs are output
-  pinMode(CS0, OUTPUT);
-  pinMode(CS1, OUTPUT);
-  pinMode(CS2, OUTPUT);
-  pinMode(CS_ENABLE, OUTPUT);
-
-  pinMode(DISPLAY_WR, OUTPUT);
-  pinMode(DISPLAY_DATA, OUTPUT);
+  if (!initPi()) return;
   
   for(i=0; i<4; i++)
     initMatrix(i); 
@@ -228,11 +240,7 @@ int main()
     int j=0;
 
   // init GPIO
-  /*if (wiringPiSetup() == -1)
-  {
-    printf("IO is not ready\n");
-    return;
-  }
+  /*initPi();
 
   chipSelect(2);return 0;*/
 
