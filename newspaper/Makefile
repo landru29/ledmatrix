@@ -1,4 +1,4 @@
-TARGET=test
+TARGET=newspaper
 CC=gcc
 CFLAGS=
 LFLAGS=-lwiringPi
