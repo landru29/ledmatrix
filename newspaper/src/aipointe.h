@@ -1,9 +1,12 @@
+#ifndef __AIPOINTE_H
+#define __AIPOINTE_H
+
+#include "font.h"
+
 // http://www.dafont.com/ai-pointe.font
 
-typedef struct {  
-  unsigned char length;  
-  uint16_t offset;
-} FONT_INFO;
+char aipoint_mapping[] = 
+	"!\"#$\%&'()*+'-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 FONT_INFO aipoint_info[] = {
   {2, 0},	// !
@@ -535,3 +538,5 @@ unsigned char aipointe_font[] = {
   0b00010000,
   0b01100000  
 };
+
+#endif

@@ -12,6 +12,9 @@ compile: folders $(TARGET)
 $(TARGET): $(OBJ)
 	$(CC) -o $@ $^ $(LFLAGS)
 
+$(BUILD_PATH)test.o: testing/test.c
+	$(CC) -c -o $@ $^ $(CFLAGS) -Isrc/.
+
 $(BUILD_PATH)%.o: $(SRC_PATH)%.c
 	$(CC) -c -o $@ $^ $(CFLAGS)
 
@@ -23,3 +26,6 @@ mrproper: clean
 	
 clean:
 	rm -r $(BUILD_PATH)
+
+test: $(BUILD_PATH)bit_array.o $(BUILD_PATH)font.o $(BUILD_PATH)ledmatrix.o $(BUILD_PATH)test.o
+	$(CC) -o $@ $^
