@@ -1,13 +1,14 @@
 TARGET=newspaper
+TEST=test
 CC=gcc
-CFLAGS=
+CFLAGS=-I./src/. -Wall
 LFLAGS=-lwiringPi
 BUILD_PATH=build/
 SRC_PATH=src/
 SRC= $(wildcard $(SRC_PATH)*.c)
 OBJ=$(subst $(SRC_PATH),$(BUILD_PATH),$(SRC:.c=.o))
 
-compile: folders $(TARGET)
+compile: $(TARGET)
 
 $(TARGET): $(OBJ)
 	$(CC) -o $@ $^ $(LFLAGS)
@@ -16,16 +17,15 @@ $(BUILD_PATH)test.o: testing/test.c
 	$(CC) -c -o $@ $^ $(CFLAGS) -Isrc/.
 
 $(BUILD_PATH)%.o: $(SRC_PATH)%.c
+	if [ ! -e build ]; then mkdir build; fi
 	$(CC) -c -o $@ $^ $(CFLAGS)
 
-folders:
-	if [ ! -e build ]; then mkdir build; fi
-
 mrproper: clean
-	rm $(TARGET)
+	if [ -e $(TARGET) ]; then rm $(TARGET); fi
+	if [ -e $(TEST) ]; then rm $(TEST); fi
 	
 clean:
-	rm -r $(BUILD_PATH)
+	if [ -e $(BUILD_PATH) ]; then rm -r $(BUILD_PATH); fi
 
-test: $(BUILD_PATH)bit_array.o $(BUILD_PATH)font.o $(BUILD_PATH)ledmatrix.o $(BUILD_PATH)test.o
+$(TEST): $(BUILD_PATH)bit_array.o $(BUILD_PATH)font.o $(BUILD_PATH)ledmatrix.o $(BUILD_PATH)test.o
 	$(CC) -o $@ $^

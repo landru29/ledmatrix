@@ -74,8 +74,6 @@ void matrixPushString(LEDMATRIX* matrix, char* string)
 void matrixModelPrint(LEDMATRIX *matrix, const char *format, ...)
 {
 	va_list arg;
-	LETTER letter;
-	unsigned int i;
 	char buffer[1024];
 
 	va_start (arg, format);

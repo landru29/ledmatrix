@@ -53,5 +53,6 @@ LETTER getLetter(char character, FONT* font);
 
 void fontDebug(FONT* font);
 void binaryPrint(unsigned char n);
+void letterDebug(LETTER letter);
 
 #endif
