@@ -27,5 +27,5 @@ mrproper: clean
 clean:
 	if [ -e $(BUILD_PATH) ]; then rm -r $(BUILD_PATH); fi
 
-$(TEST): $(BUILD_PATH)bit_array.o $(BUILD_PATH)font.o $(BUILD_PATH)ledmatrix.o $(BUILD_PATH)test.o
+$(TEST): $(BUILD_PATH)bit_array.o $(BUILD_PATH)font.o $(BUILD_PATH)ledmatrix.o $(BUILD_PATH)test.o $(BUILD_PATH)animate.o $(BUILD_PATH)animationpool.o
 	$(CC) -o $@ $^
