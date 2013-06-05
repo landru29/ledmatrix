@@ -69,6 +69,20 @@ void matrixSetFont(LEDMATRIX* matrix, FONT* font);
  **/
 void matrixCleanModel(LEDMATRIX* matrix);
 
+/**
+ * send the viewport data to the output
+ * 
+ * @param LEDMATRIX* matrix : matrix object
+ **/
+void matrixSendViewport(LEDMATRIX* matrix);
+
+/**
+ * Erase the viewport of a matrix
+ * 
+ * @param LEDMATRIX* matrix : matrix object
+ **/
+void matrixClearViewport(LEDMATRIX* matrix);
+
 
 void matrixCheckModel(LEDMATRIX* matrix);
 void matrixDebug(LEDMATRIX* matrix);

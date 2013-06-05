@@ -1,14 +1,13 @@
 #include <stdio.h>
-#include <font.h>
-#include <ledmatrix.h>
-#include <aipointe.h>
+#include "font.h"
+#include "ledmatrix.h"
+#include "aipointe.h"
+#include <unistd.h>
+#include "animationpool.h"
+#include "animate.h"
 
 
-
-
-
-int main()
-{
+void basicMatrixTest() {
 	LEDMATRIX* matrix=0;
 	FONT* font=0;
 	LETTER letter;
@@ -16,7 +15,7 @@ int main()
 	char digitaleo[] = "Digitaleo";
 	
 	printf("* Testing library\n");
-	matrix = openLedMatrix(32, 8);
+	matrix = openLedMatrix(96, 8);
 	matrixDebug(matrix);
 	
 	printf("* Loading font\n");
@@ -57,6 +56,67 @@ int main()
 	destroyFont(font);
 	closeLedMatrix(matrix);
 	printf("* Test OK\n");
+}
+
+void animationTest()
+{
+	ANIMATION* myAnimation=0;
+	ANIMATION_QUEUE* animations=0;
+	LEDMATRIX* matrix=0;
+	printf("* Creating matrix\n");
+	matrix = openLedMatrix(96, 8);
+	printf("* Testing animation\n");
+	myAnimation = createAnimation(testFrame, 0, 10, 1000);
+	printf("* Animating\n");
+	animateOne(matrix, myAnimation);
+	printf("* End of animation\n");
+	destroyAnimation(myAnimation);
+	
+	printf("* Testing animation list\n");
+	animations = createAnimationQueue();
+	printf("* Pushing animations\n");
+	enqueueAnimation(animations, createAnimation(testFrame, 0, 10, 1000));
+	enqueueAnimation(animations, createAnimation(testFrame, 9, 0, 1000));
+	printf("* Animating\n");
+	animate(matrix, animations);
+	printf("* Cleaning\n");
+	closeLedMatrix(matrix);
+}
+
+
+void usage()
+{
+	printf("test -a -b -x\n");
+}
+
+int main(int argc, char** argv)
+{
+	char optstring[] = "x:ba";
+	int option;
+	
+	if (argc<2) {
+		usage();
+		return 0;
+	}
+	
+	opterr=0; /* Pas de message d'erreur automatique */
+	
+	while ((option = getopt(argc, argv, optstring)) != -1) {
+		switch (option) {
+			case 'a': /* animation test */
+				animationTest();
+				break;
+			case 'b': /* basics on led matrix */
+				basicMatrixTest();
+				break;
+			case 'x': /* example of options with value */
+				printf("This is an example: %s\n", optarg);
+				break;
+			default:
+				usage();
+				break;
+		}
+	}
 	
 	return 0;
 }
