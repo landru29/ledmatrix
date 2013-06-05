@@ -13,7 +13,18 @@ int testFrame(LEDMATRIX* matrix, unsigned int frameNumber)
 
 int scrollH(LEDMATRIX* matrix, unsigned int frameNumber)
 {
-	memset(matrix->viewport, 0, frameNumber);
-	memcpy(&matrix->viewport[frameNumber], matrix->model, matrix->viewportWidth-frameNumber);
+	unsigned int destinationWidth = matrix->viewportWidth-frameNumber;
+	unsigned int dataWidth = (destinationWidth>matrix->modelWidth ? destinationWidth : matrix->modelWidth);
+	
+	/* erase all */
+	matrixClearViewport(matrix);
+	
+	/* copy the data */
+	memcpy(&matrix->viewport[frameNumber], matrix->model, dataWidth);
+	
+	/* Send the data to the matrix */
+	matrixSendViewport(matrix);
+	
+	/* return the status */
 	return ANIMATION_SUCCESS;
 }

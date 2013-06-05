@@ -113,6 +113,27 @@ void matrixCleanModel(LEDMATRIX* matrix)
 	matrix->model = (unsigned char*) realloc((unsigned char*) matrix->model, 1);
 }
 
+/**
+ * send the viewport data to the output
+ * 
+ * @param LEDMATRIX* matrix : matrix object
+ **/
+void matrixSendViewport(LEDMATRIX* matrix)
+{
+	/* sendData(matrix->viewport, matrix->viewportWidth) */
+}
+
+/**
+ * Erase the viewport of a matrix
+ * 
+ * @param LEDMATRIX* matrix : matrix object
+ **/
+void matrixClearViewport(LEDMATRIX* matrix) {
+	memset(matrix->viewport, 0, matrix->viewportHeight*matrix->viewportWidth);
+}
+
+/* ################################################################### */
+/* ################################################################### */
 
 void matrixCheckModel(LEDMATRIX* matrix)
 {
