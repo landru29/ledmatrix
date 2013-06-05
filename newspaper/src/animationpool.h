@@ -6,12 +6,12 @@
 /**
  * animation that scroll the text horzontally
  **/
-int scrollH(LEDMATRIX* matrix, unsigned int frameNumber);
+int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData);
 
 /**
  * Animation that write the frame number to the standard output
  **/
-int testFrame(LEDMATRIX* matrix, unsigned int frameNumber);
+int testFrame(LEDMATRIX* matrix, int frameNumber, void* userData);
 
 
 

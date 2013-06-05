@@ -68,7 +68,7 @@ void animationTest()
 	printf("* Testing animation\n");
 	myAnimation = createAnimation(testFrame, 0, 10, 1000);
 	printf("* Animating\n");
-	animateOne(matrix, myAnimation);
+	animateOne(matrix, myAnimation, 0);
 	printf("* End of animation\n");
 	destroyAnimation(myAnimation);
 	
@@ -78,11 +78,33 @@ void animationTest()
 	enqueueAnimation(animations, createAnimation(testFrame, 0, 10, 1000));
 	enqueueAnimation(animations, createAnimation(testFrame, 9, 0, 1000));
 	printf("* Animating\n");
-	animate(matrix, animations);
+	animate(matrix, animations, 0);
 	printf("* Cleaning\n");
 	closeLedMatrix(matrix);
 }
 
+void debugMatrixTest()
+{
+	LEDMATRIX* matrix=0;
+	ANIMATION_QUEUE* animations=0;
+	/* Init terminal */
+	matrixDebugInit();
+	/* Init and configure matrix */
+	matrix = openLedMatrix(96, 8);
+	matrixSetFont(matrix, createFont(aipointe_font, aipoint_info, aipoint_mapping, 1));
+	matrixSetDebugMode(matrix, 1);
+	/* Writing data */
+	matrixPushString(matrix, "Digitaleo");
+	
+	/* Debugging animation */
+	animations = createAnimationQueue();
+	enqueueAnimation(animations, createAnimation(scrollH, 96, 0, 100));
+	animate(matrix, animations, 0);
+	
+	
+	/* closing matrix */
+	closeLedMatrix(matrix);
+}
 
 void usage()
 {
@@ -91,7 +113,7 @@ void usage()
 
 int main(int argc, char** argv)
 {
-	char optstring[] = "x:ba";
+	char optstring[] = "x:bad";
 	int option;
 	
 	if (argc<2) {
@@ -108,6 +130,9 @@ int main(int argc, char** argv)
 				break;
 			case 'b': /* basics on led matrix */
 				basicMatrixTest();
+				break;
+			case 'd': /* debug led matrix */
+				debugMatrixTest();
 				break;
 			case 'x': /* example of options with value */
 				printf("This is an example: %s\n", optarg);

@@ -28,7 +28,7 @@
 #define ANIMATION_SUCCESS 0
 #define ANIMATION_END 1
 
-typedef int (MYCALL *animationFrame) (LEDMATRIX* matrix, unsigned int frameNumber);
+typedef int (MYCALL *animationFrame) (LEDMATRIX* matrix, int frameNumber, void* userData);
 
 typedef struct {
 	animationFrame animation;
@@ -87,7 +87,7 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation);
  * @param ANIMATION* animation : animation to play
  * @param unsigned int num : number of animations
  **/
-int animateOne(LEDMATRIX* matrix, ANIMATION* animation);
+int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData);
 
 /**
  * perform many animations
@@ -96,6 +96,6 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation);
  * @param ANIMATION* animation : animation to play
  * @param unsigned int num : number of animations
  **/
-int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations);
+int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations, void* userData);
 
 #endif

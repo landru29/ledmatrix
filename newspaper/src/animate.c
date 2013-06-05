@@ -78,7 +78,7 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation) 
  * @param LEDMATRIX* matrix : matrix on which the animation is played
  * @param ANIMATION* animation : animation to play
  **/
-int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
+int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
 	unsigned long int animationDelay = 100;
 	int currentFrameNumber;
 	int status = ANIMATION_SUCCESS;
@@ -89,12 +89,12 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
 	/* Launching animation */
 	if (animation->startFrameNumber > animation->endFrameNumber) {
 		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber >= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber--) {
-			status = (animation->animation)(matrix, currentFrameNumber);
+			status = (animation->animation)(matrix, currentFrameNumber, userData);
 			usleep(1000*animationDelay);
 		}
 	} else {
 		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber <= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber++) {
-			status = (animation->animation)(matrix, currentFrameNumber);
+			status = (animation->animation)(matrix, currentFrameNumber, userData);
 			usleep(1000*animationDelay);
 		}
 	}
@@ -110,11 +110,11 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
  * @param ANIMATION* animation : animation to play
  * @param unsigned int num : number of animations
  **/
-int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations) {
+int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations, void* userData) {
 	unsigned int n;
 	int status = ANIMATION_SUCCESS;
 	for(n=0; ((n < animations->len) && (status == ANIMATION_SUCCESS)); n++) {
-		status = animateOne(matrix, animations->animationList[n]);
+		status = animateOne(matrix, animations->animationList[n], userData);
 	}
 	if ((status != ANIMATION_FAILURE) && (n==animations->len)) status = ANIMATION_END;
 	return status;

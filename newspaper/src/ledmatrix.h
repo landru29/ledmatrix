@@ -11,6 +11,7 @@ typedef struct {
 	unsigned char* model;
 	unsigned char* viewport;
 	FONT* font;
+	int debugMode;
 } LEDMATRIX;
 
 
@@ -77,11 +78,37 @@ void matrixCleanModel(LEDMATRIX* matrix);
 void matrixSendViewport(LEDMATRIX* matrix);
 
 /**
+ * send the viewport data to the screen
+ * 
+ * @param LEDMATRIX* matrix : matrix object
+ **/
+void matrixDebugViewport(LEDMATRIX* matrix);
+
+/**
  * Erase the viewport of a matrix
  * 
  * @param LEDMATRIX* matrix : matrix object
  **/
 void matrixClearViewport(LEDMATRIX* matrix);
+
+/**
+ * Send the model on the viewport
+ * 
+ * @param LEDMATRIX* matrix : matrix object
+ **/
+void matrixSendModel(LEDMATRIX* matrix);
+
+/**
+ * Initialize the console for debuging
+ **/
+void matrixDebugInit();
+
+/**
+ * Set the debug mode
+ * 
+ * @param unsigned int debug : 1= debug, 0= hardware
+ **/
+void matrixSetDebugMode(LEDMATRIX* matrix, unsigned int debug);
 
 
 void matrixCheckModel(LEDMATRIX* matrix);

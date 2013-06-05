@@ -66,6 +66,8 @@ LETTER getLetter(char character, FONT* font)
 	FONT_INFO info;
 	LETTER letter;
 	unsigned int i;
+	letter.length=0;
+	if (!font) return letter;
 	/* Loocking for the parameter */
 	for(i=0; (font->mapping[i]) && (font->mapping[i]!=character); i++);
 	/* The character was not found */

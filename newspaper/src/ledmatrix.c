@@ -2,6 +2,9 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdarg.h>
+#include <stdlib.h>
+
+void columnDebug(unsigned char n, unsigned int column);
 
 /**
  * Create a new object that hold all the data to print into the led matrix
@@ -13,9 +16,11 @@ LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
 {
 	LEDMATRIX* matrix = (LEDMATRIX*) malloc(sizeof(LEDMATRIX));
 	matrix->model = (unsigned char*) malloc(1);
-	matrix->viewport = (unsigned char*) malloc(1);
 	matrix->viewportHeight = height/8;
 	matrix->viewportWidth = width;
+	matrix->viewport = (unsigned char*) malloc(matrix->viewportHeight * matrix->viewportWidth);
+	memset(matrix->viewport, 0, matrix->viewportHeight * matrix->viewportWidth);
+	matrix->debugMode=0;
 	return matrix;
 }
 
@@ -43,6 +48,7 @@ void closeLedMatrix(LEDMATRIX* matrix)
 void matrixPushLetter(LEDMATRIX* matrix, LETTER letter)
 {
 	unsigned int modelSize = matrix->modelHeight * matrix->modelWidth;
+	if (!letter.length) return;
 	/* Enlarging the model */
 	matrix->model = (unsigned char*) realloc((unsigned char*) matrix->model, modelSize + letter.length + letter.height*letter.spacing);
 	/* Copying the letter */
@@ -120,6 +126,9 @@ void matrixCleanModel(LEDMATRIX* matrix)
  **/
 void matrixSendViewport(LEDMATRIX* matrix)
 {
+	if (matrix->debugMode)
+		matrixDebugViewport(matrix);
+	else ;
 	/* sendData(matrix->viewport, matrix->viewportWidth) */
 }
 
@@ -130,6 +139,71 @@ void matrixSendViewport(LEDMATRIX* matrix)
  **/
 void matrixClearViewport(LEDMATRIX* matrix) {
 	memset(matrix->viewport, 0, matrix->viewportHeight*matrix->viewportWidth);
+}
+
+/**
+ * send the viewport data to the screen
+ * 
+ * @param LEDMATRIX* matrix : matrix object
+ **/
+void matrixDebugViewport(LEDMATRIX* matrix)
+{
+	unsigned int i;
+	unsigned int column;
+	for(i=0; i<matrix->viewportWidth; i++) {
+		columnDebug(matrix->viewport[i], i+1);
+	}
+	column = i;
+	for (i=0 ; i<8 ; i++)
+	{;
+		printf("\033[%d;%dH|\n", i, column);
+	}
+	printf("\033[%d;%dH-\n", 8, column);
+	fflush(stdout);
+}
+
+/**
+ * Initialize the console for debuging
+ **/
+void matrixDebugInit()
+{
+	system("clear");
+}
+
+/**
+ * Send the model on the viewport
+ * 
+ * @param LEDMATRIX* matrix : matrix object
+ **/
+void matrixSendModel(LEDMATRIX* matrix)
+{
+	memset(matrix->viewport, 0, matrix->viewportHeight*matrix->viewportWidth);
+	memcpy(matrix->viewport, matrix->model, matrix->modelWidth);
+}
+
+/**
+ * Set the debug mode
+ * 
+ * @param unsigned int debug : 1= debug, 0= hardware
+ **/
+void matrixSetDebugMode(LEDMATRIX* matrix, unsigned int debug)
+{
+	matrix->debugMode = debug;
+}
+
+
+void columnDebug(unsigned char n, unsigned int column)
+{
+	unsigned char bit = 0 ;
+	unsigned char mask = 0x80 ;
+	unsigned int i;
+	for (i=0 ; i<8 ; i++)
+	{
+		bit = (n & mask) >> (7-i) ;
+		printf("\033[%d;%dH%c\n", i, column, (bit ? '@':' '));
+		mask >>= 1 ;
+	}
+	printf("\033[%d;%dH-\n", 8, column);
 }
 
 /* ################################################################### */

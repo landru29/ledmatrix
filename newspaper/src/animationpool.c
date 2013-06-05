@@ -4,17 +4,17 @@
 #include "animationpool.h"
 #include "ledmatrix.h"
 
-int testFrame(LEDMATRIX* matrix, unsigned int frameNumber)
+int testFrame(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 	printf("%d  \r", frameNumber);
 	fflush(stdout);
 	return ANIMATION_SUCCESS;
 }
 
-int scrollH(LEDMATRIX* matrix, unsigned int frameNumber)
+int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 	unsigned int destinationWidth = matrix->viewportWidth-frameNumber;
-	unsigned int dataWidth = (destinationWidth>matrix->modelWidth ? destinationWidth : matrix->modelWidth);
+	unsigned int dataWidth = (destinationWidth<matrix->modelWidth ? destinationWidth : matrix->modelWidth);
 	
 	/* erase all */
 	matrixClearViewport(matrix);
