@@ -8,6 +8,7 @@ SRC_PATH=src/
 SRC= $(wildcard $(SRC_PATH)*.c)
 OBJ=$(subst $(SRC_PATH),$(BUILD_PATH),$(SRC:.c=.o))
 
+
 compile: $(TARGET)
 
 $(TARGET): $(OBJ)
@@ -29,3 +30,6 @@ clean:
 
 $(TEST): $(BUILD_PATH)bit_array.o $(BUILD_PATH)font.o $(BUILD_PATH)ledmatrix.o $(BUILD_PATH)test.o $(BUILD_PATH)animate.o $(BUILD_PATH)animationpool.o
 	$(CC) -o $@ $^
+
+toto: 
+	echo $(TOTO)

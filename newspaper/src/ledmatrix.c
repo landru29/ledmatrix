@@ -4,6 +4,13 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#ifdef __arm__
+#include "display.h"
+#else
+void writeMatrix(uint8_t *viewport, uint8_t nbMatrix, uint8_t width, uint8_t height){}
+uint8_t initDisplay(uint8_t nbMatrix){return 0;}
+#endif
+
 void columnDebug(unsigned char n, unsigned int column);
 
 /**
@@ -21,6 +28,9 @@ LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
 	matrix->viewport = (unsigned char*) malloc(matrix->viewportHeight * matrix->viewportWidth);
 	memset(matrix->viewport, 0, matrix->viewportHeight * matrix->viewportWidth);
 	matrix->debugMode=0;
+	#ifdef __arm__
+	initDisplay(width/32);
+	#endif
 	return matrix;
 }
 
@@ -77,7 +87,7 @@ void matrixPushString(LEDMATRIX* matrix, char* string)
 }
 
 
-void matrixModelPrint(LEDMATRIX *matrix, const char *format, ...)
+/*void matrixModelPrint(LEDMATRIX *matrix, const char *format, ...)
 {
 	va_list arg;
 	char buffer[1024];
@@ -85,15 +95,12 @@ void matrixModelPrint(LEDMATRIX *matrix, const char *format, ...)
 	va_start (arg, format);
 	sprintf(buffer, format, arg);
 	va_end (arg);
-	
-	/*printf("#### %s ###\n", buffer);*/
-	
-	/* initialize model */
+
 	matrixCleanModel(matrix);
 	
-	/* push letters to the model */
+
 	matrixPushString(matrix, buffer);
-}
+}*/
 
 /**
  * Set a font to the matrix
@@ -128,8 +135,11 @@ void matrixSendViewport(LEDMATRIX* matrix)
 {
 	if (matrix->debugMode)
 		matrixDebugViewport(matrix);
-	else ;
-	/* sendData(matrix->viewport, matrix->viewportWidth) */
+	else 
+#ifdef __arm__	
+	writeMatrix(matrix->viewport, matrix->viewportWidth/32, matrix->viewportWidth, matrix->viewportHeight)
+#endif
+	;
 }
 
 /**

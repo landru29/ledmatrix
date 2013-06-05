@@ -37,7 +37,7 @@ void closeLedMatrix(LEDMATRIX* matrix);
  * @param const char* format : format (printf like)
  * @param list of variables
  **/
-void matrixModelPrint(LEDMATRIX *matrix, const char *format, ...);
+/*void matrixModelPrint(LEDMATRIX *matrix, const char *format, ...);*/
 
 /**
  * Push a letter to the model of the led matrix 
