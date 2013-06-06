@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <wiringPi.h>
 #include "bit_array.h"
+#include <wiringPiSPI.h>
+#include <unistd.h>
+#include <string.h>
 
 // Vitesse de communication du SPI avec les matrices
 #define SPI_SPEED    2000000
