@@ -8,15 +8,17 @@
  * @param animationFrame animationFunction : function that perform a frame state
  * @param int startFrameNumber : start frame of the animation
  * @param int endFrameNumber : end frame of the animation
+ * @param unsigned int step : step counter
  * @param unsigned int millitime : delay between two frames (in milliseconds)
  **/ 
-ANIMATION* createAnimation(animationFrame animationFunction, unsigned int startFrameNumber, unsigned int endFrameNumber, unsigned int millitime)
+ANIMATION* createAnimation(animationFrame animationFunction, unsigned int startFrameNumber, unsigned int endFrameNumber, unsigned int step, unsigned int millitime)
 {
 	ANIMATION* animation;
 	animation = (ANIMATION*) malloc(sizeof(ANIMATION));
 	animation->animation = animationFunction;
 	animation->startFrameNumber = startFrameNumber;
 	animation->endFrameNumber = endFrameNumber;
+	animation->step = (step<2?1:step);
 	animation->millitime = millitime;
 	return animation;
 }
@@ -88,12 +90,12 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
 	if (animation->millitime) animationDelay = animation->millitime;
 	/* Launching animation */
 	if (animation->startFrameNumber > animation->endFrameNumber) {
-		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber >= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber--) {
+		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber >= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber -= animation->step) {
 			status = (animation->animation)(matrix, currentFrameNumber, userData);
 			usleep(1000*animationDelay);
 		}
 	} else {
-		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber <= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber++) {
+		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber <= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber += animation->step) {
 			status = (animation->animation)(matrix, currentFrameNumber, userData);
 			usleep(1000*animationDelay);
 		}

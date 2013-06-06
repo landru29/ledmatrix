@@ -32,8 +32,9 @@ typedef int (MYCALL *animationFrame) (LEDMATRIX* matrix, int frameNumber, void* 
 
 typedef struct {
 	animationFrame animation;
-	unsigned int startFrameNumber;
-	unsigned int endFrameNumber;
+	int startFrameNumber;
+	int endFrameNumber;
+	unsigned int step;
 	unsigned int millitime;
 } ANIMATION;
 
@@ -49,9 +50,10 @@ typedef struct {
  * @param animationFrame animationFunction : function that perform a frame state
  * @param int startFrameNumber : start frame of the animation
  * @param int endFrameNumber : end frame of the animation
+ * @param unsigned int step : step counter
  * @param unsigned int millitime : delay between two frames (in milliseconds)
  **/ 
-ANIMATION* createAnimation(animationFrame animationFunction, unsigned int startFrameNumber, unsigned int endFrameNumber, unsigned int millitime);
+ANIMATION* createAnimation(animationFrame animationFunction, unsigned int startFrameNumber, unsigned int endFrameNumber, unsigned int step, unsigned int millitime);
 
 /**
  * Destroy an animation

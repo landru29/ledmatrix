@@ -13,6 +13,9 @@ int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData);
  **/
 int testFrame(LEDMATRIX* matrix, int frameNumber, void* userData);
 
-
+/**
+ * animation that scroll the text vertically
+ **/
+int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData);
 
 #endif

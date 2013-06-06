@@ -31,5 +31,6 @@ clean:
 $(TEST): $(BUILD_PATH)bit_array.o $(BUILD_PATH)font.o $(BUILD_PATH)ledmatrix.o $(BUILD_PATH)test.o $(BUILD_PATH)animate.o $(BUILD_PATH)animationpool.o $(BUILD_PATH)display.o $(LFLAGS)
 	$(CC) -o $@ $^
 
+
 toto: 
 	echo $(TOTO)

@@ -66,7 +66,7 @@ void animationTest()
 	printf("* Creating matrix\n");
 	matrix = openLedMatrix(96, 8);
 	printf("* Testing animation\n");
-	myAnimation = createAnimation(testFrame, 0, 10, 1000);
+	myAnimation = createAnimation(testFrame, 0, 10, 1, 1000);
 	printf("* Animating\n");
 	animateOne(matrix, myAnimation, 0);
 	printf("* End of animation\n");
@@ -75,8 +75,8 @@ void animationTest()
 	printf("* Testing animation list\n");
 	animations = createAnimationQueue();
 	printf("* Pushing animations\n");
-	enqueueAnimation(animations, createAnimation(testFrame, 0, 10, 1000));
-	enqueueAnimation(animations, createAnimation(testFrame, 9, 0, 1000));
+	enqueueAnimation(animations, createAnimation(testFrame, 0, 10, 1, 1000));
+	enqueueAnimation(animations, createAnimation(testFrame, 9, 0, 1, 1000));
 	printf("* Animating\n");
 	animate(matrix, animations, 0);
 	printf("* Cleaning\n");
@@ -98,9 +98,10 @@ void debugMatrixTest()
 	
 	/* Debugging animation */
 	animations = createAnimationQueue();
-	enqueueAnimation(animations, createAnimation(scrollH, 96, 0, 100));
+	enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 100));
+	enqueueAnimation(animations, createAnimation(scrollH, 96, -50, 2, 100));
 	animate(matrix, animations, 0);
-	
+	destroyAnimationQueue(animations);
 	
 	/* closing matrix */
 	closeLedMatrix(matrix);
