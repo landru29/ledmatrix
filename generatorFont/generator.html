@@ -75,7 +75,7 @@ function calculBinary()
     }
     for (var c = 0; c < nbCells; c++) {
         for (var i = 0; i < $tr.length; i++) {
-            binary[i] += $($($tr.get(i)).children('td').get(c)).text().toString();
+            binary[c] += $($($tr.get(i)).children('td').get(c)).text().toString();
         }
     }
     return binary;
