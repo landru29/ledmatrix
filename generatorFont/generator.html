@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Font generator</title>
+    <meta charset="UTF-8"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <style type="text/css">
+div#matrix {float: left;}
+#textarea {float: left; border: 1px black solid; width: 90px; height: 160px;}
+div#matrix table td {
+    margin: 0;
+    padding: 5px;
+    border: solid;
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+    <h1>Générateur de fontes</h1>
+    <div id="matrix">
+        <table>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        </table>
+    </div>
+    <button id="clear">clear</button>
+    <textarea id="textarea"></textarea>
+    <script type="text/javascript">
+$(document).ready(function() {
+    var $cells = $('div#matrix table tr td');
+    $cells.click(function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.text() == '0') {
+            $this.text('1').css('background-color', 'red');
+        } else {
+            $this.text('0').css('background-color','white');
+        }
+        var binary = calculBinary();
+        var $textarea = $('#textarea');
+        $textarea.empty();
+        for(var i=0; i < binary.length; i++) {
+            $textarea.append(binary[i] + '\n');
+        }
+    });
+    $('#clear').click(function(e) {
+        e.preventDefault();
+        clearMatrix();
+    })
+});
+function clearMatrix()
+{
+    var $tr = $('div#matrix table tr');
+    var nbCells = $($tr.get(0)).children().length;
+    for (var c = 0; c < nbCells; c++) {
+        for (var i = 0; i < $tr.length; i++) {
+            $($($tr.get(i)).children('td').get(c)).text('0').css('background-color', 'white');
+        }
+    }
+    $('#textarea').empty();
+}
+function calculBinary()
+{
+    var $tr = $('div#matrix table tr');
+    var nbCells = $($tr.get(0)).children().length;
+    var binary = new Array();
+    for (var c = 0; c < nbCells; c++) {
+        binary[c] = '0b';
+    }
+    for (var c = 0; c < nbCells; c++) {
+        for (var i = 0; i < $tr.length; i++) {
+            binary[i] += $($($tr.get(i)).children('td').get(c)).text().toString();
+        }
+    }
+    return binary;
+}
+function getPosition(cell)
+{
+    var positionX = 0;
+    var positionY = 0;
+    positionX = calculPosition(cell, 8);
+    var tr = $(cell).parent().get(0);
+    positionY = calculPosition(tr, 8);
+    return {'x': positionX, 'y': positionY};
+}
+
+function calculPosition(actual, max)
+{
+    var position = 0;
+    do {
+        actual = actual.nextSibling;
+        if (actual instanceof Node && actual.nodeType == Node.ELEMENT_NODE) {
+            position++;
+        }
+    } while(actual != null);
+    return (max-1) - position;
+}
+    </script>
+</body>
+</html>
