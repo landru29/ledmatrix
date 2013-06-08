@@ -4,12 +4,12 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#ifdef __arm__
+//#ifdef __arm__
 #include "display.h"
-#else
+/*#else
 void writeMatrix(uint8_t *viewport, uint8_t nbMatrix, uint8_t width, uint8_t height){}
 uint8_t initDisplay(uint8_t nbMatrix){return 0;}
-#endif
+#endif*/
 
 void columnDebug(unsigned char n, unsigned int column);
 
