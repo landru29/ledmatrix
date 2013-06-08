@@ -21,7 +21,7 @@
   </target>
 
   <target name="clean"
-        description="clean up" >
+        description="clean binaries" >
     <exec dir="${build.native}" executable="${make.cmd}" failonerror="true">
     <arg value="clean"/>
     </exec>
@@ -42,7 +42,7 @@
     </exec>
   </target>
 
-  <target name="clean" description="clean up" >
+  <target name="cleanDoc" description="clean docs">
     <delete quiet="true">
       <fileset dir="Docs/html" includes="**/*" />
     </delete>
