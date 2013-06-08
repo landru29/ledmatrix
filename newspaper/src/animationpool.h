@@ -19,3 +19,6 @@ int testFrame(LEDMATRIX* matrix, int frameNumber, void* userData);
 int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData);
 
 #endif
+
+/* vim: set expandtab ai ts=4 sw=4 nu:
+*/

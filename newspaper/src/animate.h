@@ -46,18 +46,18 @@ typedef struct {
 
 /**
  * Create a new animation
- * 
+ *
  * @param animationFrame animationFunction : function that perform a frame state
  * @param int startFrameNumber : start frame of the animation
  * @param int endFrameNumber : end frame of the animation
  * @param unsigned int step : step counter
  * @param unsigned int millitime : delay between two frames (in milliseconds)
- **/ 
+ **/
 ANIMATION* createAnimation(animationFrame animationFunction, unsigned int startFrameNumber, unsigned int endFrameNumber, unsigned int step, unsigned int millitime);
 
 /**
  * Destroy an animation
- * 
+ *
  * @param ANIMATION* animation : animation to destroy
  **/
 void destroyAnimation(ANIMATION* animation);
@@ -66,17 +66,17 @@ void destroyAnimation(ANIMATION* animation);
  * Create an animation queue
  **/
  ANIMATION_QUEUE* createAnimationQueue();
- 
+
  /**
   * Destroy an animation queue
-  * 
+  *
   * @param ANIMATION_QUEUE* queue : animation queue to destroy
   **/
 void destroyAnimationQueue(ANIMATION_QUEUE* queue);
 
 /**
  * Enqueue an animation in the animation list
- * 
+ *
  * @param ANIMATION_QUEUE* queue : animation queue
  * @param ANIMATION* animation : animation to push
  **/
@@ -84,7 +84,7 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation);
 
 /**
  * perform an animation
- * 
+ *
  * @param LEDMATRIX* matrix : matrix on which the animation is played
  * @param ANIMATION* animation : animation to play
  * @param unsigned int num : number of animations
@@ -93,7 +93,7 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData);
 
 /**
  * perform many animations
- * 
+ *
  * @param LEDMATRIX* matrix : matrix on which the animation is played
  * @param ANIMATION* animation : animation to play
  * @param unsigned int num : number of animations
@@ -101,3 +101,6 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData);
 int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations, void* userData);
 
 #endif
+
+/* vim: set expandtab ai ts=4 sw=4 nu:
+*/

@@ -73,7 +73,7 @@ bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
             int             src_len_modulo;
             unsigned char   c;
             /*
-             * Begin: Line things up on destination. 
+             * Begin: Line things up on destination.
              */
             if (src_offset_modulo > dst_offset_modulo) {
                 bit_diff_ls = src_offset_modulo - dst_offset_modulo;
@@ -93,7 +93,7 @@ bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
             *dst++ |= c;
 
             /*
-             * Middle: copy with only shifting the source. 
+             * Middle: copy with only shifting the source.
              */
             byte_len = src_len / CHAR_BIT;
 
@@ -104,7 +104,7 @@ bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
             }
 
             /*
-             * End: copy the remaing bits; 
+             * End: copy the remaing bits;
              */
             src_len_modulo = src_len % CHAR_BIT;
             if (src_len_modulo) {
@@ -118,3 +118,6 @@ bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
         }
     }
 }
+
+/* vim: set expandtab ai ts=4 sw=4 nu:
+*/

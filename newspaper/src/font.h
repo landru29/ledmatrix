@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 
-typedef struct {  
-  unsigned char length;  
+typedef struct {
+  unsigned char length;
   uint16_t offset;
 } FONT_INFO;
 
@@ -28,7 +28,7 @@ typedef struct {
 
 /**
  * Create a new font
- * 
+ *
  * @param unsigned char* data
  * @param FONT_INFO* allocationTable
  * @param char* mapping
@@ -37,14 +37,14 @@ FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping,
 
 /**
  * Destroy the font object
- * 
+ *
  * @param FONT* font : font object to destroy
  **/
 void destroyFont(FONT* font);
 
 /**
  * Extract a letter from the font
- * 
+ *
  * @param char character : character to extract
  * @param FONT* font :     font object
  **/
@@ -56,3 +56,6 @@ void binaryPrint(unsigned char n);
 void letterDebug(LETTER letter);
 
 #endif
+
+/* vim: set expandtab ai ts=4 sw=4 nu:
+*/

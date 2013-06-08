@@ -4,7 +4,7 @@
 
 /**
  * Create a new font
- * 
+ *
  * @param unsigned char* data
  * @param FONT_INFO* allocationTable
  * @param char* mapping
@@ -15,32 +15,32 @@ FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping,
 	FONT_INFO lastInfo;
 	unsigned int dataSize;
 	FONT* font = (FONT*)malloc(sizeof(FONT));
-	
+
 	/* Copying mapping */
 	font->mapping = strdup(mapping);
-	
+
 	/* Copying allocation table */
 	font->allocationTable = (FONT_INFO*) malloc(sizeof(FONT_INFO) * totalLetter);
 	memcpy(font->allocationTable, allocationTable, sizeof(FONT_INFO) * totalLetter);
-	
+
 	/* Computing the length of font data */
 	lastInfo = font->allocationTable[totalLetter-1];
 	dataSize = lastInfo.length + lastInfo.offset;
-	
+
 	/* Copying font data */
 	font->data = (unsigned char*)malloc(dataSize);
 	memcpy(font->data, data, dataSize);
-	
+
 	/* Setting height and letter spacing */
 	font->fontHeight = fontHeight;
 	font->letterSpacing = 1;
-	
+
 	return font;
 }
 
 /**
  * Destroy the font object
- * 
+ *
  * @param FONT* font : font object to destroy
  **/
 void destroyFont(FONT* font)
@@ -57,7 +57,7 @@ void destroyFont(FONT* font)
 
 /**
  * Extract a letter from the font
- * 
+ *
  * @param char character : character to extract
  * @param FONT* font :     font object
  **/
@@ -123,3 +123,6 @@ void letterDebug(LETTER letter)
 		printf("\n");
 	}
 }
+
+/* vim: set expandtab ai ts=4 sw=4 nu:
+*/

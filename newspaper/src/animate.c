@@ -4,13 +4,13 @@
 
 /**
  * Create a new animation
- * 
+ *
  * @param animationFrame animationFunction : function that perform a frame state
  * @param int startFrameNumber : start frame of the animation
  * @param int endFrameNumber : end frame of the animation
  * @param unsigned int step : step counter
  * @param unsigned int millitime : delay between two frames (in milliseconds)
- **/ 
+ **/
 ANIMATION* createAnimation(animationFrame animationFunction, unsigned int startFrameNumber, unsigned int endFrameNumber, unsigned int step, unsigned int millitime)
 {
 	ANIMATION* animation;
@@ -25,7 +25,7 @@ ANIMATION* createAnimation(animationFrame animationFunction, unsigned int startF
 
 /**
  * Destroy an animation
- * 
+ *
  * @param ANIMATION* animation : animation to destroy
  **/
 void destroyAnimation(ANIMATION* animation)
@@ -44,10 +44,10 @@ void destroyAnimation(ANIMATION* animation)
 	 queue->len = 0;
 	 return queue;
  }
- 
+
  /**
   * Destroy an animation queue
-  * 
+  *
   * @param ANIMATION_QUEUE* queue : animation queue to destroy
   **/
 void destroyAnimationQueue(ANIMATION_QUEUE* queue)
@@ -63,7 +63,7 @@ void destroyAnimationQueue(ANIMATION_QUEUE* queue)
 
 /**
  * Enqueue an animation in the animation list
- * 
+ *
  * @param ANIMATION_QUEUE* queue : animation queue
  * @param ANIMATION* animation : animation to push
  **/
@@ -76,7 +76,7 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation) 
 
 /**
  * perform an animation
- * 
+ *
  * @param LEDMATRIX* matrix : matrix on which the animation is played
  * @param ANIMATION* animation : animation to play
  **/
@@ -107,7 +107,7 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
 
 /**
  * perform many animations
- * 
+ *
  * @param LEDMATRIX* matrix : matrix on which the animation is played
  * @param ANIMATION* animation : animation to play
  * @param unsigned int num : number of animations
@@ -121,3 +121,6 @@ int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations, void* userData) {
 	if ((status != ANIMATION_FAILURE) && (n==animations->len)) status = ANIMATION_END;
 	return status;
 }
+
+/* vim: set expandtab ai ts=4 sw=4 nu:
+*/
