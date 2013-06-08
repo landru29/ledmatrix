@@ -7,6 +7,7 @@
   <property name="make.cmd" value="/usr/bin/make"/>
   <property name="doxygen.cmd" value="/usr/bin/doxygen"/>
   <property name="build.native" value="./newspaper"/>
+  <property name="build.src" value="./newspaper/src"/>
   <property name="basedir" value="./"/>
 
   <target name="init">
@@ -30,30 +31,27 @@
   <target name="sloccount"
           description="Source Lines Of Code count" >
     <delete file="${basedir}/sloccount.sc"/>
-    <mkdir file="${basedir}/slocdata"/>
+    <mkdir dir="${basedir}/slocdata"/>
     <exec executable="sloccount"
-          dir="${basedir}/newspaper/src"
           output="sloccount.sc"
           failonerror="true">
-       <arg line="--duplicates --wide --details --addlangall --datadir slocdata ."/>
-       <!--
-       <env key="PATH" value="/opt/sloccount/bin:${env.PATH}"/>
-     -->
+       <arg line="--duplicates --wide --details --addlangall --datadir slocdata ${build.src}"/>
     </exec>
   </target>
 
   <target name="cleanDoc" description="clean docs">
     <delete quiet="true">
-      <fileset dir="Docs/html" includes="**/*" />
+      <fileset dir="${build.native}/Docs/html" includes="**/*" />
     </delete>
   </target>
 
   <target name="doxygen"
           description="Process documentation" >
+    <mkdir dir="${basedir}/Docs"/>
     <exec executable="${doxygen.cmd}"
-          dir="${build.native}"
+          dir="${build.native}/src"
           failonerror="false">
-       <arg value="${build.native}/Doxygen.cfg"/>
+       <arg value="../Doxygen.cfg"/>
     </exec>
   </target>
 
