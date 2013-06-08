@@ -1,0 +1,60 @@
+<project name="Matrix" default="jenkins" basedir=".">
+    <description>
+        Jenkins Ant file for Matrix
+    </description>
+  <!-- set global properties for this build -->
+  <property name="app" location="matrix"/>
+  <property name="make.cmd" value="/usr/bin/make"/>
+  <property name="doxygen.cmd" value="/usr/bin/doxygen"/>
+  <property name="build.native" value="./newspaper"/>
+  <property name="basedir" value="./"/>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+  </target>
+
+  <target name="compile"
+        description="compile the source" >
+    <exec dir="${build.native}" executable="${make.cmd}" failonerror="true">
+    </exec>
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <exec dir="${build.native}" executable="${make.cmd}" failonerror="true">
+    <arg value="clean"/>
+    </exec>
+  </target>
+
+  <target name="sloccount"
+          description="Source Lines Of Code count" >
+    <delete file="${basedir}/sloccount.sc"/>
+    <mkdir file="${basedir}/slocdata"/>
+    <exec executable="sloccount"
+          dir="${basedir}/newspaper/src"
+          output="sloccount.sc"
+          failonerror="true">
+       <arg line="--duplicates --wide --details --addlangall --datadir slocdata ."/>
+       <!--
+       <env key="PATH" value="/opt/sloccount/bin:${env.PATH}"/>
+     -->
+    </exec>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete quiet="true">
+      <fileset dir="Docs/html" includes="**/*" />
+    </delete>
+  </target>
+
+  <target name="doxygen"
+          description="Process documentation" >
+    <exec executable="${doxygen.cmd}"
+          dir="${build.native}"
+          failonerror="false">
+       <arg value="${build.native}/Doxygen.cfg"/>
+    </exec>
+  </target>
+
+</project>
