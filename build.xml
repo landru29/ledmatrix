@@ -49,9 +49,9 @@
           description="Process documentation" >
     <mkdir dir="${basedir}/Docs"/>
     <exec executable="${doxygen.cmd}"
-          dir="${build.native}/src"
+          dir="${basedir}"
           failonerror="false">
-       <arg value="../Doxygen.cfg"/>
+       <arg value="Doxygen.cfg"/>
     </exec>
   </target>
 
