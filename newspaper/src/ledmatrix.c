@@ -4,12 +4,12 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-//#ifdef __arm__
+#ifdef __arm__
 #include "display.h"
-/*#else
+#else
 void writeMatrix(uint8_t *viewport, uint8_t nbMatrix, uint8_t width, uint8_t height){}
 uint8_t initDisplay(uint8_t nbMatrix){return 0;}
-#endif*/
+#endif
 
 void columnDebug(unsigned char n, unsigned int column);
 
@@ -26,10 +26,12 @@ LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
 	matrix->viewportHeight = height/8;
 	matrix->viewportWidth = width;
 	matrix->viewport = (unsigned char*) malloc(matrix->viewportHeight * matrix->viewportWidth);
-	memset(matrix->viewport, 0, matrix->viewportHeight * matrix->viewportWidth);
+	matrixClearViewport(matrix);
 	matrix->debugMode=0;
 	#ifdef __arm__
-	initDisplay(width/32);
+	if (initDisplay(width/32, 32, height) < 0) {
+		printf("Erreur d'initialisation des matrices\n");
+	}
 	#endif
 	return matrix;
 }
@@ -133,13 +135,13 @@ void matrixCleanModel(LEDMATRIX* matrix)
  **/
 void matrixSendViewport(LEDMATRIX* matrix)
 {
-	if (matrix->debugMode)
+	if (matrix->debugMode) {
 		matrixDebugViewport(matrix);
-	else
+	} else {
 #ifdef __arm__
-	writeMatrix(matrix->viewport, matrix->viewportWidth/32, matrix->viewportWidth, matrix->viewportHeight)
+	writeMatrix(matrix->viewport, matrix->viewportWidth/32, matrix->viewportWidth/3, 8);
 #endif
-	;
+	}
 }
 
 /**
