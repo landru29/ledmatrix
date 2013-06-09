@@ -19,7 +19,9 @@ int displays = 3; // Nombre des matrices
 int height = 8;   // Nombre de ligne sur une matrice
 int width = 32;   // Nombre de colonnes sur une matrice
 
-
+/**
+ * Display usage of program on stdout
+ */
 void usage()
 {
     printf("newspaper -m message\n");
@@ -28,7 +30,10 @@ void usage()
 /**
  * Méthode de lancement du programme
  *
- * @return int
+ * @param argc Number of parameters
+ * @param argv Parameters of program
+ *
+ * @return status
  */
 int main(int argc, char **argv)
 {

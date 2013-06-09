@@ -1,3 +1,13 @@
+/**
+ * Bibliothèque de fonctions de communication avec le hardware
+ * via la bibliothèque WiringPi
+ *
+ * @file    display.c
+ * @author  Cyrille Meichel <cmeichel@digitaleo.com>
+ * @author  Manuel Hervo <mhervo@digitaleo.com>
+ * @version 0.1
+ */
+
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -43,10 +53,8 @@ void print_word(uint16_t x);
 /**
  * Modifie le poids faible et le poids fort
  *
- * @param void   *p   La référence de l'élément à modifier
- * @param size_t size la taille de l'élément
- *
- * @return void
+ * @param p    La référence de l'élément à modifier
+ * @param size La taille de l'élément
  */
 void *reverseEndian(void *p, size_t size)
 {
@@ -64,9 +72,7 @@ void *reverseEndian(void *p, size_t size)
 /**
  * Select a matrix
  *
- * @param unsigned char id  : id of the matrix
- *
- * @return true
+ * @param id matrix ID
  */
 int selectChip(unsigned char id)
 {
@@ -105,11 +111,11 @@ int selectChip(unsigned char id)
 /**
  * Ecrit les données sur une matrice
  *
- * @param int     chip   Le numéro de matrice
- * @param uint8_t screen Pointeur sur les données
- * @param uint8_t size   La taille à écrire
- *
- * @return void
+ * @param chip   Le numéro de matrice
+ * @param screen Pointeur sur les données
+ * @param size   La taille à écrire
+ * @param width  Largeur d'une matrice
+ * @param height Hauteur d'une matrice
  */
 void writeScreen(int chip, unsigned char *screen, uint8_t size, uint8_t width, uint8_t height)
 {
@@ -154,7 +160,10 @@ void writeScreen(int chip, unsigned char *screen, uint8_t size, uint8_t width, u
 /**
  * Ecrire toutes les données sur les matrices
  *
- * @return void
+ * @param viewport Le buffer des données à écrire
+ * @param nbMatrix Nombre de matrices sur lesquelles ecrire
+ * @param width    La largeur d'une matrice
+ * @param height   La hauteur d'une matrice
  */
 void writeMatrix(unsigned char* viewport, uint8_t nbMatrix, uint8_t width, uint8_t height)
 {
@@ -171,10 +180,8 @@ void writeMatrix(unsigned char* viewport, uint8_t nbMatrix, uint8_t width, uint8
 /**
  * Envoie les commandes d'initialisation à une matrice
  *
- * @param uint8_t chip Le numéro de matrice
- * @param uint8_t cmd  La commande
- *
- * @return void
+ * @param chip Le numéro de matrice
+ * @param cmd  La commande
  */
 void sendCommand(uint8_t chip, uint8_t cmd)
 {
@@ -201,10 +208,8 @@ void sendCommand(uint8_t chip, uint8_t cmd)
 /**
  * Permet d'activer ou non le blink sur une matrice
  *
- * @param uint8_t chip   Le numéro de matrice
- * @param uint8_t blinky Flag d'activation (0 ou 1)
- *
- * @return void
+ * @param chip   Le numéro de matrice
+ * @param blinky Flag d'activation (0 ou 1)
  */
 void displayBlink(uint8_t chip, uint8_t blinky)
 {
@@ -220,10 +225,8 @@ void displayBlink(uint8_t chip, uint8_t blinky)
 /**
  * Permet de régler la luminosité d'une matrice
  *
- * @param uint8_t chip Le numéro de matrice
- * @param uint8_t pwm  Le niveau de luminosité (0 - 15)
- *
- * @return void
+ * @param chip Le numéro de matrice
+ * @param pwm  Le niveau de luminosité (0 - 15)
  */
 void setBrightness(uint8_t chip, uint8_t pwm)
 {
@@ -237,9 +240,11 @@ void setBrightness(uint8_t chip, uint8_t pwm)
 /**
  * Initialisation des matrices
  *
- * @param uint8_t nbMatrix Nombre de matrices à initialiser
+ * @param nbMatrix Nombre de matrices à initialiser
+ * @param width    Taille d'une matrice
+ * @param height   Hauteur d'une matrice
  *
- * @return uint8_t
+ * @return init's status
  */
 int8_t initDisplay(uint8_t nbMatrix, uint8_t width, uint8_t height)
 {
@@ -297,9 +302,7 @@ int8_t initDisplay(uint8_t nbMatrix, uint8_t width, uint8_t height)
 /**
  * Affiche un octet pour le debug
  *
- * @para uint8_t x L'octet à afficher
- *
- * @return void
+ * @param x L'octet à afficher
  */
 void print_byte(uint8_t x)
 {
@@ -321,9 +324,7 @@ void print_byte(uint8_t x)
 /**
  * Affiche un mot de 16 bits pour le debug
  *
- * @para uint16_t x Le mot à afficher
- *
- * @return void
+ * @param x Le mot à afficher
  */
 void print_word(uint16_t x)
 {

@@ -1,3 +1,12 @@
+/**
+ * Bibliothèque de fonctions de manipulation de la matrice
+ *
+ * @file    ledmatrix.c
+ * @author  Cyrille Meichel <cmeichel@digitaleo.com>
+ * @author  Manuel Hervo <mhervo@digitaleo.com>
+ * @version 0.1
+ */
+
 #include "ledmatrix.h"
 #include <malloc.h>
 #include <string.h>
@@ -5,10 +14,10 @@
 #include <stdlib.h>
 
 #ifdef __arm__
-#include "display.h"
+    #include "display.h"
 #else
-void writeMatrix(uint8_t *viewport, uint8_t nbMatrix, uint8_t width, uint8_t height){}
-uint8_t initDisplay(uint8_t nbMatrix){return 0;}
+    void writeMatrix(uint8_t *viewport, uint8_t nbMatrix, uint8_t width, uint8_t height){}
+    uint8_t initDisplay(uint8_t nbMatrix){return 0;}
 #endif
 
 void columnDebug(unsigned char n, unsigned int column);
@@ -16,9 +25,11 @@ void columnDebug(unsigned char n, unsigned int column);
 /**
  * Create a new object that hold all the data to print into the led matrix
  *
- * @param unsigned int width :  matrix width (number of leds)
- * @param unsigned int height : matrix height (number of leds)
- **/
+ * @param width  Matrix width (number of leds)
+ * @param height Matrix height (number of leds)
+ *
+ * @return Matrix struct
+ */
 LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
 {
 	LEDMATRIX* matrix = (LEDMATRIX*) malloc(sizeof(LEDMATRIX));
@@ -39,8 +50,8 @@ LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
 /**
  * Close and destroy the object that hold the matrix
  *
- * @param LEDMATRIX* matrix : matrix to close
- **/
+ * @param matrix Matrix to close
+ */
 void closeLedMatrix(LEDMATRIX* matrix)
 {
 	if (!matrix) return;
@@ -54,9 +65,9 @@ void closeLedMatrix(LEDMATRIX* matrix)
 /**
  * Push a letter to the model of the led matrix
  *
- * @param LEDMATRIX* matrix : matrix object
- * @param LETTER letter:      letter to push
- **/
+ * @param matrix Matrix object
+ * @param letter Letter to push
+ */
 void matrixPushLetter(LEDMATRIX* matrix, LETTER letter)
 {
 	unsigned int modelSize = matrix->modelHeight * matrix->modelWidth;
@@ -75,9 +86,9 @@ void matrixPushLetter(LEDMATRIX* matrix, LETTER letter)
 /**
  * Push a letter to the model of the led matrix
  *
- * @param LEDMATRIX* matrix : matrix object
- * @param char* string :      string to push
- **/
+ * @param matrix Matrix object
+ * @param string String to push
+ */
 void matrixPushString(LEDMATRIX* matrix, char* string)
 {
 	LETTER letter;
@@ -107,9 +118,9 @@ void matrixPushString(LEDMATRIX* matrix, char* string)
 /**
  * Set a font to the matrix
  *
- * @param LEDMATRIX* matrix : matrix object
- * @param FONT* font:         font to set
- **/
+ * @param matrix Matrix object
+ * @param font   Font to set
+ */
 void matrixSetFont(LEDMATRIX* matrix, FONT* font)
 {
 	matrix->font = font;
@@ -119,8 +130,8 @@ void matrixSetFont(LEDMATRIX* matrix, FONT* font)
 /**
  * Erase the model of a matrix
  *
- * @param LEDMATRIX* matrix : matrix object
- **/
+ * @param matrix Matrix object
+ */
 void matrixCleanModel(LEDMATRIX* matrix)
 {
 	/* initialize model */
@@ -131,8 +142,8 @@ void matrixCleanModel(LEDMATRIX* matrix)
 /**
  * send the viewport data to the output
  *
- * @param LEDMATRIX* matrix : matrix object
- **/
+ * @param matrix Matrix object
+ */
 void matrixSendViewport(LEDMATRIX* matrix)
 {
 	if (matrix->debugMode) {
@@ -147,8 +158,8 @@ void matrixSendViewport(LEDMATRIX* matrix)
 /**
  * Erase the viewport of a matrix
  *
- * @param LEDMATRIX* matrix : matrix object
- **/
+ * @param matrix Matrix object
+ */
 void matrixClearViewport(LEDMATRIX* matrix) {
 	memset(matrix->viewport, 0, matrix->viewportHeight*matrix->viewportWidth);
 }
@@ -156,8 +167,8 @@ void matrixClearViewport(LEDMATRIX* matrix) {
 /**
  * send the viewport data to the screen
  *
- * @param LEDMATRIX* matrix : matrix object
- **/
+ * @param matrix Matrix object
+ */
 void matrixDebugViewport(LEDMATRIX* matrix)
 {
 	unsigned int i;
@@ -176,7 +187,7 @@ void matrixDebugViewport(LEDMATRIX* matrix)
 
 /**
  * Initialize the console for debuging
- **/
+ */
 void matrixDebugInit()
 {
 	system("clear");
@@ -185,8 +196,8 @@ void matrixDebugInit()
 /**
  * Send the model on the viewport
  *
- * @param LEDMATRIX* matrix : matrix object
- **/
+ * @param matrix Matrix object
+ */
 void matrixSendModel(LEDMATRIX* matrix)
 {
 	memset(matrix->viewport, 0, matrix->viewportHeight*matrix->viewportWidth);
@@ -196,14 +207,20 @@ void matrixSendModel(LEDMATRIX* matrix)
 /**
  * Set the debug mode
  *
- * @param unsigned int debug : 1= debug, 0= hardware
- **/
+ * @param matrix Matrix object
+ * @param debug  Mode debug = 1, Mode hardware = 0
+ */
 void matrixSetDebugMode(LEDMATRIX* matrix, unsigned int debug)
 {
 	matrix->debugMode = debug;
 }
 
-
+/**
+ * Debug column
+ *
+ * @param n      Caractère
+ * @param column Column
+ */
 void columnDebug(unsigned char n, unsigned int column)
 {
 	unsigned char bit = 0 ;
@@ -221,6 +238,11 @@ void columnDebug(unsigned char n, unsigned int column)
 /* ################################################################### */
 /* ################################################################### */
 
+/**
+ * Display model's matrix on stdout
+ *
+ * @param matrix Matrix object
+ */
 void matrixCheckModel(LEDMATRIX* matrix)
 {
 	unsigned int i;
@@ -229,6 +251,11 @@ void matrixCheckModel(LEDMATRIX* matrix)
 	printf("\n");
 }
 
+/**
+ * Display infos of matrix on stdout
+ *
+ * @param matrix Matrix object
+ */
 void matrixDebug(LEDMATRIX* matrix)
 {
 	unsigned int i;

@@ -1,3 +1,12 @@
+/**
+ * Bibliothèque de fonctions de manipulation des fontes
+ *
+ * @file    font.c
+ * @author  Cyrille Meichel <cmeichel@digitaleo.com>
+ * @author  Manuel Hervo <mhervo@digitaleo.com>
+ * @version 0.1
+ */
+
 #include "font.h"
 #include <malloc.h>
 #include <string.h>
@@ -5,10 +14,13 @@
 /**
  * Create a new font
  *
- * @param unsigned char* data
- * @param FONT_INFO* allocationTable
- * @param char* mapping
- **/
+ * @param data            Tableau de la fonte au format binaire
+ * @param allocationTable Tableau d'information de positionnement et de taille des caractères
+ * @param mapping         Mapping des caractères ascii et de la fonte
+ * @param fontHeight      Hauteur de la fonte
+ *
+ * @return Font struct
+ */
 FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping, unsigned char fontHeight)
 {
 	unsigned int totalLetter = strlen(mapping);
@@ -43,8 +55,8 @@ FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping,
 /**
  * Destroy the font object
  *
- * @param FONT* font : font object to destroy
- **/
+ * @param font Font object to destroy
+ */
 void destroyFont(FONT* font)
 {
 	if (!font) return;
@@ -60,9 +72,11 @@ void destroyFont(FONT* font)
 /**
  * Extract a letter from the font
  *
- * @param char character : character to extract
- * @param FONT* font :     font object
- **/
+ * @param character Character to extract
+ * @param font      Font object
+ *
+ * @return Letter struct
+ */
 LETTER getLetter(char character, FONT* font)
 {
 	FONT_INFO info;
@@ -87,10 +101,15 @@ LETTER getLetter(char character, FONT* font)
 }
 
 
-	char* mapping;
-	FONT_INFO* allocationTable;
-	unsigned char* data;
+char* mapping;
+FONT_INFO* allocationTable;
+unsigned char* data;
 
+/**
+ * Debug font struct
+ *
+ * @param font Font struct
+ */
 void fontDebug(FONT* font)
 {
 	unsigned int i;
@@ -102,6 +121,11 @@ void fontDebug(FONT* font)
 	}
 }
 
+/**
+ * Display word to binary
+ *
+ * @param n word to display
+ */
 void binaryPrint(unsigned char n)
 {
 	unsigned char bit = 0 ;
@@ -115,6 +139,11 @@ void binaryPrint(unsigned char n)
 	}
 }
 
+/**
+ * Debug letter struct
+ *
+ * @param letter Letter to display
+ */
 void letterDebug(LETTER letter)
 {
 	unsigned int i;

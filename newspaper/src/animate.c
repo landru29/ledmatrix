@@ -1,3 +1,12 @@
+/**
+ * Bibliothèque des fonctions de manipulation des animations
+ *
+ * @file    animate.c
+ * @author  Cyrille Meichel <cmeichel@digitaleo.com>
+ * @author  Manuel Hervo <mhervo@digitaleo.com>
+ * @version 0.1
+ */
+
 #include "animate.h"
 #include <malloc.h>
 #include <unistd.h>
@@ -5,14 +14,14 @@
 /**
  * Create a new animation
  *
- * @param animationFrame animationFunction Function that perform a frame state
- * @param int            startFrameNumber  Start frame of the animation
- * @param int            endFrameNumber    End frame of the animation
- * @param unsigned int   step              Step counter
- * @param unsigned int   millitime         Delay between two frames (in milliseconds)
+ * @param animationFunction Function that perform a frame state
+ * @param startFrameNumber  Start frame of the animation
+ * @param endFrameNumber    End frame of the animation
+ * @param step              Step counter
+ * @param millitime         Delay between two frames (in milliseconds)
  *
- * @return ANIMATION*
- **/
+ * @return struct animation
+ */
 ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
     unsigned int step, unsigned int millitime)
 {
@@ -29,11 +38,9 @@ ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumbe
 /**
  * Destroy an animation
  *
- * @param ANIMATION *animation Animation to destroy
- *
- * @return void
- **/
-void destroyAnimation(ANIMATION *animation)
+ * @param animation Animation to destroy
+ */
+void destroyAnimation(ANIMATION* animation)
 {
 	if (animation) free(animation);
 }
@@ -41,8 +48,8 @@ void destroyAnimation(ANIMATION *animation)
 /**
  * Create an animation queue
  *
- * @return ANIMATION_QUEUE*
- **/
+ * @return animation queue
+ */
 ANIMATION_QUEUE* createAnimationQueue()
 {
     ANIMATION_QUEUE* queue;
@@ -55,11 +62,9 @@ ANIMATION_QUEUE* createAnimationQueue()
 /**
  * Destroy an animation queue
  *
- * @param ANIMATION_QUEUE *queue Animation queue to destroy
- *
- * @return void
- **/
-void destroyAnimationQueue(ANIMATION_QUEUE *queue)
+ * @param queue Animation queue to destroy
+ */
+void destroyAnimationQueue(ANIMATION_QUEUE* queue)
 {
 	int n;
 	if (!queue) return;
@@ -73,12 +78,12 @@ void destroyAnimationQueue(ANIMATION_QUEUE *queue)
 /**
  * Enqueue an animation in the animation list
  *
- * @param ANIMATION_QUEUE *queue     Animation queue
- * @param ANIMATION       *animation Animation to push
+ * @param queue     Animation queue
+ * @param animation Animation to push
  *
- * @return ANIMATION_QUEUE*
- **/
-ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE *queue, ANIMATION *animation) {
+ * @return animation queue
+ */
+ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation) {
 	queue->len ++;
 	queue->animationList = (ANIMATION**) realloc(queue->animationList, sizeof(ANIMATION*) * queue->len);
 	queue->animationList[queue->len-1] = animation;
@@ -88,13 +93,13 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE *queue, ANIMATION *animation) 
 /**
  * perform an animation
  *
- * @param LEDMATRIX *matrix    matrix on which the animation is played
- * @param ANIMATION *animation animation to play
- * @param void      *userData  number of animations
+ * @param matrix    matrix on which the animation is played
+ * @param animation animation to play
+ * @param userData  number of animations
  *
- * @return int Status's animation
- **/
-int animateOne(LEDMATRIX *matrix, ANIMATION *animation, void *userData) {
+ * @return Animation's status
+ */
+int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
 	unsigned long int animationDelay = 100;
 	int currentFrameNumber;
 	int status = ANIMATION_SUCCESS;
@@ -122,13 +127,13 @@ int animateOne(LEDMATRIX *matrix, ANIMATION *animation, void *userData) {
 /**
  * perform many animations
  *
- * @param LEDMATRIX       *matrix    matrix on which the animation is played
- * @param ANIMATION_QUEUE *animation animation to play
- * @param void 		 	  *userData  number of animations
+ * @param matrix     matrix on which the animation is played
+ * @param animations animation to play
+ * @param userData   number of animations
  *
- * @return int Status's animation
- **/
-int animate(LEDMATRIX *matrix, ANIMATION_QUEUE *animations, void *userData) {
+ * @return Animation's status
+ */
+int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations, void* userData) {
 	unsigned int n;
 	int status = ANIMATION_SUCCESS;
 	for(n=0; ((n < animations->len) && (status == ANIMATION_SUCCESS)); n++) {

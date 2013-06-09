@@ -1,15 +1,36 @@
+/**
+ * Bibliothèque de fonctions d'animations
+ *
+ * @file    animationpool.h
+ * @author  Cyrille Meichel <cmeichel@digitaleo.com>
+ * @author  Manuel Hervo <mhervo@digitaleo.com>
+ * @version 0.1
+ */
+
 #ifndef __ANIMATION_POOL_H_
 #define __ANIMATION_POOL_H_
 
 #include "animate.h"
 
 /**
- * animation that scroll the text horzontally
- **/
+ * Animation that scroll the text horzontally
+ *
+ * @param  matrix      La matrice
+ * @param  frameNumber Le numéro de la frame courante
+ * @param  userData    Données spécifiques
+ *
+ * @return Animation's status
+ */
 int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData);
 
 /**
  * Animation that write the frame number to the standard output
+ *
+ * @param  matrix      La matrice
+ * @param  frameNumber Le numéro de la frame courante
+ * @param  userData    Données spécifiques
+ *
+ * @return Animation's status
  **/
 int testFrame(LEDMATRIX* matrix, int frameNumber, void* userData);
 
@@ -19,7 +40,8 @@ int testFrame(LEDMATRIX* matrix, int frameNumber, void* userData);
  * @param  matrix      La matrice
  * @param  frameNumber Le numéro de la frame courante
  * @param  userData    Données spécifiques
- * @return             int
+ *
+ * @return Animation's status
  */
 int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData);
 
@@ -29,7 +51,8 @@ int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData);
  * @param  matrix      La matrice
  * @param  frameNumber Le numéro de la frame courante
  * @param  userData    Données spécifiques
- * @return             int
+ *
+ * @return Animation's status
  */
 int interval(LEDMATRIX* matrix, int frameNumber, void* userData);
 
@@ -39,7 +62,8 @@ int interval(LEDMATRIX* matrix, int frameNumber, void* userData);
  * @param  matrix      La matrice
  * @param  frameNumber Le numéro de la frame courante
  * @param  userData    Données spécifiques
- * @return             int
+ *
+ * @return Animation's status
  */
 int blink(LEDMATRIX* matrix, int frameNumber, void* userData);
 
