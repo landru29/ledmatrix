@@ -11,7 +11,7 @@
  * @param unsigned int step : step counter
  * @param unsigned int millitime : delay between two frames (in milliseconds)
  **/
-ANIMATION* createAnimation(animationFrame animationFunction, unsigned int startFrameNumber, unsigned int endFrameNumber, unsigned int step, unsigned int millitime)
+ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber, unsigned int step, unsigned int millitime)
 {
 	ANIMATION* animation;
 	animation = (ANIMATION*) malloc(sizeof(ANIMATION));
