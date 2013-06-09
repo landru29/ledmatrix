@@ -14,9 +14,34 @@ int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData);
 int testFrame(LEDMATRIX* matrix, int frameNumber, void* userData);
 
 /**
- * animation that scroll the text vertically
- **/
+ * Animation that scroll the text vertically
+ *
+ * @param  matrix      La matrice
+ * @param  frameNumber Le numéro de la frame courante
+ * @param  userData    Données spécifiques
+ * @return             int
+ */
 int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData);
+
+/**
+ * Animation de pause
+ *
+ * @param  matrix      La matrice
+ * @param  frameNumber Le numéro de la frame courante
+ * @param  userData    Données spécifiques
+ * @return             int
+ */
+int interval(LEDMATRIX* matrix, int frameNumber, void* userData);
+
+/**
+ * Animation de clignotement
+ *
+ * @param  matrix      La matrice
+ * @param  frameNumber Le numéro de la frame courante
+ * @param  userData    Données spécifiques
+ * @return             int
+ */
+int blink(LEDMATRIX* matrix, int frameNumber, void* userData);
 
 #endif
 
