@@ -1,4 +1,4 @@
-<project name="Matrix" default="jenkins" basedir=".">
+<project name="Matrix" default="build" basedir=".">
     <description>
         Jenkins Ant file for Matrix
     </description>
@@ -10,13 +10,11 @@
   <property name="build.src" value="./newspaper/src"/>
   <property name="basedir" value="./"/>
 
-  <target name="init">
-    <!-- Create the time stamp -->
-    <tstamp/>
-  </target>
+  <target name="build" depends="compile,sloccount,doxygen" />
 
   <target name="compile"
-        description="compile the source" >
+        description="compile the source"
+        depends="clean">
     <exec dir="${build.native}" executable="${make.cmd}" failonerror="false">
     </exec>
   </target>
@@ -24,7 +22,7 @@
   <target name="clean"
         description="clean binaries" >
     <exec dir="${build.native}" executable="${make.cmd}" failonerror="true">
-    <arg value="clean"/>
+    <arg value="mrproper"/>
     </exec>
   </target>
 
@@ -46,7 +44,8 @@
   </target>
 
   <target name="doxygen"
-          description="Process documentation" >
+          description="Process documentation"
+          depends="cleanDoc">
     <mkdir dir="${basedir}/Docs"/>
     <exec executable="${doxygen.cmd}"
           dir="${basedir}"
