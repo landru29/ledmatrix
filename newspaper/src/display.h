@@ -11,7 +11,7 @@
  *
  * @return void
  */
-void writeMatrix(uint8_t *viewport, uint8_t nbMatrix, uint8_t width, uint8_t height);
+void writeMatrix(unsigned char* viewport, uint8_t nbMatrix, uint8_t width, uint8_t height);
 
 /**
  * Envoie les commandes d'initialisation à une matrice
@@ -31,7 +31,7 @@ void sendCommand(uint8_t chip, uint8_t cmd);
  *
  * @return void
  */
-void blink(uint8_t chip, uint8_t blinky);
+void displayBlink(uint8_t chip, uint8_t blinky);
 
 /**
  * Permet de régler la luminosité d'une matrice
@@ -47,10 +47,12 @@ void setBrightness(uint8_t chip, uint8_t pwm);
  * Initialisation des matrices
  *
  * @param uint8_t nbMatrix Nombre de matrices à initialiser
+ * @param uint8_t width    Taille d'une matrice
+ * @param uint8_t height   Hauteur d'une matrice
  *
  * @return uint8_t
  */
-uint8_t initDisplay(uint8_t nbMatrix);
+int8_t initDisplay(uint8_t nbMatrix, uint8_t width, uint8_t height);
 
 #endif
 

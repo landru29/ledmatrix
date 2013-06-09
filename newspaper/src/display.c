@@ -35,6 +35,11 @@
 #define CS2 5 // GPIO 24
 #define CS3 6 // GPIO 24 A activer en continu avec le 74HC138 (pin E3)
 
+//#define DEBUG
+
+void print_byte(uint8_t x);
+void print_word(uint16_t x);
+
 /**
  * Modifie le poids faible et le poids fort
  *
@@ -106,10 +111,10 @@ int selectChip(unsigned char id)
  *
  * @return void
  */
-void writeScreen(int chip, uint8_t *screen, uint8_t size, uint8_t width, uint8_t height)
+void writeScreen(int chip, unsigned char *screen, uint8_t size, uint8_t width, uint8_t height)
 {
 #ifdef DEBUG
-    printf("writeScreen(%d)\n", chip);
+    printf("writeScreen(%d, %d, %d)\n", chip, width, height);
 #endif
     uint8_t *output = malloc(size+2);
     uint16_t data;
@@ -151,7 +156,7 @@ void writeScreen(int chip, uint8_t *screen, uint8_t size, uint8_t width, uint8_t
  *
  * @return void
  */
-void writeMatrix(uint8_t *viewport, uint8_t nbMatrix, uint8_t width, uint8_t height)
+void writeMatrix(unsigned char* viewport, uint8_t nbMatrix, uint8_t width, uint8_t height)
 {
 #ifdef DEBUG
     printf("writeMatrix\n");
@@ -175,7 +180,7 @@ void sendCommand(uint8_t chip, uint8_t cmd)
 {
 #ifdef DEBUG
     printf("sendCommand: ");
-    print_word(cmd);
+    print_word((uint16_t)cmd);
 #endif
     uint16_t data=0;
 
@@ -201,7 +206,7 @@ void sendCommand(uint8_t chip, uint8_t cmd)
  *
  * @return void
  */
-void blink(uint8_t chip, uint8_t blinky)
+void displayBlink(uint8_t chip, uint8_t blinky)
 {
 #ifdef DEBUG
     printf("blink\n");
@@ -236,22 +241,24 @@ void setBrightness(uint8_t chip, uint8_t pwm)
  *
  * @return uint8_t
  */
-uint8_t initDisplay(uint8_t nbMatrix)
+int8_t initDisplay(uint8_t nbMatrix, uint8_t width, uint8_t height)
 {
 #ifdef DEBUG
-    printf("init display");
+    printf("init display (%d)\n", nbMatrix);
 #endif
     uint8_t i;
 
     // Initialisation du SPI avec la lib WiringPi
     if (wiringPiSPISetup(0, SPI_SPEED) < 0) {
-        printf ("SPI Setup Failed: %s\n", strerror(errno));
-        return 1;
+        printf("SPI Setup Failed: %s\n", strerror(errno));
+        return -1;
     }
 
     // Initialise le GPIO
-    if (wiringPiSetup() == -1)
-        return 1;
+    if (wiringPiSetup() < 0) {
+        printf("Setup Failed: %s\n", strerror(errno));
+        return -1;
+    }
 
     // Initialisation du mode output pour les pins du chipSelect
     pinMode(CS0, OUTPUT);
@@ -272,10 +279,57 @@ uint8_t initDisplay(uint8_t nbMatrix)
         // Set brightness at full
         setBrightness(i, 15);
         // Turn off blinking function
-        blink(i, 0);
+        displayBlink(i, 0);
     }
 
+    // Clear buffer
+    unsigned char *buffer;
+    // Allocation de l'espace mémoire pour les matrices
+    buffer = calloc(nbMatrix * width * height / 8, sizeof(char));
+    for (i=0; i < (nbMatrix * width); i++)
+        *(buffer+i) = 0x00;
+    writeMatrix(buffer, nbMatrix, width, height);
+    free(buffer);
+
     return 0;
+}
+
+/**
+ * Affiche un octet pour le debug
+ *
+ * @para uint8_t x L'octet à afficher
+ *
+ * @return void
+ */
+void print_byte(uint8_t x)
+{
+    int n;
+
+    for(n=0; n<8; n++){
+
+        if (n%4==0)
+            printf(" ");
+        if ((x &0x80) != 0)
+            printf("1");
+        else
+            printf("0");
+
+        x = x <<1;
+    }
+}
+
+/**
+ * Affiche un mot de 16 bits pour le debug
+ *
+ * @para uint16_t x Le mot à afficher
+ *
+ * @return void
+ */
+void print_word(uint16_t x)
+{
+    print_byte(x>>8);
+    print_byte(x);
+    printf("\n");
 }
 
 /* vim: set expandtab ai nu ts=4 sw=4:
