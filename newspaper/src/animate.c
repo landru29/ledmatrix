@@ -5,13 +5,16 @@
 /**
  * Create a new animation
  *
- * @param animationFrame animationFunction : function that perform a frame state
- * @param int startFrameNumber : start frame of the animation
- * @param int endFrameNumber : end frame of the animation
- * @param unsigned int step : step counter
- * @param unsigned int millitime : delay between two frames (in milliseconds)
+ * @param animationFrame animationFunction Function that perform a frame state
+ * @param int            startFrameNumber  Start frame of the animation
+ * @param int            endFrameNumber    End frame of the animation
+ * @param unsigned int   step              Step counter
+ * @param unsigned int   millitime         Delay between two frames (in milliseconds)
+ *
+ * @return ANIMATION*
  **/
-ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber, unsigned int step, unsigned int millitime)
+ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
+    unsigned int step, unsigned int millitime)
 {
 	ANIMATION* animation;
 	animation = (ANIMATION*) malloc(sizeof(ANIMATION));
@@ -26,7 +29,9 @@ ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumbe
 /**
  * Destroy an animation
  *
- * @param ANIMATION* animation : animation to destroy
+ * @param ANIMATION* animation Animation to destroy
+ *
+ * @return void
  **/
 void destroyAnimation(ANIMATION* animation)
 {
@@ -35,6 +40,8 @@ void destroyAnimation(ANIMATION* animation)
 
 /**
  * Create an animation queue
+ *
+ * @return ANIMATION_QUEUE*
  **/
  ANIMATION_QUEUE* createAnimationQueue()
  {
@@ -48,7 +55,9 @@ void destroyAnimation(ANIMATION* animation)
  /**
   * Destroy an animation queue
   *
-  * @param ANIMATION_QUEUE* queue : animation queue to destroy
+  * @param ANIMATION_QUEUE* queue Animation queue to destroy
+  *
+  * @return void
   **/
 void destroyAnimationQueue(ANIMATION_QUEUE* queue)
 {
@@ -64,8 +73,10 @@ void destroyAnimationQueue(ANIMATION_QUEUE* queue)
 /**
  * Enqueue an animation in the animation list
  *
- * @param ANIMATION_QUEUE* queue : animation queue
- * @param ANIMATION* animation : animation to push
+ * @param ANIMATION_QUEUE* queue     Animation queue
+ * @param ANIMATION*       animation Animation to push
+ *
+ * @return ANIMATION_QUEUE*
  **/
 ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation) {
 	queue->len ++;
@@ -77,8 +88,11 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation) 
 /**
  * perform an animation
  *
- * @param LEDMATRIX* matrix : matrix on which the animation is played
- * @param ANIMATION* animation : animation to play
+ * @param LEDMATRIX* matrix    matrix on which the animation is played
+ * @param ANIMATION* animation animation to play
+ * @param void*      userData  number of animations
+ *
+ * @return int Status's animation
  **/
 int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
 	unsigned long int animationDelay = 100;
@@ -108,9 +122,11 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
 /**
  * perform many animations
  *
- * @param LEDMATRIX* matrix : matrix on which the animation is played
- * @param ANIMATION* animation : animation to play
- * @param unsigned int num : number of animations
+ * @param LEDMATRIX* 	   matrix    matrix on which the animation is played
+ * @param ANIMATION_QUEUE* animation animation to play
+ * @param void 		 	   userData  number of animations
+ *
+ * @return int Status's animation
  **/
 int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations, void* userData) {
 	unsigned int n;
