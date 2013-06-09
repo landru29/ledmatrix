@@ -17,7 +17,7 @@
     #include "display.h"
 #else
     void writeMatrix(uint8_t *viewport, uint8_t nbMatrix, uint8_t width, uint8_t height){}
-    uint8_t initDisplay(uint8_t nbMatrix){return 0;}
+    int8_t initDisplay(uint8_t nbMatrix, uint8_t width, uint8_t height){return 0;}
 #endif
 
 void columnDebug(unsigned char n, unsigned int column);

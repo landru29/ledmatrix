@@ -157,6 +157,7 @@ void writeScreen(int chip, unsigned char *screen, uint8_t size, uint8_t width, u
     selectChip(0x0f);
 }
 
+#ifdef __arm__
 /**
  * Ecrire toutes les données sur les matrices
  *
@@ -176,6 +177,7 @@ void writeMatrix(unsigned char* viewport, uint8_t nbMatrix, uint8_t width, uint8
         writeScreen(i, viewport + (width * i), size, width, height);
     }
 }
+#endif
 
 /**
  * Envoie les commandes d'initialisation à une matrice
@@ -205,6 +207,7 @@ void sendCommand(uint8_t chip, uint8_t cmd)
     selectChip(0x0f);
 }
 
+#ifdef __arm__
 /**
  * Permet d'activer ou non le blink sur une matrice
  *
@@ -221,6 +224,7 @@ void displayBlink(uint8_t chip, uint8_t blinky)
     else
         sendCommand(chip, BLINK_OFF);
 }
+#endif
 
 /**
  * Permet de régler la luminosité d'une matrice
@@ -237,6 +241,7 @@ void setBrightness(uint8_t chip, uint8_t pwm)
     sendCommand(chip, PWM_CONTROL | pwm);
 }
 
+#ifdef __arm__
 /**
  * Initialisation des matrices
  *
@@ -298,6 +303,7 @@ int8_t initDisplay(uint8_t nbMatrix, uint8_t width, uint8_t height)
 
     return 0;
 }
+#endif
 
 /**
  * Affiche un octet pour le debug

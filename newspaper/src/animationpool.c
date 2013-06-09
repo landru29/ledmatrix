@@ -12,7 +12,12 @@
 #include <string.h>
 #include "animationpool.h"
 #include "ledmatrix.h"
-#include "display.h"
+
+#ifdef __arm__
+    #include "display.h"
+#else
+ 	void displayBlink(uint8_t chip, uint8_t blinky){}
+#endif
 
 /**
  * Animation that write the frame number to the standard output
@@ -123,12 +128,14 @@ int interval(LEDMATRIX* matrix, int frameNumber, void* userData)
 int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 	uint8_t i, blink = 0;
+#ifdef __arm__
 	/* définition du statut de blink en fonction du numéro de frame */
 	blink = (frameNumber > 0) ? 0 : 1;
 	/* Appel de la méthode clignotement sur bloc de la matrice */
 	for (i=0; i < matrix->viewportWidth/32; i++) {
 		displayBlink(i, blink);
 	}
+#endif
 	/* return the status */
 	return ANIMATION_SUCCESS;
 }

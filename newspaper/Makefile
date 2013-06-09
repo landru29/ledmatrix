@@ -24,7 +24,7 @@ $(BUILD_PATH)%.o: $(SRC_PATH)%.c
 mrproper: clean
 	if [ -e $(TARGET) ]; then rm $(TARGET); fi
 	if [ -e $(TEST) ]; then rm $(TEST); fi
-	
+
 clean:
 	if [ -e $(BUILD_PATH) ]; then rm -r $(BUILD_PATH); fi
 
@@ -32,5 +32,5 @@ $(TEST): $(BUILD_PATH)bit_array.o $(BUILD_PATH)font.o $(BUILD_PATH)ledmatrix.o $
 	$(CC) -o $@ $^
 
 
-toto: 
+toto:
 	echo $(TOTO)
