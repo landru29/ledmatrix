@@ -21,6 +21,7 @@ FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping,
 
 	/* Copying allocation table */
 	font->allocationTable = (FONT_INFO*) malloc(sizeof(FONT_INFO) * totalLetter);
+	memset(font->allocationTable, 0, sizeof(FONT_INFO) * totalLetter);
 	memcpy(font->allocationTable, allocationTable, sizeof(FONT_INFO) * totalLetter);
 
 	/* Computing the length of font data */
@@ -29,6 +30,7 @@ FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping,
 
 	/* Copying font data */
 	font->data = (unsigned char*)malloc(dataSize);
+	memset(font->data, 0, dataSize);
 	memcpy(font->data, data, dataSize);
 
 	/* Setting height and letter spacing */
