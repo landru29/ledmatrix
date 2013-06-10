@@ -15,16 +15,23 @@
 #include "animationpool.h"
 
 
-int displays = 3; // Nombre des matrices
-int height = 8;   // Nombre de ligne sur une matrice
-int width = 32;   // Nombre de colonnes sur une matrice
+#define DISPLAYS 3     // Nombre des matrices
+#define HEIGHT   8     // Nombre de ligne sur une matrice
+#define WIDTH    32    // Nombre de colonnes sur une matrice
 
 /**
  * Display usage of program on stdout
+ *
+ * @param argv Parameters of program
+ *
+ * @return void
  */
-void usage()
+void usage(char **argv)
 {
-    printf("newspaper -m message\n");
+	fprintf(stdout, "Newspaper V1.0\n M. Hervo & C. Meichel\n2013, June\n");
+	fprintf(stdout, "Syntaxe : %s -m message [-d]\n", argv[0]);
+	fprintf(stdout, "\t-m message:\n\t\tmessage to send to the matrix\n");
+	fprintf(stdout, "\t-s:\n\t\tSimulate the matrix\n");
 }
 
 /**
@@ -37,15 +44,22 @@ void usage()
  */
 int main(int argc, char **argv)
 {
-    char optstring[] = "m:";
+    char optstring[] = "m:s";
     int option;
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT* font = 0;
     ANIMATION_QUEUE* animations=0;
-    char* message;
+    char* message=0;
+    int simulated=
+#ifdef __arm__    
+    0;
+#else
+    1;
+#endif
 
+	/* check if there is at least one argument */
     if (argc<2) {
-        usage();
+        usage(argv);
         return 0;
     }
 
@@ -54,41 +68,52 @@ int main(int argc, char **argv)
     while ((option = getopt(argc, argv, optstring)) != -1) {
         switch (option) {
             case 'm': /* example of options with value */
-                message = optarg;
+                message = strdup(optarg);
                 break;
+            case 's':
+				simulated = 1;
+				break;
             default:
                 abort();
                 break;
         }
     }
 
-    if (strlen(message) <= 0) {
+	/* check if a message was specified */
+    if ((!message) || (!*message)) {
         printf("Le message est vide\n");
         return 0;
     }
 
-    matrix = openLedMatrix(displays*width, height);
+	/* Matrix initialisation */
+    matrix = openLedMatrix(DISPLAYS*WIDTH, HEIGHT);
     font = createFont(perso_font, perso_info, perso_mapping, 1);
     matrixSetFont(matrix, font);
     matrixPushString(matrix, message);
+    
+    /* Switch on the simulator */
+    if (simulated) matrixSetDebugMode(matrix, 1);
+    
+    /* Wait for a while */
     usleep(2000*1000);
 
-    /* Debugging animation */
+    /* Animation in action */
     animations = createAnimationQueue();
     enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500));
     enqueueAnimation(animations, createAnimation(scrollV, -8, 0, 1, 150));
     enqueueAnimation(animations, createAnimation(blink, 0, 1, 1, 2000));
-    enqueueAnimation(animations, createAnimation(scrollH, 0, displays*width, 2, 150));
+    enqueueAnimation(animations, createAnimation(scrollH, 0, DISPLAYS*WIDTH, 2, 150));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500));
-    enqueueAnimation(animations, createAnimation(scrollH, displays*width, 0-(strlen(message)*8), 2, 150));
+    enqueueAnimation(animations, createAnimation(scrollH, DISPLAYS*WIDTH, 0-(strlen(message)*8), 2, 150));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500));
-    enqueueAnimation(animations, createAnimation(scrollH, 0-(strlen(message)*8), 0, 2, 150));
+    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150));
     animate(matrix, animations, 0);
-    destroyAnimationQueue(animations);
 
+	/* Cleaning everything */
     destroyFont(font);
     closeLedMatrix(matrix);
+    destroyAnimationQueue(animations);
 
     return 0;
 }

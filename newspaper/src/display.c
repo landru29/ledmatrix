@@ -12,11 +12,25 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <wiringPi.h>
-#include "bit_array.h"
-#include <wiringPiSPI.h>
 #include <unistd.h>
 #include <string.h>
+#ifdef __arm__
+#include <wiringPi.h>
+#include <wiringPiSPI.h>
+#else
+    void digitalWrite(int a, int b) 
+    {
+		a = a;
+		b = b;
+	}
+    void wiringPiSPIDataRW(int a, unsigned char* b, unsigned int c)
+    {
+		a = a;
+		b = b;
+		c = c;		
+	}
+#endif
+#include "bit_array.h"
 
 // Vitesse de communication du SPI avec les matrices
 #define SPI_SPEED    2000000

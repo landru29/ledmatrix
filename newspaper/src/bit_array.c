@@ -4,6 +4,8 @@
 #include "bit_array.h"
 
 
+#ifdef __arm__
+
 #define PREPARE_FIRST_COPY()                                      \
     do {                                                          \
     if (src_len >= (CHAR_BIT - dst_offset_modulo)) {              \
@@ -117,7 +119,24 @@ bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
             }
         }
     }
+    return 0;
 }
+
+#else
+
+int
+bitarray_copy(const unsigned char *src_org, int src_offset, int src_len,
+                    unsigned char *dst_org, int dst_offset)
+{
+	src_org = src_org;
+	src_offset = src_offset;
+	src_len = src_len;
+	dst_org = dst_org;
+	dst_offset = dst_offset;
+	return 0;
+}
+
+#endif
 
 /* vim: set expandtab ai ts=4 sw=4 nu:
 */

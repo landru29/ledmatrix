@@ -127,14 +127,23 @@ int interval(LEDMATRIX* matrix, int frameNumber, void* userData)
  */
 int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
-	uint8_t i, blink = 0;
 #ifdef __arm__
+	uint8_t i;
+#endif
+	uint8_t blink = 0;
+
 	/* définition du statut de blink en fonction du numéro de frame */
 	blink = (frameNumber > 0) ? 0 : 1;
 	/* Appel de la méthode clignotement sur bloc de la matrice */
+#ifdef __arm__
 	for (i=0; i < matrix->viewportWidth/32; i++) {
 		displayBlink(i, blink);
 	}
+#else
+	if (blink) 
+		matrixSendViewport(matrix);
+	else
+		matrixClearViewport(matrix);
 #endif
 	/* return the status */
 	return ANIMATION_SUCCESS;
