@@ -52,7 +52,7 @@ typedef struct {
  *
  * @return Font struct
  */
-FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping, unsigned char fontHeight);
+FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight);
 
 /**
  * Destroy the font object

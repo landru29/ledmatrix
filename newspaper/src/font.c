@@ -21,12 +21,14 @@
  *
  * @return Font struct
  */
-FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping, unsigned char fontHeight)
+FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight)
 {
 	unsigned int totalLetter = strlen(mapping);
 	FONT_INFO lastInfo;
 	unsigned int dataSize;
 	FONT* font = (FONT*)malloc(sizeof(FONT));
+	unsigned int i;
+	unsigned int offset = 0;
 
 	/* Copying mapping */
 	font->mapping = strdup(mapping);
@@ -34,7 +36,11 @@ FONT* createFont(unsigned char* data, FONT_INFO* allocationTable, char* mapping,
 	/* Copying allocation table */
 	font->allocationTable = (FONT_INFO*) malloc(sizeof(FONT_INFO) * totalLetter);
 	memset(font->allocationTable, 0, sizeof(FONT_INFO) * totalLetter);
-	memcpy(font->allocationTable, allocationTable, sizeof(FONT_INFO) * totalLetter);
+	for(i=0; mapping[i]; i++) {
+		font->allocationTable[i].length = sizeTable[i];
+		font->allocationTable[i].offset = offset;
+		offset += sizeTable[i];
+	}
 
 	/* Computing the length of font data */
 	lastInfo = font->allocationTable[totalLetter-1];
