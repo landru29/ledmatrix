@@ -11,6 +11,7 @@
 #define __FONT_H
 
 #include <stdint.h>
+#include "../config.h"
 
 /**
  * Structure d'information d'un caractère de la fonte

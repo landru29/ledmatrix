@@ -11,6 +11,7 @@
 #define __ANIMATE_H_
 
 #include "ledmatrix.h"
+#include "../config.h"
 
 #ifndef MYCALL
 #if defined(_MSC_VER)

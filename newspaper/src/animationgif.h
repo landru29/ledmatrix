@@ -9,11 +9,13 @@
 
 #ifndef __ANIMATION_GIF_H_
 #define __ANIMATION_GIF_H_
+#include "../config.h"
 
 
 #include "animate.h"
+#ifdef HAS_GIF_LIB
 #include <gif_lib.h>
-
+#endif
 /**
  * Animation that play an animated gif
  *
@@ -25,10 +27,12 @@
  */
 int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData);
 
+#ifdef HAS_GIF_LIB
+
 GifFileType* openGifFile(char* filename);
 
 void closeGifFile(GifFileType* gif);
-
+#endif
 
 #endif
 

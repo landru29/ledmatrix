@@ -11,6 +11,7 @@
 #define __ANIMATION_POOL_H_
 
 #include "animate.h"
+#include "../config.h"
 
 /**
  * Animation that scroll the text horzontally

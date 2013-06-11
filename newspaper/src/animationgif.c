@@ -8,17 +8,19 @@
  */
 
 #include <stdio.h>
+#ifdef HAS_GIF_LIB
 #include <gif_lib.h>
+#endif
 #include <string.h>
 #include <malloc.h>
 #include "animationgif.h"
 #include "ledmatrix.h"
 
-
+#ifdef HAS_GIF_LIB
 int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, unsigned int left, unsigned int height, unsigned int width, unsigned char* data);
 int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned int height, unsigned int width);
 void printRectangle(unsigned char* data, unsigned int height, unsigned int width);
-
+#endif
 
 /**
  * Animation that play an animated gif
@@ -31,6 +33,7 @@ void printRectangle(unsigned char* data, unsigned int height, unsigned int width
  */
 int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
+#ifdef HAS_GIF_LIB
 	GifFileType* gif = (GifFileType*)userData;
 	unsigned char* data;
 	
@@ -43,9 +46,11 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 	matrixSendViewport(matrix);
 	
 	free(data);
+#endif
 	return ANIMATION_SUCCESS;
 }
 
+#ifdef HAS_GIF_LIB
 int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, unsigned int left, unsigned int height, unsigned int width, unsigned char* data)
 {
 	unsigned int realWidth = width;
@@ -118,6 +123,7 @@ void closeGifFile(GifFileType* gif)
 	DGifCloseFile(gif);
 }
 
+#endif
 
 /* vim: set expandtab ai ts=4 sw=4 nu:
 */

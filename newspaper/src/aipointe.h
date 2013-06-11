@@ -1,5 +1,6 @@
 #ifndef __AIPOINTE_H
 #define __AIPOINTE_H
+#include "../config.h"
 
 // http://www.dafont.com/ai-pointe.font
 

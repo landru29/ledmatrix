@@ -1,5 +1,6 @@
 #ifndef __BIT_ARRAY_H
 #define __BIT_ARRAY_H
+#include "../config.h"
 
 int bitarray_copy(
 	const unsigned char *src_org,

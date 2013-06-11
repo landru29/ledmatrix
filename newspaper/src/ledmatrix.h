@@ -11,6 +11,7 @@
 #define __LEDMATRIX_H
 
 #include "font.h"
+#include "../config.h"
 
 /**
  * Structure de la matrice

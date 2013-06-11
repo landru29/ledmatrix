@@ -1,6 +1,8 @@
 #ifndef __PERSO_H
 #define __PERSO_H
 
+#include "../config.h"
+
 // http://www.dafont.com/ai-pointe.font
 
 char perso_mapping[] =
