@@ -55,8 +55,8 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
  *
  * @param filename   	filename of the GIF 
  *
- * @return Animation 	gif struct
- */
+ * @return Animation gif struct
+ **/
 GIFANIMATION* openGifFile(char* filename)
 {
 	GIFANIMATION* gif;
@@ -84,7 +84,7 @@ GIFANIMATION* openGifFile(char* filename)
  * Close a GIF animation
  *
  * @param gif	animation to close
- */
+ **/
 void closeGifFile(GIFANIMATION* gif)
 {
 #ifdef HAS_GIF_LIB
