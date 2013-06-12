@@ -53,9 +53,9 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 /**
  * Create a new GIF animation
  *
- * @param  filename   filename of the GIF 
+ * @param filename   	filename of the GIF 
  *
- * @return Animation gif struct
+ * @return Animation 	gif struct
  */
 GIFANIMATION* openGifFile(char* filename)
 {
@@ -83,7 +83,7 @@ GIFANIMATION* openGifFile(char* filename)
 /**
  * Close a GIF animation
  *
- * @param gif animation to close
+ * @param gif	animation to close
  */
 void closeGifFile(GIFANIMATION* gif)
 {
