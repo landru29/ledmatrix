@@ -53,9 +53,9 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 /**
  * Create a new GIF animation
  *
- * @param  chr* filename   filename of the GIF 
+ * @param  filename   filename of the GIF 
  *
- * @return GIFANIMATION*   Animation
+ * @return Animation gif struct
  */
 GIFANIMATION* openGifFile(char* filename)
 {
@@ -83,7 +83,7 @@ GIFANIMATION* openGifFile(char* filename)
 /**
  * Close a GIF animation
  *
- * @param  GIFANIMATION* gif animation to close
+ * @param gif animation to close
  */
 void closeGifFile(GIFANIMATION* gif)
 {
@@ -95,6 +95,21 @@ void closeGifFile(GIFANIMATION* gif)
 
 
 #ifdef HAS_GIF_LIB
+
+/**
+ * Extract a rectangle from a GIF file
+ * 
+ * @param gif		gif descriptor
+ * @param frameNum  frame number of the image
+ * @param top       number of pixels from the top
+ * @param left      number of pixels from the left
+ * @param height    height of the rectangle in pixels
+ * @param width     width of the rectangle in pixels
+ * @param data      destination of the rectangle. You must perform the memory allocation before.
+ * 
+ * @return Gif status
+ * 
+ **/
 int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, unsigned int left, unsigned int height, unsigned int width, unsigned char* data)
 {
 	unsigned int realWidth = width;
@@ -116,6 +131,18 @@ int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, 
 	return GIF_OK;
 }
 
+/**
+ * convert a rectangle to matrix data
+ * 
+ * @param matrixData  destination of the data. You must perform the memory allocation before.
+ * @param data        image rectangle (from extractRectangle() function).
+ * @param height      height of the rectangle in pixels
+ * @param width       width of the rectangle in pixels
+ * @param bgcolor     index of the background color
+ * 
+ * @return Gif status
+ * 
+ * */
 int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned int height, unsigned int width, unsigned char bgColor)
 {
 	unsigned int x;
@@ -135,6 +162,13 @@ int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned in
 	return GIF_OK;
 }
 
+/**
+ * Debug a rectangle to the console
+ * 
+ * @param data        image rectangle (from extractRectangle() function).
+ * @param height      height of the rectangle in pixels
+ * @param width       width of the rectangle in pixels
+ **/
 void printRectangle(unsigned char* data, unsigned int height, unsigned int width)
 {
 	unsigned int x;

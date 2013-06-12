@@ -19,6 +19,7 @@
  * @param endFrameNumber    End frame of the animation
  * @param step              Step counter
  * @param millitime         Delay between two frames (in milliseconds)
+ * @param userData			User data to pass to the animation function
  *
  * @return struct animation
  */
@@ -96,7 +97,6 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation) 
  *
  * @param matrix    matrix on which the animation is played
  * @param animation animation to play
- * @param userData  number of animations
  *
  * @return Animation's status
  */
@@ -130,7 +130,6 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
  *
  * @param matrix     matrix on which the animation is played
  * @param animations animation to play
- * @param userData   number of animations
  *
  * @return Animation's status
  */

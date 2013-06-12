@@ -15,7 +15,7 @@
  * Create a new font
  *
  * @param data            Tableau de la fonte au format binaire
- * @param allocationTable Tableau d'information de positionnement et de taille des caractères
+ * @param sizeTable       Tableau d'information de taille des caractères
  * @param mapping         Mapping des caractères ascii et de la fonte
  * @param fontHeight      Hauteur de la fonte
  *
