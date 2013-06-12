@@ -87,7 +87,9 @@ GIFANIMATION* openGifFile(char* filename)
  */
 void closeGifFile(GIFANIMATION* gif)
 {
+#ifdef HAS_GIF_LIB
 	DGifCloseFile(gif->gif);
+#endif
 	free(gif);
 }
 
