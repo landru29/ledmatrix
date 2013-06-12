@@ -12,17 +12,23 @@
 
   <target name="build" depends="compile,sloccount,doxygen" />
 
+  <target name="check-Makefile">
+    <available file="${build.native}/Makefile" property="makefile.present"/>
+  </target>
   <target name="compile"
         description="compile the source"
         depends="clean">
+    <exec dir="${build.native}" executable=".configure" failonerror="false">
     <exec dir="${build.native}" executable="${make.cmd}" failonerror="false">
     </exec>
   </target>
 
   <target name="clean"
-        description="clean binaries" >
+        description="clean binaries"
+        depends="check-Makefile"
+        if="makefile.present">
     <exec dir="${build.native}" executable="${make.cmd}" failonerror="true">
-    <arg value="mrproper"/>
+    <arg value="clean"/>
     </exec>
   </target>
 

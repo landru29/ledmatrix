@@ -1,3 +1,7 @@
 build/
 newspaper
 test
+Makefile
+config.h
+config.log
+config.status
