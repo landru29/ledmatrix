@@ -12,16 +12,16 @@
 
   <target name="build" depends="sloccount,doxygen,compile" />
 
-  <target name="check-Makefile">
+  <!-- configuration du projet -->
+  <target name="configure"
+        description="configure the project">
+    <exec dir="${build.native}" executable="./configure" failonerror="false"/>
+  </target>
+  <!-- Verifie la presence du fichier Makefile -->
+  <target name="check-Makefile" depends="configure">
     <available file="${build.native}/Makefile" property="makefile.present"/>
   </target>
-  <target name="compile"
-        description="compile the source"
-        depends="clean">
-    <exec dir="${build.native}" executable="./configure" failonerror="false"/>
-    <exec dir="${build.native}" executable="${make.cmd}" failonerror="false"/>
-  </target>
-
+  <!-- Nettoie le projet -->
   <target name="clean"
         description="clean binaries"
         depends="check-Makefile"
@@ -30,6 +30,13 @@
       <arg value="clean"/>
     </exec>
   </target>
+  <!-- Compile le projet -->
+  <target name="compile"
+        description="compile the source"
+        depends="clean">
+    <exec dir="${build.native}" executable="${make.cmd}" failonerror="false"/>
+  </target>
+
 
   <target name="sloccount"
           description="Source Lines Of Code count" >
