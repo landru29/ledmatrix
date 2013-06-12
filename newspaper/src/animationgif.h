@@ -16,6 +16,17 @@
 #ifdef HAS_GIF_LIB
 #include <gif_lib.h>
 #endif
+
+typedef struct {
+#ifdef HAS_GIF_LIB
+	GifFileType* gif;
+#endif
+	int frameNumber;
+} GIFANIMATION;
+
+
+
+
 /**
  * Animation that play an animated gif
  *
@@ -27,12 +38,22 @@
  */
 int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData);
 
-#ifdef HAS_GIF_LIB
+/**
+ * Create a new GIF animation
+ *
+ * @param  chr* filename   filename of the GIF 
+ *
+ * @return GIFANIMATION*   Animation
+ */
+GIFANIMATION* openGifFile(char* filename);
 
-GifFileType* openGifFile(char* filename);
+/**
+ * Close a GIF animation
+ *
+ * @param  GIFANIMATION* gif animation to close
+ */
+void closeGifFile(GIFANIMATION* gif);
 
-void closeGifFile(GifFileType* gif);
-#endif
 
 #endif
 

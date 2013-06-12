@@ -50,6 +50,48 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 	return ANIMATION_SUCCESS;
 }
 
+/**
+ * Create a new GIF animation
+ *
+ * @param  chr* filename   filename of the GIF 
+ *
+ * @return GIFANIMATION*   Animation
+ */
+GIFANIMATION* openGifFile(char* filename)
+{
+	GIFANIMATION* gif;
+	gif = (GIFANIMATION*) malloc(sizeof(GIFANIMATION));
+	
+#ifdef HAS_GIF_LIB
+	if ((gif->gif = DGifOpenFileName("foo2.gif")) == 0) {
+		printf("An error occured while opening\n");
+		return 0;
+	}
+	
+	if (DGifSlurp(gif->gif) != GIF_OK) {
+		printf("An error occured while reading\n");
+		return 0;
+	}
+	
+	gif->frameNumber = gif->gif->ImageCount;
+#else
+	gif->frameNumber = 0;
+#endif
+	return gif;
+}
+
+/**
+ * Close a GIF animation
+ *
+ * @param  GIFANIMATION* gif animation to close
+ */
+void closeGifFile(GIFANIMATION* gif)
+{
+	DGifCloseFile(gif->gif);
+	free(gif);
+}
+
+
 #ifdef HAS_GIF_LIB
 int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, unsigned int left, unsigned int height, unsigned int width, unsigned char* data)
 {
@@ -101,26 +143,6 @@ void printRectangle(unsigned char* data, unsigned int height, unsigned int width
 		}
 		printf("\n");
 	}
-}
-
-GifFileType* openGifFile(char* filename)
-{
-	GifFileType* gif;
-	if ((gif = DGifOpenFileName("foo2.gif")) == 0) {
-		printf("An error occured while opening\n");
-		return 0;
-	}
-	
-	if (DGifSlurp(gif) != GIF_OK) {
-		printf("An error occured while reading\n");
-		return 0;
-	}
-	return gif;
-}
-
-void closeGifFile(GifFileType* gif)
-{
-	DGifCloseFile(gif);
 }
 
 #endif
