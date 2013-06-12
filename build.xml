@@ -18,7 +18,7 @@
   <target name="compile"
         description="compile the source"
         depends="clean">
-    <exec dir="${build.native}" executable=".configure" failonerror="false"/>
+    <exec dir="${build.native}" executable="./configure" failonerror="false"/>
     <exec dir="${build.native}" executable="${make.cmd}" failonerror="false"/>
   </target>
 
