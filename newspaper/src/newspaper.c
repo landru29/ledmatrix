@@ -13,7 +13,7 @@
 #include "ledmatrix.h"
 #include "animate.h"
 #include "animationpool.h"
-
+#include "animationgif.h"
 
 #define DISPLAYS 3     // Nombre des matrices
 #define HEIGHT   8     // Nombre de ligne sur une matrice
@@ -49,6 +49,7 @@ int main(int argc, char **argv)
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT* font = 0;
     ANIMATION_QUEUE* animations=0;
+    GIFANIMATION* gif;
     char* message=0;
     int simulated=
 #ifdef __arm__    
@@ -98,7 +99,10 @@ int main(int argc, char **argv)
     usleep(2000*1000);
 
     /* Animation in action */
+    gif = openGifFile("../foo.gif");
     animations = createAnimationQueue();
+    enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
+    
     enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(scrollV, -8, 0, 1, 150, 0));
@@ -114,6 +118,7 @@ int main(int argc, char **argv)
     destroyFont(font);
     closeLedMatrix(matrix);
     destroyAnimationQueue(animations);
+	closeGifFile(gif);
 
     return 0;
 }

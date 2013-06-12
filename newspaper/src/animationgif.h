@@ -21,7 +21,7 @@ typedef struct {
 #ifdef HAS_GIF_LIB
 	GifFileType* gif;
 #endif
-	int frameNumber;
+	int frameCount;
 } GIFANIMATION;
 
 

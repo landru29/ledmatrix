@@ -18,7 +18,7 @@
 
 #ifdef HAS_GIF_LIB
 int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, unsigned int left, unsigned int height, unsigned int width, unsigned char* data);
-int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned int height, unsigned int width);
+int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned int height, unsigned int width, unsigned char bgColor);
 void printRectangle(unsigned char* data, unsigned int height, unsigned int width);
 #endif
 
@@ -34,13 +34,13 @@ void printRectangle(unsigned char* data, unsigned int height, unsigned int width
 int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 #ifdef HAS_GIF_LIB
-	GifFileType* gif = (GifFileType*)userData;
+	GIFANIMATION* gif = (GIFANIMATION*)userData;
 	unsigned char* data;
 	
 	data = (unsigned char*) malloc(matrix->viewportWidth * matrix->viewportHeight*8);
 	
-	extractRectangle(gif, frameNumber, 0, 0, matrix->viewportHeight*8, matrix->viewportWidth, data);
-	rectangle2Matrix(matrix->viewport, data, matrix->viewportHeight*8, matrix->viewportWidth);
+	extractRectangle(gif->gif, gif->frameCount-frameNumber-1, 0, 0, matrix->viewportHeight*8, matrix->viewportWidth, data);
+	rectangle2Matrix(matrix->viewport, data, matrix->viewportHeight*8, matrix->viewportWidth, gif->gif->SBackGroundColor);
 	
 	/* Send the data to the matrix */
 	matrixSendViewport(matrix);
@@ -63,7 +63,7 @@ GIFANIMATION* openGifFile(char* filename)
 	gif = (GIFANIMATION*) malloc(sizeof(GIFANIMATION));
 	
 #ifdef HAS_GIF_LIB
-	if ((gif->gif = DGifOpenFileName("foo2.gif")) == 0) {
+	if ((gif->gif = DGifOpenFileName(filename)) == 0) {
 		printf("An error occured while opening\n");
 		return 0;
 	}
@@ -73,9 +73,9 @@ GIFANIMATION* openGifFile(char* filename)
 		return 0;
 	}
 	
-	gif->frameNumber = gif->gif->ImageCount;
+	gif->frameCount = gif->gif->ImageCount;
 #else
-	gif->frameNumber = 0;
+	gif->frameCount = 0;
 #endif
 	return gif;
 }
@@ -101,7 +101,7 @@ int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, 
 	unsigned int y;
 	
 	if (frameNum>=gif->ImageCount) return GIF_ERROR;
-	memset(data, 0xFF, width*height);
+	memset(data, gif->SBackGroundColor, width*height);
 	
 	if (width+left > gif->SavedImages[frameNum].ImageDesc.Width) realWidth = gif->SavedImages[frameNum].ImageDesc.Width-left;
 	if (height+top > gif->SavedImages[frameNum].ImageDesc.Height) realHeight = gif->SavedImages[frameNum].ImageDesc.Height-top;
@@ -114,7 +114,7 @@ int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, 
 	return GIF_OK;
 }
 
-int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned int height, unsigned int width)
+int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned int height, unsigned int width, unsigned char bgColor)
 {
 	unsigned int x;
 	unsigned int y;
@@ -126,7 +126,7 @@ int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned in
 	for(x=0; x<width; x++) {
 		for(y=0; y<height; y++) {
 			byteOffset = (height-y-1)/8;
-			byte = (data[y*width + x]>0 ? 0 : 1) << y % 8;
+			byte = (data[(height-y-1)*width + x]==bgColor ? 0 : 1) << y % 8;
 			matrixData[(height/8)*x+byteOffset] |= byte;
 		}
 	}
