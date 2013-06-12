@@ -18,9 +18,8 @@
   <target name="compile"
         description="compile the source"
         depends="clean">
-    <exec dir="${build.native}" executable=".configure" failonerror="false">
-    <exec dir="${build.native}" executable="${make.cmd}" failonerror="false">
-    </exec>
+    <exec dir="${build.native}" executable=".configure" failonerror="false"/>
+    <exec dir="${build.native}" executable="${make.cmd}" failonerror="false"/>
   </target>
 
   <target name="clean"
@@ -28,7 +27,7 @@
         depends="check-Makefile"
         if="makefile.present">
     <exec dir="${build.native}" executable="${make.cmd}" failonerror="true">
-    <arg value="clean"/>
+      <arg value="clean"/>
     </exec>
   </target>
 
