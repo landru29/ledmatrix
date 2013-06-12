@@ -23,7 +23,7 @@
  * @return struct animation
  */
 ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
-    unsigned int step, unsigned int millitime)
+    unsigned int step, unsigned int millitime, void* userData)
 {
 	ANIMATION* animation;
 	animation = (ANIMATION*) malloc(sizeof(ANIMATION));
@@ -32,6 +32,7 @@ ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumbe
 	animation->endFrameNumber = endFrameNumber;
 	animation->step = (step<2?1:step);
 	animation->millitime = millitime;
+	animation->userData = userData;
 	return animation;
 }
 
@@ -99,7 +100,7 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation) 
  *
  * @return Animation's status
  */
-int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
+int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
 	unsigned long int animationDelay = 100;
 	int currentFrameNumber;
 	int status = ANIMATION_SUCCESS;
@@ -110,12 +111,12 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
 	/* Launching animation */
 	if (animation->startFrameNumber > animation->endFrameNumber) {
 		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber >= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber -= animation->step) {
-			status = (animation->animation)(matrix, currentFrameNumber, userData);
+			status = (animation->animation)(matrix, currentFrameNumber, animation->userData);
 			usleep(1000*animationDelay);
 		}
 	} else {
 		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber <= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber += animation->step) {
-			status = (animation->animation)(matrix, currentFrameNumber, userData);
+			status = (animation->animation)(matrix, currentFrameNumber, animation->userData);
 			usleep(1000*animationDelay);
 		}
 	}
@@ -133,11 +134,11 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData) {
  *
  * @return Animation's status
  */
-int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations, void* userData) {
+int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations) {
 	unsigned int n;
 	int status = ANIMATION_SUCCESS;
 	for(n=0; ((n < animations->len) && (status == ANIMATION_SUCCESS)); n++) {
-		status = animateOne(matrix, animations->animationList[n], userData);
+		status = animateOne(matrix, animations->animationList[n]);
 	}
 	if ((status != ANIMATION_FAILURE) && (n==animations->len)) status = ANIMATION_END;
 	return status;

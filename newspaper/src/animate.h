@@ -46,6 +46,7 @@ typedef struct {
 	int endFrameNumber;
 	unsigned int step;
 	unsigned int millitime;
+	void* userData;
 } ANIMATION;
 
 typedef struct {
@@ -64,7 +65,7 @@ typedef struct {
  * @param millitime         Delay between two frames (in milliseconds)
  */
 ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
-    unsigned int step, unsigned int millitime);
+    unsigned int step, unsigned int millitime, void* userData);
 
 /**
  * Destroy an animation
@@ -102,7 +103,7 @@ ANIMATION_QUEUE* enqueueAnimation(ANIMATION_QUEUE* queue, ANIMATION* animation);
  *
  * @return Animation's status
  */
-int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData);
+int animateOne(LEDMATRIX* matrix, ANIMATION* animation);
 
 /**
  * perform many animations
@@ -113,7 +114,7 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation, void* userData);
  *
  * @return Animation's status
  */
-int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations, void* userData);
+int animate(LEDMATRIX* matrix, ANIMATION_QUEUE* animations);
 
 #endif
 

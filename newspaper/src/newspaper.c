@@ -99,16 +99,16 @@ int main(int argc, char **argv)
 
     /* Animation in action */
     animations = createAnimationQueue();
-    enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150));
-    enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500));
-    enqueueAnimation(animations, createAnimation(scrollV, -8, 0, 1, 150));
-    enqueueAnimation(animations, createAnimation(blink, 0, 1, 1, 2000));
-    enqueueAnimation(animations, createAnimation(scrollH, 0, DISPLAYS*WIDTH, 2, 150));
-    enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500));
-    enqueueAnimation(animations, createAnimation(scrollH, DISPLAYS*WIDTH, 0-(strlen(message)*8), 2, 150));
-    enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500));
-    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150));
-    animate(matrix, animations, 0);
+    enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
+    enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
+    enqueueAnimation(animations, createAnimation(scrollV, -8, 0, 1, 150, 0));
+    enqueueAnimation(animations, createAnimation(blink, 0, 1, 1, 2000, 0));
+    enqueueAnimation(animations, createAnimation(scrollH, 0, DISPLAYS*WIDTH, 2, 150, 0));
+    enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
+    enqueueAnimation(animations, createAnimation(scrollH, DISPLAYS*WIDTH, 0-(strlen(message)*8), 2, 150, 0));
+    enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
+    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));
+    animate(matrix, animations);
 
 	/* Cleaning everything */
     destroyFont(font);
