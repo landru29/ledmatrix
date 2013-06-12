@@ -53,10 +53,10 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 /**
  * Create a new GIF animation
  *
- * @param filename   	filename of the GIF 
+ * @param filename filename of the GIF 
  *
  * @return Animation gif struct
- **/
+ */
 GIFANIMATION* openGifFile(char* filename)
 {
 	GIFANIMATION* gif;
@@ -83,8 +83,8 @@ GIFANIMATION* openGifFile(char* filename)
 /**
  * Close a GIF animation
  *
- * @param gif	animation to close
- **/
+ * @param gif animation to close
+ */
 void closeGifFile(GIFANIMATION* gif)
 {
 #ifdef HAS_GIF_LIB
@@ -109,7 +109,7 @@ void closeGifFile(GIFANIMATION* gif)
  * 
  * @return Gif status
  * 
- **/
+ */
 int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, unsigned int left, unsigned int height, unsigned int width, unsigned char* data)
 {
 	unsigned int realWidth = width;
