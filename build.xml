@@ -10,7 +10,7 @@
   <property name="build.src" value="./newspaper/src"/>
   <property name="basedir" value="./"/>
 
-  <target name="build" depends="compile,sloccount,doxygen" />
+  <target name="build" depends="sloccount,doxygen,compile" />
 
   <target name="check-Makefile">
     <available file="${build.native}/Makefile" property="makefile.present"/>
