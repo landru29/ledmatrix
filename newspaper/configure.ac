@@ -3,9 +3,13 @@
 
 AC_PREREQ([2.69])
 AC_INIT([newspaper], [1.0], [noreply@gmail.com])
+LT_INIT
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/ledmatrix.h])
+AC_CONFIG_SRCDIR([src/plugins/animation.h])
 AC_CONFIG_HEADERS([config.h])
+
+AC_CONFIG_MACRO_DIR([m4])
 
 # Checks for programs.
 AC_PROG_CC
@@ -35,5 +39,5 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset strdup strerror])
 
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile])
 AC_OUTPUT

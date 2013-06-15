@@ -6,6 +6,9 @@
 /* Define to 1 if you have the 'wiringPi' library. */
 #undef HAS_WIRING_PI
 
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
 /* Define to 1 if you have the <gif_lib.h> header file. */
 #undef HAVE_GIF_LIB_H
 
@@ -73,6 +76,10 @@
 
 /* Define to 1 if you have the <wiringPi.h> header file. */
 #undef HAVE_WIRINGPI_H
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
 
 /* Name of package */
 #undef PACKAGE
