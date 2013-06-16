@@ -1,19 +1,19 @@
 ACLOCAL_AMFLAGS = -I m4
 
-lib_LTLIBRARIES = libscrollh.la libscrollv.la libintervalle.la libblink.la libgif.la
+lib_LTLIBRARIES = libmatrixScrollh.la libmatrixScrollv.la libmatrixIntervalle.la libmatrixBlink.la libmatrixGif.la
 
-libscrollh_la_SOURCES = scrollh.c
-libscrollh_la_LDFLAGS = -version-info 0:0:0
+libmatrixScrollh_la_SOURCES = scrollh.c
+libmatrixScrollh_la_LDFLAGS = -version-info 0:0:0
 
-libscrollv_la_SOURCES = scrollv.c
-libscrollv_la_LDFLAGS = -version-info 0:0:0
+libmatrixScrollv_la_SOURCES = scrollv.c
+libmatrixScrollv_la_LDFLAGS = -version-info 0:0:0
 
 
-libintervalle_la_SOURCES = intervalle.c
-libintervalle_la_LDFLAGS = -version-info 0:0:0
+libmatrixIntervalle_la_SOURCES = intervalle.c
+libmatrixIntervalle_la_LDFLAGS = -version-info 0:0:0
 
-libblink_la_SOURCES = blink.c
-libblink_la_LDFLAGS = -version-info 0:0:0
+libmatrixBlink_la_SOURCES = blink.c
+libmatrixBlink_la_LDFLAGS = -version-info 0:0:0
 
-libgif_la_SOURCES = gif.c
-libgif_la_LDFLAGS = -version-info 0:0:0
+libmatrixGif_la_SOURCES = gif.c
+libmatrixGif_la_LDFLAGS = -version-info 0:0:0

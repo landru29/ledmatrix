@@ -90,36 +90,36 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libblink_la_LIBADD =
-am_libblink_la_OBJECTS = blink.lo
-libblink_la_OBJECTS = $(am_libblink_la_OBJECTS)
-libblink_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+libmatrixBlink_la_LIBADD =
+am_libmatrixBlink_la_OBJECTS = blink.lo
+libmatrixBlink_la_OBJECTS = $(am_libmatrixBlink_la_OBJECTS)
+libmatrixBlink_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libblink_la_LDFLAGS) $(LDFLAGS) -o $@
-libgif_la_LIBADD =
-am_libgif_la_OBJECTS = gif.lo
-libgif_la_OBJECTS = $(am_libgif_la_OBJECTS)
-libgif_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(libmatrixBlink_la_LDFLAGS) $(LDFLAGS) -o $@
+libmatrixGif_la_LIBADD =
+am_libmatrixGif_la_OBJECTS = gif.lo
+libmatrixGif_la_OBJECTS = $(am_libmatrixGif_la_OBJECTS)
+libmatrixGif_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libgif_la_LDFLAGS) $(LDFLAGS) -o $@
-libintervalle_la_LIBADD =
-am_libintervalle_la_OBJECTS = intervalle.lo
-libintervalle_la_OBJECTS = $(am_libintervalle_la_OBJECTS)
-libintervalle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(libmatrixGif_la_LDFLAGS) $(LDFLAGS) -o $@
+libmatrixIntervalle_la_LIBADD =
+am_libmatrixIntervalle_la_OBJECTS = intervalle.lo
+libmatrixIntervalle_la_OBJECTS = $(am_libmatrixIntervalle_la_OBJECTS)
+libmatrixIntervalle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libintervalle_la_LDFLAGS) $(LDFLAGS) -o $@
-libscrollh_la_LIBADD =
-am_libscrollh_la_OBJECTS = scrollh.lo
-libscrollh_la_OBJECTS = $(am_libscrollh_la_OBJECTS)
-libscrollh_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(libmatrixIntervalle_la_LDFLAGS) $(LDFLAGS) -o $@
+libmatrixScrollh_la_LIBADD =
+am_libmatrixScrollh_la_OBJECTS = scrollh.lo
+libmatrixScrollh_la_OBJECTS = $(am_libmatrixScrollh_la_OBJECTS)
+libmatrixScrollh_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libscrollh_la_LDFLAGS) $(LDFLAGS) -o $@
-libscrollv_la_LIBADD =
-am_libscrollv_la_OBJECTS = scrollv.lo
-libscrollv_la_OBJECTS = $(am_libscrollv_la_OBJECTS)
-libscrollv_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(libmatrixScrollh_la_LDFLAGS) $(LDFLAGS) -o $@
+libmatrixScrollv_la_LIBADD =
+am_libmatrixScrollv_la_OBJECTS = scrollv.lo
+libmatrixScrollv_la_OBJECTS = $(am_libmatrixScrollv_la_OBJECTS)
+libmatrixScrollv_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(libscrollv_la_LDFLAGS) $(LDFLAGS) -o $@
+	$(libmatrixScrollv_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -133,12 +133,12 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libblink_la_SOURCES) $(libgif_la_SOURCES) \
-	$(libintervalle_la_SOURCES) $(libscrollh_la_SOURCES) \
-	$(libscrollv_la_SOURCES)
-DIST_SOURCES = $(libblink_la_SOURCES) $(libgif_la_SOURCES) \
-	$(libintervalle_la_SOURCES) $(libscrollh_la_SOURCES) \
-	$(libscrollv_la_SOURCES)
+SOURCES = $(libmatrixBlink_la_SOURCES) $(libmatrixGif_la_SOURCES) \
+	$(libmatrixIntervalle_la_SOURCES) \
+	$(libmatrixScrollh_la_SOURCES) $(libmatrixScrollv_la_SOURCES)
+DIST_SOURCES = $(libmatrixBlink_la_SOURCES) $(libmatrixGif_la_SOURCES) \
+	$(libmatrixIntervalle_la_SOURCES) \
+	$(libmatrixScrollh_la_SOURCES) $(libmatrixScrollv_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -261,17 +261,17 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-lib_LTLIBRARIES = libscrollh.la libscrollv.la libintervalle.la libblink.la libgif.la
-libscrollh_la_SOURCES = scrollh.c
-libscrollh_la_LDFLAGS = -version-info 0:0:0
-libscrollv_la_SOURCES = scrollv.c
-libscrollv_la_LDFLAGS = -version-info 0:0:0
-libintervalle_la_SOURCES = intervalle.c
-libintervalle_la_LDFLAGS = -version-info 0:0:0
-libblink_la_SOURCES = blink.c
-libblink_la_LDFLAGS = -version-info 0:0:0
-libgif_la_SOURCES = gif.c
-libgif_la_LDFLAGS = -version-info 0:0:0
+lib_LTLIBRARIES = libmatrixScrollh.la libmatrixScrollv.la libmatrixIntervalle.la libmatrixBlink.la libmatrixGif.la
+libmatrixScrollh_la_SOURCES = scrollh.c
+libmatrixScrollh_la_LDFLAGS = -version-info 0:0:0
+libmatrixScrollv_la_SOURCES = scrollv.c
+libmatrixScrollv_la_LDFLAGS = -version-info 0:0:0
+libmatrixIntervalle_la_SOURCES = intervalle.c
+libmatrixIntervalle_la_LDFLAGS = -version-info 0:0:0
+libmatrixBlink_la_SOURCES = blink.c
+libmatrixBlink_la_LDFLAGS = -version-info 0:0:0
+libmatrixGif_la_SOURCES = gif.c
+libmatrixGif_la_LDFLAGS = -version-info 0:0:0
 all: all-am
 
 .SUFFIXES:
@@ -338,16 +338,16 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libblink.la: $(libblink_la_OBJECTS) $(libblink_la_DEPENDENCIES) $(EXTRA_libblink_la_DEPENDENCIES) 
-	$(libblink_la_LINK) -rpath $(libdir) $(libblink_la_OBJECTS) $(libblink_la_LIBADD) $(LIBS)
-libgif.la: $(libgif_la_OBJECTS) $(libgif_la_DEPENDENCIES) $(EXTRA_libgif_la_DEPENDENCIES) 
-	$(libgif_la_LINK) -rpath $(libdir) $(libgif_la_OBJECTS) $(libgif_la_LIBADD) $(LIBS)
-libintervalle.la: $(libintervalle_la_OBJECTS) $(libintervalle_la_DEPENDENCIES) $(EXTRA_libintervalle_la_DEPENDENCIES) 
-	$(libintervalle_la_LINK) -rpath $(libdir) $(libintervalle_la_OBJECTS) $(libintervalle_la_LIBADD) $(LIBS)
-libscrollh.la: $(libscrollh_la_OBJECTS) $(libscrollh_la_DEPENDENCIES) $(EXTRA_libscrollh_la_DEPENDENCIES) 
-	$(libscrollh_la_LINK) -rpath $(libdir) $(libscrollh_la_OBJECTS) $(libscrollh_la_LIBADD) $(LIBS)
-libscrollv.la: $(libscrollv_la_OBJECTS) $(libscrollv_la_DEPENDENCIES) $(EXTRA_libscrollv_la_DEPENDENCIES) 
-	$(libscrollv_la_LINK) -rpath $(libdir) $(libscrollv_la_OBJECTS) $(libscrollv_la_LIBADD) $(LIBS)
+libmatrixBlink.la: $(libmatrixBlink_la_OBJECTS) $(libmatrixBlink_la_DEPENDENCIES) $(EXTRA_libmatrixBlink_la_DEPENDENCIES) 
+	$(libmatrixBlink_la_LINK) -rpath $(libdir) $(libmatrixBlink_la_OBJECTS) $(libmatrixBlink_la_LIBADD) $(LIBS)
+libmatrixGif.la: $(libmatrixGif_la_OBJECTS) $(libmatrixGif_la_DEPENDENCIES) $(EXTRA_libmatrixGif_la_DEPENDENCIES) 
+	$(libmatrixGif_la_LINK) -rpath $(libdir) $(libmatrixGif_la_OBJECTS) $(libmatrixGif_la_LIBADD) $(LIBS)
+libmatrixIntervalle.la: $(libmatrixIntervalle_la_OBJECTS) $(libmatrixIntervalle_la_DEPENDENCIES) $(EXTRA_libmatrixIntervalle_la_DEPENDENCIES) 
+	$(libmatrixIntervalle_la_LINK) -rpath $(libdir) $(libmatrixIntervalle_la_OBJECTS) $(libmatrixIntervalle_la_LIBADD) $(LIBS)
+libmatrixScrollh.la: $(libmatrixScrollh_la_OBJECTS) $(libmatrixScrollh_la_DEPENDENCIES) $(EXTRA_libmatrixScrollh_la_DEPENDENCIES) 
+	$(libmatrixScrollh_la_LINK) -rpath $(libdir) $(libmatrixScrollh_la_OBJECTS) $(libmatrixScrollh_la_LIBADD) $(LIBS)
+libmatrixScrollv.la: $(libmatrixScrollv_la_OBJECTS) $(libmatrixScrollv_la_DEPENDENCIES) $(EXTRA_libmatrixScrollv_la_DEPENDENCIES) 
+	$(libmatrixScrollv_la_LINK) -rpath $(libdir) $(libmatrixScrollv_la_OBJECTS) $(libmatrixScrollv_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

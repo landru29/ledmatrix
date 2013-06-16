@@ -66,7 +66,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_newspaper_OBJECTS = animate.$(OBJEXT) animationpool.$(OBJEXT) \
 	display.$(OBJEXT) ledmatrix.$(OBJEXT) animationgif.$(OBJEXT) \
-	bit_array.$(OBJEXT) font.$(OBJEXT) newspaper.$(OBJEXT)
+	bit_array.$(OBJEXT) font.$(OBJEXT) newspaper.$(OBJEXT) \
+	plugins.$(OBJEXT)
 newspaper_OBJECTS = $(am_newspaper_OBJECTS)
 newspaper_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -206,23 +207,25 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 newspaper_SOURCES = \
-	animate.c \
-	animationpool.c \
-	display.c \
-	ledmatrix.c \
-	animationgif.c \
-	bit_array.c \
-	font.c \
-	newspaper.c \
-	aipointe.h \
-	animationpool.h \
-	font.h \
-	animate.h \
-	bit_array.h \
-	ledmatrix.h \
-	animationgif.h \
-	display.h \
-	perso.h
+    animate.c \
+    animationpool.c \
+    display.c \
+    ledmatrix.c \
+    animationgif.c \
+    bit_array.c \
+    font.c \
+    newspaper.c \
+    plugins.c \
+    aipointe.h \
+    animationpool.h \
+    font.h \
+    animate.h \
+    bit_array.h \
+    ledmatrix.h \
+    animationgif.h \
+    display.h \
+    perso.h \
+    plugins.h
 
 all: all-am
 
@@ -322,6 +325,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/font.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrix.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/plugins.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
