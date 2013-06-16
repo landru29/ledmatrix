@@ -62,6 +62,7 @@ int main(int argc, char **argv)
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT* font = 0;
     ANIMATION_QUEUE* animations=0;
+    plugin_function getFrames;
     char* message=0;
     int simulated=
 #ifdef __arm__    
@@ -102,6 +103,9 @@ int main(int argc, char **argv)
                 break;
         }
     }
+#ifndef __arm__     
+    simulated = 1;
+#endif
 
 	/* check if a message was specified */
     if ((!message) || (!*message)) {
@@ -117,24 +121,20 @@ int main(int argc, char **argv)
     matrixPushString(matrix, message);
     
     /* Switch on the simulator */
-    if (simulated) matrixSetDebugMode(matrix, 1);
-    
-    /* Wait for a while */
-    /* usleep(2000*1000);*/
+    if (simulated) {
+		matrixSetDebugMode(matrix, 1);
+		matrixDebugInit();
+	}
 
     /* Animation in action */
     animations = createAnimationQueue();
     
     /* getting animation from plugin */
-    
     plugAnimation = getPluginAnimation(plugins, "scrollV");
     if (plugAnimation) {
 		if (plugAnimation->creation)
 			userData = (plugAnimation->creation)();
-		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, -8, 1, 150, userData));
-		/* On ne peut détroire le userData que lorsque l'animation est terminée */
-		/*if (plugAnimation->destruction)
-			(plugAnimation->destruction)(userData);*/
+		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, -8, 1, 150, userData, plugAnimation->destruction));
 		userData = 0;
 	}
 	
@@ -142,10 +142,8 @@ int main(int argc, char **argv)
     if (plugAnimation) {
 		if (plugAnimation->creation)
 			userData = (plugAnimation->creation)("foo.gif");
-		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 0, 8, 1, 150, userData));
-		/* On ne peut détroire le userData que lorsque l'animation est terminée */
-		/*if (plugAnimation->destruction)
-			(plugAnimation->destruction)(userData);*/
+		getFrames = getPluginFunction(plugAnimation, "getFrames");
+		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 0, getFrames(userData), 1, 150, userData, plugAnimation->destruction));
 		userData = 0;
 	}
     

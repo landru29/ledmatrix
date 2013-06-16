@@ -66,7 +66,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_newspaper_OBJECTS = animate.$(OBJEXT) display.$(OBJEXT) \
 	ledmatrix.$(OBJEXT) bit_array.$(OBJEXT) font.$(OBJEXT) \
-	newspaper.$(OBJEXT) plugins.$(OBJEXT)
+	newspaper.$(OBJEXT) plugins.$(OBJEXT) animation.$(OBJEXT)
 newspaper_OBJECTS = $(am_newspaper_OBJECTS)
 newspaper_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -213,6 +213,7 @@ newspaper_SOURCES = \
     font.c \
     newspaper.c \
     plugins.c \
+    plugins/animation.c \
     aipointe.h \
     font.h \
     animate.h \
@@ -220,7 +221,8 @@ newspaper_SOURCES = \
     ledmatrix.h \
     display.h \
     perso.h \
-    plugins.h
+    plugins.h \
+    plugins/animation.h
 
 all: all-am
 
@@ -313,6 +315,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/animate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/animation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bit_array.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/display.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/font.Po@am__quote@
@@ -340,6 +343,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+animation.o: plugins/animation.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT animation.o -MD -MP -MF $(DEPDIR)/animation.Tpo -c -o animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/animation.Tpo $(DEPDIR)/animation.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='animation.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
+
+animation.obj: plugins/animation.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT animation.obj -MD -MP -MF $(DEPDIR)/animation.Tpo -c -o animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/animation.Tpo $(DEPDIR)/animation.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='animation.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

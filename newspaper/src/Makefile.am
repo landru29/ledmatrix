@@ -7,6 +7,7 @@ newspaper_SOURCES = \
     font.c \
     newspaper.c \
     plugins.c \
+    plugins/animation.c \
     aipointe.h \
     font.h \
     animate.h \
@@ -14,4 +15,5 @@ newspaper_SOURCES = \
     ledmatrix.h \
     display.h \
     perso.h \
-    plugins.h
+    plugins.h \
+    plugins/animation.h

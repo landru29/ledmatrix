@@ -38,34 +38,12 @@ char* getExtension(char* filename)
  **/
 HOSTFUNCTION** getHostFunctions()
 {
+	HOSTFUNCTIONLIST temp = initializeFunctionList();
+	temp = appendFunction(temp, "matrixSendViewport", (host_function)matrixSendViewport);
+	temp = appendFunction(temp, "matrixClearViewport", (host_function)matrixClearViewport);
 #ifdef __arm__
-	#define NB_HOST_FUNCTIONS 3
-#else
-	#define NB_HOST_FUNCTIONS 2
+	temp = appendFunction(temp, "displayBlink", (host_function)displayBlink);
 #endif
-	HOSTFUNCTION** temp;
-	HOSTFUNCTION* matrixSendViewportFct;
-	HOSTFUNCTION* matrixClearViewportFct;
-	HOSTFUNCTION* displayBlinkFct;
-	temp = (HOSTFUNCTION**)malloc(sizeof(HOSTFUNCTION*) * (NB_HOST_FUNCTIONS+1));
-	temp[NB_HOST_FUNCTIONS]=0;
-	
-	matrixSendViewportFct = (HOSTFUNCTION*)malloc(sizeof(HOSTFUNCTION));
-	matrixSendViewportFct->name = strdup("matrixSendViewport");
-	matrixSendViewportFct->runtime = matrixSendViewport;
-	temp[0] = matrixSendViewportFct;
-	
-	matrixClearViewportFct = (HOSTFUNCTION*)malloc(sizeof(HOSTFUNCTION));
-	matrixClearViewportFct->name = strdup("matrixClearViewport");
-	matrixClearViewportFct->runtime = matrixClearViewport;
-	temp[1] = matrixClearViewportFct;
-
-#ifdef __arm__
-	displayBlinkFct = (HOSTFUNCTION*)malloc(sizeof(HOSTFUNCTION));
-	displayBlinkFct->name = strdup("displayBlink");
-	displayBlinkFct->runtime = displayBlink;
-	temp[2] = displayBlinkFct;
-#endif	
 	return temp;
 }
 

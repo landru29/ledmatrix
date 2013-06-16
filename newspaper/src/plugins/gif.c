@@ -99,6 +99,7 @@ void closeGifFile(GIFANIMATION* gif)
 #endif
 	if (gif)
 		free(gif);
+	fprintf(stdout, "gif closed\n");
 }
 
 
@@ -189,6 +190,11 @@ void printRectangle(unsigned char* data, unsigned int height, unsigned int width
 	}
 }
 
+int getFrames(GIFANIMATION* gif)
+{
+	return gif->frameCount;
+}
+
 /**
  * Return the name of the animation function
  * 
@@ -196,13 +202,10 @@ void printRectangle(unsigned char* data, unsigned int height, unsigned int width
  **/
 ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
 {
-	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
-	temp->name = strdup("gif");
-	temp->runtime = gifAnimation;
-	temp->creation = (userdata_function)openGifFile;
-	temp->destruction = (userdata_function)closeGifFile;
 	hostFunctions = hostFunc;
-	return temp;
+	ANIMATIONPLUGIN* plug = createAnimationPlugin("gif", gifAnimation, (userdata_function)openGifFile, (userdata_function)closeGifFile);
+	pluginAppendFunction(plug, "getFrames", getFrames);
+	return plug;
 }
 
 #endif

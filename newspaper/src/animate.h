@@ -31,7 +31,7 @@
 */
 #define MYCALL
 #endif
-#endif  /* not defined XMLCALL */
+#endif  /* not defined MYCALL */
 
 
 #define ANIMATION_FAILURE -1
@@ -39,6 +39,7 @@
 #define ANIMATION_END 1
 
 typedef int (MYCALL *animationFrame) (LEDMATRIX* matrix, int frameNumber, void* userData);
+typedef void (*userDataDestructor) ();
 
 typedef struct {
 	animationFrame animation;
@@ -47,6 +48,7 @@ typedef struct {
 	unsigned int step;
 	unsigned int millitime;
 	void* userData;
+	userDataDestructor destructor;
 } ANIMATION;
 
 typedef struct {
@@ -66,7 +68,7 @@ typedef struct {
  * @param userData			User data to pass to the animation function
  */
 ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
-    unsigned int step, unsigned int millitime, void* userData);
+    unsigned int step, unsigned int millitime, void* userData, userDataDestructor destructor);
 
 /**
  * Destroy an animation

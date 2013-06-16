@@ -35,14 +35,9 @@ int interval(LEDMATRIX* matrix, int frameNumber, void* userData)
  * @return animation plugin
  **/
 ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
-{
-	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
-	temp->name = strdup("interval");
-	temp->runtime = interval;
-	temp->creation = 0;
-	temp->destruction = 0;
+{	
 	hostFunctions = hostFunc;
-	return temp;
+	return createAnimationPlugin("intervalle", interval, 0, 0);
 }
 
 /* vim: set expandtab ai ts=4 sw=4 nu:

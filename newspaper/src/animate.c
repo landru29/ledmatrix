@@ -24,7 +24,7 @@
  * @return struct animation
  */
 ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
-    unsigned int step, unsigned int millitime, void* userData)
+    unsigned int step, unsigned int millitime, void* userData, userDataDestructor destructor)
 {
 	ANIMATION* animation;
 	animation = (ANIMATION*) malloc(sizeof(ANIMATION));
@@ -34,6 +34,7 @@ ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumbe
 	animation->step = (step<2?1:step);
 	animation->millitime = millitime;
 	animation->userData = userData;
+	animation->destructor = destructor;
 	return animation;
 }
 
@@ -122,6 +123,10 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
 	}
 	/* checking status*/
 	if ((status != ANIMATION_FAILURE) && (currentFrameNumber==animation->endFrameNumber)) status = ANIMATION_END;
+	/* destroying userData */
+	if ((animation->destructor) && (animation->userData)) {
+		(animation->destructor)(animation->userData);
+	}
 	return status;
 }
 
