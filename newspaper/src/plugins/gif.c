@@ -180,6 +180,19 @@ void printRectangle(unsigned char* data, unsigned int height, unsigned int width
 	}
 }
 
+/**
+ * Return the name of the animation function
+ * 
+ * @return animation plugin
+ **/
+ANIMATIONPLUGIN* init()
+{
+	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
+	temp->name = strdup("gif");
+	temp->runtime = gifAnimation;
+	return temp;
+}
+
 #endif
 
 /* vim: set expandtab ai ts=4 sw=4 nu:

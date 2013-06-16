@@ -14,6 +14,10 @@
 #include "../../config.h"
 #include "../ledmatrix.h"
 
+typedef struct {
+	char* name;
+	void* runtime;
+} ANIMATIONPLUGIN;
 
 
 #endif

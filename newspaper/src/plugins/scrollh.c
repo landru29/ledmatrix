@@ -15,16 +15,6 @@
 
 
 /**
- * Return the name of the animation function
- * 
- * @return animation function name
- **/
-char* getName()
-{
-	return strdup("scrollH");
-}
-
-/**
  * Animation that scroll the text horzontally
  *
  * @param  matrix      La matrice
@@ -55,6 +45,19 @@ int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
 
 	/* return the status */
 	return ANIMATION_SUCCESS;
+}
+
+/**
+ * Return the name of the animation function
+ * 
+ * @return animation plugin
+ **/
+ANIMATIONPLUGIN* init()
+{
+	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
+	temp->name = strdup("scrollh");
+	temp->runtime = scrollh;
+	return temp;
 }
 
 /* vim: set expandtab ai ts=4 sw=4 nu:

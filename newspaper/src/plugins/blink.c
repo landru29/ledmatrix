@@ -20,16 +20,6 @@
 #endif
 
 /**
- * Return the name of the animation function
- * 
- * @return animation function name
- **/
-char* getName()
-{
-	return strdup("blink");
-}
-
-/**
  * Animation de clignotement
  *
  * @param  matrix      La matrice
@@ -60,6 +50,19 @@ int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
 #endif
 	/* return the status */
 	return ANIMATION_SUCCESS;
+}
+
+/**
+ * Return the name of the animation function
+ * 
+ * @return animation plugin
+ **/
+ANIMATIONPLUGIN* init()
+{
+	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
+	temp->name = strdup("blink");
+	temp->runtime = blink;
+	return temp;
 }
 
 /* vim: set expandtab ai ts=4 sw=4 nu:

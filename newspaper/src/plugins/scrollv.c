@@ -13,16 +13,6 @@
 #include "animation.h"
 
 /**
- * Return the name of the animation function
- * 
- * @return animation function name
- **/
-char* getName()
-{
-	return strdup("scrollV");
-}
-
-/**
  * Animation that scroll the text vertically
  *
  * @param  matrix      La matrice
@@ -53,6 +43,19 @@ int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData)
 
 	/* return the status */
 	return ANIMATION_SUCCESS;
+}
+
+/**
+ * Return the name of the animation function
+ * 
+ * @return animation plugin
+ **/
+ANIMATIONPLUGIN* init()
+{
+	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
+	temp->name = strdup("scrollv");
+	temp->runtime = scrollv;
+	return temp;
 }
 
 /* vim: set expandtab ai ts=4 sw=4 nu:

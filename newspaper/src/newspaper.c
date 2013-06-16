@@ -14,6 +14,7 @@
 #include "animate.h"
 #include "animationpool.h"
 #include "animationgif.h"
+#include "plugins.h"
 
 #define DISPLAYS 3     // Nombre des matrices
 #define HEIGHT   8     // Nombre de ligne sur une matrice
@@ -32,6 +33,19 @@ void usage(char **argv)
 	fprintf(stdout, "Syntaxe : %s -m message [-d]\n", argv[0]);
 	fprintf(stdout, "\t-m message:\n\t\tmessage to send to the matrix\n");
 	fprintf(stdout, "\t-s:\n\t\tSimulate the matrix\n");
+}
+
+/**
+ * Construit le chemin vers le dossier des plugins   
+ * 
+ * @return chemin absolu vers les plugins
+ */
+char* pluginsFolder()
+{
+	char currentPath[1000];
+	getcwd(currentPath, sizefo(currentPath));
+	strcpy(&currentPath[strlen(currentPath)], "/src/plugins/.libs");
+	return strdup(currentPath);
 }
 
 /**
@@ -85,6 +99,9 @@ int main(int argc, char **argv)
         printf("Le message est vide\n");
         return 0;
     }
+    
+    /* Load plugins */
+    loadPlugins(pluginsFolder());
 
 	/* Matrix initialisation */
     matrix = openLedMatrix(DISPLAYS*WIDTH, HEIGHT);

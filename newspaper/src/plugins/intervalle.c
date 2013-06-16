@@ -12,16 +12,6 @@
 #include <string.h>
 #include "animation.h"
 
-/**
- * Return the name of the animation function
- * 
- * @return animation function name
- **/
-char* getName()
-{
-	return strdup("interval");
-}
-
 
 /**
  * Animation de pause
@@ -36,6 +26,19 @@ int interval(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 	/* return the status */
 	return ANIMATION_SUCCESS;
+}
+
+/**
+ * Return the name of the animation function
+ * 
+ * @return animation plugin
+ **/
+ANIMATIONPLUGIN* init()
+{
+	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
+	temp->name = strdup("interval");
+	temp->runtime = interval;
+	return temp;
 }
 
 /* vim: set expandtab ai ts=4 sw=4 nu:
