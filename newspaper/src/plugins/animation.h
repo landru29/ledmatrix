@@ -14,10 +14,34 @@
 #include "../../config.h"
 #include "../ledmatrix.h"
 
+
+typedef int (*host_function) ();
+
+typedef int (*animation_function) ();
+
 typedef struct {
 	char* name;
-	void* runtime;
+	animation_function runtime;
+	void* _pluginHdl;
 } ANIMATIONPLUGIN;
+
+typedef ANIMATIONPLUGIN* (*init_function) ();
+
+typedef struct {
+	char* name;
+	host_function* runtime;
+} HOSTFUNCTION;
+
+
+/**
+ * recherche une fonction hôte
+ *
+ * @param  hostFunctions  table des fonctions hôtes
+ * @param  name           nom de la fonction
+ *
+ * @return fonction
+ */
+void* getHostFunction(HOSTFUNCTION** hostFunctions, char* name);
 
 
 #endif

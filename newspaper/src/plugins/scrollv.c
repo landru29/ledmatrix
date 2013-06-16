@@ -12,6 +12,8 @@
 #include <string.h>
 #include "animation.h"
 
+HOSTFUNCTION** hostFunctions;
+
 /**
  * Animation that scroll the text vertically
  *
@@ -25,9 +27,15 @@ int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 	unsigned int i;
 	unsigned char data;
+	host_function matrixClearViewportFct;
+	host_function matrixSendViewportFct;
+	
+	/* get functions from host */
+	matrixClearViewportFct = (host_function)getHostFunction(hostFunctions, "matrixClearViewport");
+	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
 
 	/* erase all */
-	matrixClearViewport(matrix);
+	matrixClearViewportFct(matrix);
 
 	for(i=0; i<matrix->modelWidth; i++) {
 		data = matrix->model[i];
@@ -39,7 +47,7 @@ int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData)
 	}
 
 	/* Send the data to the matrix */
-	matrixSendViewport(matrix);
+	matrixSendViewportFct(matrix);
 
 	/* return the status */
 	return ANIMATION_SUCCESS;
@@ -50,11 +58,12 @@ int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData)
  * 
  * @return animation plugin
  **/
-ANIMATIONPLUGIN* init()
+ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
 {
 	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
-	temp->name = strdup("scrollv");
-	temp->runtime = scrollv;
+	temp->name = strdup("scrollV");
+	temp->runtime = scrollV;
+	hostFunctions = hostFunc;
 	return temp;
 }
 

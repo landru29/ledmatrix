@@ -19,10 +19,24 @@
  *
  * @return tableau de plugins (terminé par un nom null)
  */
-ANIMATIONPLUGIN* loadPlugins(char* path);
+ANIMATIONPLUGIN** loadPlugins(char* path);
 
+/**
+ * Décharge les plugins et libère la mémoire
+ *
+ * @param  plugins      tableau de plugins (terminé par null)
+ *
+ **/
+void closePlugins(ANIMATIONPLUGIN** plugins);
 
-
+/**
+ * Récupère un plugin par son nom
+ *
+ * @param  name      nom du plugin
+ *
+ * @return plugin d'animation
+ */
+ANIMATIONPLUGIN* getPluginAnimation(ANIMATIONPLUGIN** plugins, char* name);
 
 #endif
 

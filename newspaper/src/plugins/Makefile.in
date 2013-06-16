@@ -91,31 +91,31 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libmatrixBlink_la_LIBADD =
-am_libmatrixBlink_la_OBJECTS = blink.lo
+am_libmatrixBlink_la_OBJECTS = blink.lo animation.lo
 libmatrixBlink_la_OBJECTS = $(am_libmatrixBlink_la_OBJECTS)
 libmatrixBlink_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libmatrixBlink_la_LDFLAGS) $(LDFLAGS) -o $@
 libmatrixGif_la_LIBADD =
-am_libmatrixGif_la_OBJECTS = gif.lo
+am_libmatrixGif_la_OBJECTS = gif.lo animation.lo
 libmatrixGif_la_OBJECTS = $(am_libmatrixGif_la_OBJECTS)
 libmatrixGif_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libmatrixGif_la_LDFLAGS) $(LDFLAGS) -o $@
 libmatrixIntervalle_la_LIBADD =
-am_libmatrixIntervalle_la_OBJECTS = intervalle.lo
+am_libmatrixIntervalle_la_OBJECTS = intervalle.lo animation.lo
 libmatrixIntervalle_la_OBJECTS = $(am_libmatrixIntervalle_la_OBJECTS)
 libmatrixIntervalle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libmatrixIntervalle_la_LDFLAGS) $(LDFLAGS) -o $@
 libmatrixScrollh_la_LIBADD =
-am_libmatrixScrollh_la_OBJECTS = scrollh.lo
+am_libmatrixScrollh_la_OBJECTS = scrollh.lo animation.lo
 libmatrixScrollh_la_OBJECTS = $(am_libmatrixScrollh_la_OBJECTS)
 libmatrixScrollh_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libmatrixScrollh_la_LDFLAGS) $(LDFLAGS) -o $@
 libmatrixScrollv_la_LIBADD =
-am_libmatrixScrollv_la_OBJECTS = scrollv.lo
+am_libmatrixScrollv_la_OBJECTS = scrollv.lo animation.lo
 libmatrixScrollv_la_OBJECTS = $(am_libmatrixScrollv_la_OBJECTS)
 libmatrixScrollv_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -262,15 +262,15 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
 lib_LTLIBRARIES = libmatrixScrollh.la libmatrixScrollv.la libmatrixIntervalle.la libmatrixBlink.la libmatrixGif.la
-libmatrixScrollh_la_SOURCES = scrollh.c
+libmatrixScrollh_la_SOURCES = scrollh.c animation.c
 libmatrixScrollh_la_LDFLAGS = -version-info 0:0:0
-libmatrixScrollv_la_SOURCES = scrollv.c
+libmatrixScrollv_la_SOURCES = scrollv.c animation.c
 libmatrixScrollv_la_LDFLAGS = -version-info 0:0:0
-libmatrixIntervalle_la_SOURCES = intervalle.c
+libmatrixIntervalle_la_SOURCES = intervalle.c animation.c
 libmatrixIntervalle_la_LDFLAGS = -version-info 0:0:0
-libmatrixBlink_la_SOURCES = blink.c
+libmatrixBlink_la_SOURCES = blink.c animation.c
 libmatrixBlink_la_LDFLAGS = -version-info 0:0:0
-libmatrixGif_la_SOURCES = gif.c
+libmatrixGif_la_SOURCES = gif.c animation.c
 libmatrixGif_la_LDFLAGS = -version-info 0:0:0
 all: all-am
 
@@ -355,6 +355,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/animation.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blink.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gif.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/intervalle.Plo@am__quote@

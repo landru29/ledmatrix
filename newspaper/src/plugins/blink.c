@@ -13,11 +13,7 @@
 #include "animation.h"
 
 
-#ifdef __arm__
-    #include "display.h"
-#else
- 	void displayBlink(uint8_t chip, uint8_t blinky){}
-#endif
+HOSTFUNCTION** hostFunctions;
 
 /**
  * Animation de clignotement
@@ -32,21 +28,29 @@ int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 #ifdef __arm__
 	uint8_t i;
+	host_function displayBlinkFct;
 #endif
+	host_function matrixClearViewportFct;
+	host_function matrixSendViewportFct;
 	uint8_t blink = 0;
+	
+	/* get functions from host */
+	matrixClearViewportFct = (host_function)getHostFunction(hostFunctions, "matrixClearViewport");
+	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
 
 	/* définition du statut de blink en fonction du numéro de frame */
 	blink = (frameNumber > 0) ? 0 : 1;
 	/* Appel de la méthode clignotement sur bloc de la matrice */
 #ifdef __arm__
+	displayBlinkFct = (host_function)getHostFunction(hostFunctions, "displayBlink");
 	for (i=0; i < matrix->viewportWidth/32; i++) {
-		displayBlink(i, blink);
+		displayBlinkFct(i, blink);
 	}
 #else
 	if (blink) 
-		matrixSendViewport(matrix);
+		matrixSendViewportFct(matrix);
 	else
-		matrixClearViewport(matrix);
+		matrixClearViewportFct(matrix);
 #endif
 	/* return the status */
 	return ANIMATION_SUCCESS;
@@ -57,11 +61,12 @@ int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
  * 
  * @return animation plugin
  **/
-ANIMATIONPLUGIN* init()
+ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
 {
 	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
 	temp->name = strdup("blink");
 	temp->runtime = blink;
+	hostFunctions = hostFunc;
 	return temp;
 }
 

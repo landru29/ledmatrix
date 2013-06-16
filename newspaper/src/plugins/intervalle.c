@@ -12,6 +12,7 @@
 #include <string.h>
 #include "animation.h"
 
+HOSTFUNCTION** hostFunctions;
 
 /**
  * Animation de pause
@@ -33,11 +34,12 @@ int interval(LEDMATRIX* matrix, int frameNumber, void* userData)
  * 
  * @return animation plugin
  **/
-ANIMATIONPLUGIN* init()
+ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
 {
 	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
 	temp->name = strdup("interval");
 	temp->runtime = interval;
+	hostFunctions = hostFunc;
 	return temp;
 }
 

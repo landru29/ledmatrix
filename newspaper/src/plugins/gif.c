@@ -21,6 +21,8 @@ int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned in
 void printRectangle(unsigned char* data, unsigned int height, unsigned int width);
 #endif
 
+HOSTFUNCTION** hostFunctions;
+
 /**
  * Animation that play an animated gif
  *
@@ -35,14 +37,18 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 #ifdef HAS_GIF_LIB
 	GIFANIMATION* gif = (GIFANIMATION*)userData;
 	unsigned char* data;
+	host_function matrixSendViewportFct;
 	
+	/* get functions from host */
+	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
+		
 	data = (unsigned char*) malloc(matrix->viewportWidth * matrix->viewportHeight*8);
 	
 	extractRectangle(gif->gif, gif->frameCount-frameNumber-1, 0, 0, matrix->viewportHeight*8, matrix->viewportWidth, data);
 	rectangle2Matrix(matrix->viewport, data, matrix->viewportHeight*8, matrix->viewportWidth, gif->gif->SBackGroundColor);
 	
 	/* Send the data to the matrix */
-	matrixSendViewport(matrix);
+	matrixSendViewportFct(matrix);
 	
 	free(data);
 #endif
@@ -63,12 +69,12 @@ GIFANIMATION* openGifFile(char* filename)
 	
 #ifdef HAS_GIF_LIB
 	if ((gif->gif = DGifOpenFileName(filename)) == 0) {
-		printf("An error occured while opening\n");
+		printf("An error occured while opening %s\n", filename);
 		return 0;
 	}
 	
 	if (DGifSlurp(gif->gif) != GIF_OK) {
-		printf("An error occured while reading\n");
+		printf("An error occured while reading %s\n", filename);
 		return 0;
 	}
 	
@@ -185,11 +191,12 @@ void printRectangle(unsigned char* data, unsigned int height, unsigned int width
  * 
  * @return animation plugin
  **/
-ANIMATIONPLUGIN* init()
+ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
 {
 	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
 	temp->name = strdup("gif");
 	temp->runtime = gifAnimation;
+	hostFunctions = hostFunc;
 	return temp;
 }
 

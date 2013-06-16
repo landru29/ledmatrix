@@ -42,9 +42,10 @@ void usage(char **argv)
  */
 char* pluginsFolder()
 {
-	char currentPath[1000];
-	getcwd(currentPath, sizefo(currentPath));
-	strcpy(&currentPath[strlen(currentPath)], "/src/plugins/.libs");
+	char currentPath[1000]="";
+	if (getcwd(currentPath, sizeof(currentPath)) != 0) {
+		strcpy(&currentPath[strlen(currentPath)], "/src/plugins/.libs");
+	}
 	return strdup(currentPath);
 }
 
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT* font = 0;
     ANIMATION_QUEUE* animations=0;
-    GIFANIMATION* gif;
+    GIFANIMATION* gif=0;
     char* message=0;
     int simulated=
 #ifdef __arm__    
@@ -71,6 +72,15 @@ int main(int argc, char **argv)
 #else
     1;
 #endif
+
+	ANIMATIONPLUGIN** plugins;
+	unsigned int i;
+
+    
+    /* Load plugins */
+    plugins = loadPlugins(pluginsFolder());
+    for(i=0; plugins[i]; i++)
+		printf("%s was loaded\n", plugins[i]->name);
 
 	/* check if there is at least one argument */
     if (argc<2) {
@@ -99,9 +109,7 @@ int main(int argc, char **argv)
         printf("Le message est vide\n");
         return 0;
     }
-    
-    /* Load plugins */
-    loadPlugins(pluginsFolder());
+;
 
 	/* Matrix initialisation */
     matrix = openLedMatrix(DISPLAYS*WIDTH, HEIGHT);
@@ -113,12 +121,19 @@ int main(int argc, char **argv)
     if (simulated) matrixSetDebugMode(matrix, 1);
     
     /* Wait for a while */
-    usleep(2000*1000);
+    /* usleep(2000*1000);*/
 
     /* Animation in action */
     gif = openGifFile("../foo.gif");
     animations = createAnimationQueue();
-    enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
+    
+    /* getting animation from plugin */
+    ANIMATIONPLUGIN* scrolling = getPluginAnimation(plugins, "scrollV");
+    if (scrolling) {
+		enqueueAnimation(animations, createAnimation(scrolling->runtime, 8, -8, 1, 150, 0));
+	}
+    
+    /*enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
     
     enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
@@ -128,14 +143,16 @@ int main(int argc, char **argv)
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(scrollH, DISPLAYS*WIDTH, 0-(strlen(message)*8), 2, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));
+    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));*/
     animate(matrix, animations);
 
 	/* Cleaning everything */
     destroyFont(font);
     closeLedMatrix(matrix);
     destroyAnimationQueue(animations);
-	closeGifFile(gif);
+	/*if (gif) closeGifFile(gif);*/
+	
+	closePlugins(plugins);
 
     return 0;
 }

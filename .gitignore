@@ -2,3 +2,8 @@
 *.swo
 build
 Docs
+.deps
+.libs
+libtool
+*.lo
+*.la

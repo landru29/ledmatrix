@@ -25,6 +25,9 @@ if test "x-$ac_cv_lib_wiringPi_digitalWrite" = "x-yes" ; then
     AC_DEFINE(HAS_WIRING_PI,1,[Define to 1 if you have the 'wiringPi' library.])
 fi
 
+AC_CHECK_LIB([dl], [dlopen])
+
+
 # Checks for header files.
 AC_CHECK_HEADERS([limits.h malloc.h stddef.h stdint.h stdlib.h string.h unistd.h gif_lib.h wiringPiSPI.h wiringPi.h])
 

@@ -12,7 +12,7 @@
 #include <string.h>
 #include "animation.h"
 
-
+HOSTFUNCTION** hostFunctions;
 
 /**
  * Animation that scroll the text horzontally
@@ -25,12 +25,18 @@
  */
 int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
+	host_function matrixClearViewportFct;
+	host_function matrixSendViewportFct;
 	unsigned int destinationWidth = matrix->viewportWidth-frameNumber;
 	unsigned int dataWidth = (destinationWidth<matrix->modelWidth ? destinationWidth : matrix->modelWidth);
 	int modelDataStart;
 
+	/* get functions from host */
+	matrixClearViewportFct = (host_function)getHostFunction(hostFunctions, "matrixClearViewport");
+	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
+
 	/* erase all */
-	matrixClearViewport(matrix);
+	matrixClearViewportFct(matrix);
 
 	/* copy the data */
 	if (frameNumber>=0) {
@@ -41,7 +47,7 @@ int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
 	}
 
 	/* Send the data to the matrix */
-	matrixSendViewport(matrix);
+	matrixSendViewportFct(matrix);
 
 	/* return the status */
 	return ANIMATION_SUCCESS;
@@ -52,11 +58,12 @@ int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
  * 
  * @return animation plugin
  **/
-ANIMATIONPLUGIN* init()
+ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
 {
 	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
-	temp->name = strdup("scrollh");
-	temp->runtime = scrollh;
+	temp->name = strdup("scrollH");
+	temp->runtime = scrollH;
+	hostFunctions = hostFunc;
 	return temp;
 }
 
