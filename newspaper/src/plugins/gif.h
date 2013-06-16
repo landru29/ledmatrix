@@ -24,36 +24,6 @@ typedef struct {
 } GIFANIMATION;
 
 
-
-
-/**
- * Animation that play an animated gif
- *
- * @param  matrix      La matrice
- * @param  frameNumber Le numéro de la frame courante
- * @param  userData    Données spécifiques
- *
- * @return Animation's status
- */
-int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData);
-
-/**
- * Create a new GIF animation
- *
- * @param  chr* filename   filename of the GIF 
- *
- * @return GIFANIMATION*   Animation
- */
-GIFANIMATION* openGifFile(char* filename);
-
-/**
- * Close a GIF animation
- *
- * @param  GIFANIMATION* gif animation to close
- */
-void closeGifFile(GIFANIMATION* gif);
-
-
 #endif
 
 /* vim: set expandtab ai ts=4 sw=4 nu:

@@ -39,6 +39,8 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 	unsigned char* data;
 	host_function matrixSendViewportFct;
 	
+	if (!userData) return ANIMATION_FAILURE;
+	
 	/* get functions from host */
 	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
 		
@@ -62,7 +64,7 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
  *
  * @return Animation gif struct
  **/
-GIFANIMATION* openGifFile(char* filename)
+GIFANIMATION* openGifFile(const char* filename)
 {
 	GIFANIMATION* gif;
 	gif = (GIFANIMATION*) malloc(sizeof(GIFANIMATION));
@@ -95,7 +97,8 @@ void closeGifFile(GIFANIMATION* gif)
 #ifdef HAS_GIF_LIB
 	DGifCloseFile(gif->gif);
 #endif
-	free(gif);
+	if (gif)
+		free(gif);
 }
 
 
@@ -196,6 +199,8 @@ ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
 	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
 	temp->name = strdup("gif");
 	temp->runtime = gifAnimation;
+	temp->creation = (userdata_function)openGifFile;
+	temp->destruction = (userdata_function)closeGifFile;
 	hostFunctions = hostFunc;
 	return temp;
 }

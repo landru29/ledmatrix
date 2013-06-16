@@ -12,8 +12,6 @@
 #include "font.h"
 #include "ledmatrix.h"
 #include "animate.h"
-#include "animationpool.h"
-#include "animationgif.h"
 #include "plugins.h"
 
 #define DISPLAYS 3     // Nombre des matrices
@@ -64,7 +62,6 @@ int main(int argc, char **argv)
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT* font = 0;
     ANIMATION_QUEUE* animations=0;
-    GIFANIMATION* gif=0;
     char* message=0;
     int simulated=
 #ifdef __arm__    
@@ -74,6 +71,8 @@ int main(int argc, char **argv)
 #endif
 
 	ANIMATIONPLUGIN** plugins;
+	ANIMATIONPLUGIN* plugAnimation;
+	void* userData = 0;
 	unsigned int i;
 
     
@@ -124,13 +123,30 @@ int main(int argc, char **argv)
     /* usleep(2000*1000);*/
 
     /* Animation in action */
-    gif = openGifFile("../foo.gif");
     animations = createAnimationQueue();
     
     /* getting animation from plugin */
-    ANIMATIONPLUGIN* scrolling = getPluginAnimation(plugins, "scrollV");
-    if (scrolling) {
-		enqueueAnimation(animations, createAnimation(scrolling->runtime, 8, -8, 1, 150, 0));
+    
+    plugAnimation = getPluginAnimation(plugins, "scrollV");
+    if (plugAnimation) {
+		if (plugAnimation->creation)
+			userData = (plugAnimation->creation)();
+		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, -8, 1, 150, userData));
+		/* On ne peut détroire le userData que lorsque l'animation est terminée */
+		/*if (plugAnimation->destruction)
+			(plugAnimation->destruction)(userData);*/
+		userData = 0;
+	}
+	
+	plugAnimation = getPluginAnimation(plugins, "gif");
+    if (plugAnimation) {
+		if (plugAnimation->creation)
+			userData = (plugAnimation->creation)("foo.gif");
+		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 0, 8, 1, 150, userData));
+		/* On ne peut détroire le userData que lorsque l'animation est terminée */
+		/*if (plugAnimation->destruction)
+			(plugAnimation->destruction)(userData);*/
+		userData = 0;
 	}
     
     /*enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
@@ -150,7 +166,6 @@ int main(int argc, char **argv)
     destroyFont(font);
     closeLedMatrix(matrix);
     destroyAnimationQueue(animations);
-	/*if (gif) closeGifFile(gif);*/
 	
 	closePlugins(plugins);
 

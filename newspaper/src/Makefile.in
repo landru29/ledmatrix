@@ -64,10 +64,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_newspaper_OBJECTS = animate.$(OBJEXT) animationpool.$(OBJEXT) \
-	display.$(OBJEXT) ledmatrix.$(OBJEXT) animationgif.$(OBJEXT) \
-	bit_array.$(OBJEXT) font.$(OBJEXT) newspaper.$(OBJEXT) \
-	plugins.$(OBJEXT)
+am_newspaper_OBJECTS = animate.$(OBJEXT) display.$(OBJEXT) \
+	ledmatrix.$(OBJEXT) bit_array.$(OBJEXT) font.$(OBJEXT) \
+	newspaper.$(OBJEXT) plugins.$(OBJEXT)
 newspaper_OBJECTS = $(am_newspaper_OBJECTS)
 newspaper_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -208,21 +207,17 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 newspaper_SOURCES = \
     animate.c \
-    animationpool.c \
     display.c \
     ledmatrix.c \
-    animationgif.c \
     bit_array.c \
     font.c \
     newspaper.c \
     plugins.c \
     aipointe.h \
-    animationpool.h \
     font.h \
     animate.h \
     bit_array.h \
     ledmatrix.h \
-    animationgif.h \
     display.h \
     perso.h \
     plugins.h
@@ -318,8 +313,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/animate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/animationgif.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/animationpool.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bit_array.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/display.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/font.Po@am__quote@

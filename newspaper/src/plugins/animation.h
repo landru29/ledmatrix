@@ -18,10 +18,13 @@
 typedef int (*host_function) ();
 
 typedef int (*animation_function) ();
+typedef void* (*userdata_function) ();
 
 typedef struct {
 	char* name;
 	animation_function runtime;
+	userdata_function creation;
+	userdata_function destruction;
 	void* _pluginHdl;
 } ANIMATIONPLUGIN;
 

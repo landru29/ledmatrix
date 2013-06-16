@@ -66,6 +66,8 @@ ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
 	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
 	temp->name = strdup("blink");
 	temp->runtime = blink;
+	temp->creation = 0;
+	temp->destruction = 0;
 	hostFunctions = hostFunc;
 	return temp;
 }
