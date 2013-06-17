@@ -9,3 +9,4 @@ src/Makefile
 src/*.o
 src/newspaper
 stamp-h1
+autom4te.cache
