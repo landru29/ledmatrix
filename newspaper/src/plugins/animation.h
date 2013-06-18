@@ -37,7 +37,7 @@ typedef SHAREDFUNCTION** SHAREDFUNCTIONLIST;
  **/
 typedef struct {
 	char* name;
-	shared_function runtime;
+	animationFrame runtime;
 	shared_function creation;
 	shared_function destruction;
 	SHAREDFUNCTIONLIST functions;
