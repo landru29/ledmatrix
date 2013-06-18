@@ -126,7 +126,7 @@ void pluginListFunctions(ANIMATIONPLUGIN* plugin)
  * @param list     liste de fonctions
  * 
  */
-void listFunctions(sharedFUNCTIONLIST list)
+void listFunctions(SHAREDFUNCTIONLIST list)
 {
 	unsigned int len;
 	for(len=0; list[len]; len++) {
