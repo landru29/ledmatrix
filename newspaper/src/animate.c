@@ -20,6 +20,7 @@
  * @param step              Step counter
  * @param millitime         Delay between two frames (in milliseconds)
  * @param userData			User data to pass to the animation function
+ * @param destructor        fonction de destruction de userData
  *
  * @return struct animation
  */

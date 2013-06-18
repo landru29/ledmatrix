@@ -15,9 +15,9 @@
 #include "../ledmatrix.h"
 
 /**
- * Fonction partagéeshared
+ * Fonction partagée
  **/
-typedef int (*shared_function) ();
+typedef void* (*shared_function) ();
 
 /**
  * Description d'une fonction d'échange
@@ -100,7 +100,7 @@ void pluginListFunctions(ANIMATIONPLUGIN* plugin);
 /**
  * liste les fonctions spécifiques du plugin
  *
- * @param liste     liste de fonctions
+ * @param list      liste de fonctions
  * 
  */
 void listFunctions(SHAREDFUNCTIONLIST list);
@@ -108,7 +108,7 @@ void listFunctions(SHAREDFUNCTIONLIST list);
 /**
  * Ajoute une fonction à la liste
  *
- * @param liste     liste de fonctions
+ * @param list      liste de fonctions
  * @param name      nom de la fonction
  * @param function  fonction à ajouter
  * 
@@ -123,7 +123,7 @@ SHAREDFUNCTIONLIST appendFunction(SHAREDFUNCTIONLIST list, char* name, shared_fu
  * @param createUser  fonction d'initialisation de données utilisables dans l'animation
  * @param destroyUser fonction de destruction de données utilisables dans l'animation
  **/
-ANIMATIONPLUGIN* createAnimationPlugin(char* name, animation_function animation, shared_function createUser, shared_function destroyUser);
+ANIMATIONPLUGIN* createAnimationPlugin(char* name, shared_function animation, shared_function createUser, shared_function destroyUser);
 
 #endif
 

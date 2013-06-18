@@ -52,7 +52,7 @@ void pluginAppendFunction(ANIMATIONPLUGIN* plugin, char* name, shared_function f
 /**
  * Ajoute une fonction à la liste
  *
- * @param liste     liste de fonctions
+ * @param list      liste de fonctions
  * @param name      nom de la fonction
  * @param function  fonction à ajouter
  * 
@@ -123,7 +123,7 @@ void pluginListFunctions(ANIMATIONPLUGIN* plugin)
 /**
  * liste les fonctions spécifiques du plugin
  *
- * @param liste     liste de fonctions
+ * @param list     liste de fonctions
  * 
  */
 void listFunctions(sharedFUNCTIONLIST list)
