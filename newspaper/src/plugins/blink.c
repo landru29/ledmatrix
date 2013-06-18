@@ -13,7 +13,7 @@
 #include "animation.h"
 
 
-HOSTFUNCTION** hostFunctions;
+SHAREDFUNCTION** hostFunctions;
 
 /**
  * Animation de clignotement
@@ -61,7 +61,7 @@ int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
  * 
  * @return animation plugin
  **/
-ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
+ANIMATIONPLUGIN* init(SHAREDFUNCTION** hostFunc)
 {
 	hostFunctions = hostFunc;
 	return createAnimationPlugin("blink", blink, 0, 0);

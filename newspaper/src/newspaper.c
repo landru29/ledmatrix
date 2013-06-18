@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT* font = 0;
     ANIMATION_QUEUE* animations=0;
-    plugin_function getFrames;
+    shared_function getFrames;
     char* message=0;
     int simulated=
 #ifdef __arm__    

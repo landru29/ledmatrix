@@ -21,7 +21,7 @@ int rectangle2Matrix(unsigned char* matrixData, unsigned char* data, unsigned in
 void printRectangle(unsigned char* data, unsigned int height, unsigned int width);
 #endif
 
-HOSTFUNCTION** hostFunctions;
+SHAREDFUNCTION** hostFunctions;
 
 /**
  * Animation that play an animated gif
@@ -200,10 +200,10 @@ int getFrames(GIFANIMATION* gif)
  * 
  * @return animation plugin
  **/
-ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
+ANIMATIONPLUGIN* init(SHAREDFUNCTION** hostFunc)
 {
 	hostFunctions = hostFunc;
-	ANIMATIONPLUGIN* plug = createAnimationPlugin("gif", gifAnimation, (userdata_function)openGifFile, (userdata_function)closeGifFile);
+	ANIMATIONPLUGIN* plug = createAnimationPlugin("gif", gifAnimation, (shared_function)openGifFile, (shared_function)closeGifFile);
 	pluginAppendFunction(plug, "getFrames", getFrames);
 	return plug;
 }

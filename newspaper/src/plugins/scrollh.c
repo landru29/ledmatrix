@@ -12,7 +12,7 @@
 #include <string.h>
 #include "animation.h"
 
-HOSTFUNCTION** hostFunctions;
+SHAREDFUNCTION** hostFunctions;
 
 /**
  * Animation that scroll the text horzontally
@@ -58,7 +58,7 @@ int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
  * 
  * @return animation plugin
  **/
-ANIMATIONPLUGIN* init(HOSTFUNCTION** hostFunc)
+ANIMATIONPLUGIN* init(SHAREDFUNCTION** hostFunc)
 {
 	hostFunctions = hostFunc;
 	return createAnimationPlugin("scrollH", scrollH, 0, 0);

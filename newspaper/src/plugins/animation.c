@@ -7,17 +7,17 @@
 /**
  * recherche une fonction hôte
  *
- * @param  hostFunctions  table des fonctions hôtes
+ * @param  sharedFunctions  table des fonctions hôtes
  * @param  name           nom de la fonction
  *
  * @return fonction
  */
-void* getHostFunction(HOSTFUNCTION** hostFunctions, char* name)
+void* getHostFunction(SHAREDFUNCTION** sharedFunctions, char* name)
 {
 	unsigned int i;
-	for(i=0; hostFunctions[i]; i++)
-		if (strcmp(name, hostFunctions[i]->name) == 0)
-			return hostFunctions[i]->runtime;
+	for(i=0; sharedFunctions[i]; i++)
+		if (strcmp(name, sharedFunctions[i]->name) == 0)
+			return sharedFunctions[i]->runtime;
 	fprintf(stderr, "Could not find function %s\n", name);
 	return 0;
 }
@@ -27,10 +27,10 @@ void* getHostFunction(HOSTFUNCTION** hostFunctions, char* name)
  *
  * @return liste de fonction
  */
-HOSTFUNCTIONLIST initializeFunctionList()
+SHAREDFUNCTIONLIST initializeFunctionList()
 {
-	HOSTFUNCTIONLIST temp;
-	temp = (HOSTFUNCTIONLIST)malloc(sizeof(HOSTFUNCTION*));
+	SHAREDFUNCTIONLIST temp;
+	temp = (SHAREDFUNCTIONLIST)malloc(sizeof(SHAREDFUNCTION*));
 	temp[0] = 0;
 	return temp;
 }
@@ -44,7 +44,7 @@ HOSTFUNCTIONLIST initializeFunctionList()
  * @param function  fonction à ajouter
  * 
  */
-void pluginAppendFunction(ANIMATIONPLUGIN* plugin, char* name, host_function function)
+void pluginAppendFunction(ANIMATIONPLUGIN* plugin, char* name, shared_function function)
 {
 	plugin->functions = appendFunction(plugin->functions, name, function);
 }
@@ -57,18 +57,18 @@ void pluginAppendFunction(ANIMATIONPLUGIN* plugin, char* name, host_function fun
  * @param function  fonction à ajouter
  * 
  */
-HOSTFUNCTIONLIST appendFunction(HOSTFUNCTIONLIST list, char* name, host_function function)
+SHAREDFUNCTIONLIST appendFunction(SHAREDFUNCTIONLIST list, char* name, shared_function function)
 {
 	unsigned int len;
-	HOSTFUNCTION* temp;
-	HOSTFUNCTIONLIST newList;
+	SHAREDFUNCTION* temp;
+	SHAREDFUNCTIONLIST newList;
 	/* get the length of the list */
 	for(len=0; list[len]; len++);
 	/* enlarge the table */
-	newList = (HOSTFUNCTION**)realloc(list, sizeof(HOSTFUNCTION*) * (len+2));
+	newList = (SHAREDFUNCTION**)realloc(list, sizeof(SHAREDFUNCTION*) * (len+2));
 	newList[len+1]=0;
 	/* Add the new function */
-	temp = (HOSTFUNCTION*)malloc(sizeof(HOSTFUNCTION));
+	temp = (SHAREDFUNCTION*)malloc(sizeof(SHAREDFUNCTION));
 	newList[len]=temp;
 	temp->name = strdup(name);
 	temp->runtime = function;
@@ -85,7 +85,7 @@ HOSTFUNCTIONLIST appendFunction(HOSTFUNCTIONLIST list, char* name, host_function
  * @param createUser  fonction d'initialisation de données utilisables dans l'animation
  * @param destroyUser fonction de destruction de données utilisables dans l'animation
  **/
-ANIMATIONPLUGIN* createAnimationPlugin(char* name, animation_function animation, userdata_function createUser, userdata_function destroyUser)
+ANIMATIONPLUGIN* createAnimationPlugin(char* name, animation_function animation, shared_function createUser, shared_function destroyUser)
 {
 	ANIMATIONPLUGIN* temp = (ANIMATIONPLUGIN*)malloc(sizeof(ANIMATIONPLUGIN));
 	temp->name = strdup(name);
@@ -126,7 +126,7 @@ void pluginListFunctions(ANIMATIONPLUGIN* plugin)
  * @param liste     liste de fonctions
  * 
  */
-void listFunctions(HOSTFUNCTIONLIST list)
+void listFunctions(sharedFUNCTIONLIST list)
 {
 	unsigned int len;
 	for(len=0; list[len]; len++) {

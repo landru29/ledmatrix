@@ -36,13 +36,13 @@ char* getExtension(char* filename)
  *
  * @return tableau de fonctions (terminé par null)
  **/
-HOSTFUNCTION** getHostFunctions()
+SHAREDFUNCTION** getHostFunctions()
 {
-	HOSTFUNCTIONLIST temp = initializeFunctionList();
-	temp = appendFunction(temp, "matrixSendViewport", (host_function)matrixSendViewport);
-	temp = appendFunction(temp, "matrixClearViewport", (host_function)matrixClearViewport);
+	SHAREDFUNCTIONLIST temp = initializeFunctionList();
+	temp = appendFunction(temp, "matrixSendViewport", (shared_function)matrixSendViewport);
+	temp = appendFunction(temp, "matrixClearViewport", (shared_function)matrixClearViewport);
 #ifdef __arm__
-	temp = appendFunction(temp, "displayBlink", (host_function)displayBlink);
+	temp = appendFunction(temp, "displayBlink", (shared_function)displayBlink);
 #endif
 	return temp;
 }
@@ -64,7 +64,7 @@ ANIMATIONPLUGIN** loadPlugins(char* path)
 	void *plugin;
 	init_function initFunction;
 	unsigned int nbPlugins = 0;
-	HOSTFUNCTION** hostFunctions = getHostFunctions();
+	SHAREDFUNCTION** sharedFunctions = getHostFunctions();
 	
 	/* initialize result */
 	temp = (ANIMATIONPLUGIN**)malloc(sizeof(ANIMATIONPLUGIN*));
@@ -93,7 +93,7 @@ ANIMATIONPLUGIN** loadPlugins(char* path)
 			/* resize the table */
 			temp = (ANIMATIONPLUGIN**)realloc(temp, sizeof(ANIMATIONPLUGIN*)*(nbPlugins+2));
 			/* Add the new plugin */
-			temp[nbPlugins] = (ANIMATIONPLUGIN*)initFunction(hostFunctions);
+			temp[nbPlugins] = (ANIMATIONPLUGIN*)initFunction(sharedFunctions);
 			/* register the plugin */
 			temp[nbPlugins]->_pluginHdl = plugin;
 			/* terminate the table with a 0 */

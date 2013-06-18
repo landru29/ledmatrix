@@ -14,32 +14,40 @@
 #include "../../config.h"
 #include "../ledmatrix.h"
 
+/**
+ * Fonction partagéeshared
+ **/
+typedef int (*shared_function) ();
 
-typedef int (*host_function) ();
-
-typedef int (*animation_function) ();
-
-typedef int (*plugin_function) ();
-
-typedef void* (*userdata_function) ();
-
-
+/**
+ * Description d'une fonction d'échange
+ **/
 typedef struct {
 	char* name;
-	host_function runtime;
-} HOSTFUNCTION;
+	shared_function runtime;
+} SHAREDFUNCTION;
 
-typedef HOSTFUNCTION** HOSTFUNCTIONLIST;
+/**
+ * Liste de fonctions d'échange
+ **/
+typedef SHAREDFUNCTION** SHAREDFUNCTIONLIST;
 
+/**
+ * Plugin
+ **/
 typedef struct {
 	char* name;
 	animation_function runtime;
-	userdata_function creation;
-	userdata_function destruction;
-	HOSTFUNCTIONLIST functions;
+	shared_function creation;
+	shared_function destruction;
+	SHAREDFUNCTIONLIST functions;
 	void* _pluginHdl;
 } ANIMATIONPLUGIN;
 
+
+/**
+ * Fonction d'initialisation de plugin
+ **/
 typedef ANIMATIONPLUGIN* (*init_function) ();
 
 
@@ -47,17 +55,17 @@ typedef ANIMATIONPLUGIN* (*init_function) ();
 /**
  * recherche une fonction hôte
  *
- * @param  hostFunctions  table des fonctions hôtes
+ * @param  sharedFunctions  table des fonctions hôtes
  * @param  name           nom de la fonction
  *
  * @return fonction
  */
-void* getHostFunction(HOSTFUNCTION** hostFunctions, char* name);
+void* getHostFunction(SHAREDFUNCTION** sharedFunctions, char* name);
 
 /**
  * recherche une fonction du plugin
  *
- * @param  hostFunctions  table des fonctions hôtes
+ * @param  sharedFunctions  table des fonctions hôtes
  * @param  name           nom de la fonction
  *
  * @return fonction
@@ -69,7 +77,7 @@ void* getPluginFunction(ANIMATIONPLUGIN* plugin, char* name);
  *
  * @return liste de fonction
  */
-HOSTFUNCTIONLIST initializeFunctionList();
+SHAREDFUNCTIONLIST initializeFunctionList();
 
 /**
  * Ajoute une fonction au plugin
@@ -79,7 +87,7 @@ HOSTFUNCTIONLIST initializeFunctionList();
  * @param function  fonction à ajouter
  * 
  */
-void pluginAppendFunction(ANIMATIONPLUGIN* plugin, char* name, host_function function);
+void pluginAppendFunction(ANIMATIONPLUGIN* plugin, char* name, shared_function function);
 
 /**
  * liste les fonctions spécifiques du plugin
@@ -95,7 +103,7 @@ void pluginListFunctions(ANIMATIONPLUGIN* plugin);
  * @param liste     liste de fonctions
  * 
  */
-void listFunctions(HOSTFUNCTIONLIST list);
+void listFunctions(SHAREDFUNCTIONLIST list);
 
 /**
  * Ajoute une fonction à la liste
@@ -105,7 +113,7 @@ void listFunctions(HOSTFUNCTIONLIST list);
  * @param function  fonction à ajouter
  * 
  */
-HOSTFUNCTIONLIST appendFunction(HOSTFUNCTIONLIST list, char* name, host_function function);
+SHAREDFUNCTIONLIST appendFunction(SHAREDFUNCTIONLIST list, char* name, shared_function function);
 
 /**
  * Initialise un plugin
@@ -115,7 +123,7 @@ HOSTFUNCTIONLIST appendFunction(HOSTFUNCTIONLIST list, char* name, host_function
  * @param createUser  fonction d'initialisation de données utilisables dans l'animation
  * @param destroyUser fonction de destruction de données utilisables dans l'animation
  **/
-ANIMATIONPLUGIN* createAnimationPlugin(char* name, animation_function animation, userdata_function createUser, userdata_function destroyUser);
+ANIMATIONPLUGIN* createAnimationPlugin(char* name, animation_function animation, shared_function createUser, shared_function destroyUser);
 
 #endif
 
