@@ -28,15 +28,15 @@ int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 #ifdef __arm__
 	uint8_t i;
-	host_function displayBlinkFct;
+	shared_function displayBlinkFct;
 #endif
-	host_function matrixClearViewportFct;
-	host_function matrixSendViewportFct;
+	shared_function matrixClearViewportFct;
+	shared_function matrixSendViewportFct;
 	uint8_t blink = 0;
 	
 	/* get functions from host */
-	matrixClearViewportFct = (host_function)getHostFunction(hostFunctions, "matrixClearViewport");
-	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
+	matrixClearViewportFct = (shared_function)getHostFunction(hostFunctions, "matrixClearViewport");
+	matrixSendViewportFct = (shared_function)getHostFunction(hostFunctions, "matrixSendViewport");
 
 	/* définition du statut de blink en fonction du numéro de frame */
 	blink = (frameNumber > 0) ? 0 : 1;

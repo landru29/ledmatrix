@@ -79,8 +79,13 @@ int main(int argc, char **argv)
     
     /* Load plugins */
     plugins = loadPlugins(pluginsFolder());
+	if (!plugins) {
+		printf("No plugins ! Exiting.\n");
+		return 0;
+	}
     for(i=0; plugins[i]; i++)
 		printf("%s was loaded\n", plugins[i]->name);
+
 
 	/* check if there is at least one argument */
     if (argc<2) {

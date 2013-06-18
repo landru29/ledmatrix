@@ -25,15 +25,15 @@ SHAREDFUNCTION** hostFunctions;
  */
 int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
-	host_function matrixClearViewportFct;
-	host_function matrixSendViewportFct;
+	shared_function matrixClearViewportFct;
+	shared_function matrixSendViewportFct;
 	unsigned int destinationWidth = matrix->viewportWidth-frameNumber;
 	unsigned int dataWidth = (destinationWidth<matrix->modelWidth ? destinationWidth : matrix->modelWidth);
 	int modelDataStart;
 
 	/* get functions from host */
-	matrixClearViewportFct = (host_function)getHostFunction(hostFunctions, "matrixClearViewport");
-	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
+	matrixClearViewportFct = (shared_function)getHostFunction(hostFunctions, "matrixClearViewport");
+	matrixSendViewportFct = (shared_function)getHostFunction(hostFunctions, "matrixSendViewport");
 
 	/* erase all */
 	matrixClearViewportFct(matrix);

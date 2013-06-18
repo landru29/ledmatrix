@@ -27,12 +27,12 @@ int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 	unsigned int i;
 	unsigned char data;
-	host_function matrixClearViewportFct;
-	host_function matrixSendViewportFct;
+	shared_function matrixClearViewportFct;
+	shared_function matrixSendViewportFct;
 	
 	/* get functions from host */
-	matrixClearViewportFct = (host_function)getHostFunction(hostFunctions, "matrixClearViewport");
-	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
+	matrixClearViewportFct = (shared_function)getHostFunction(hostFunctions, "matrixClearViewport");
+	matrixSendViewportFct = (shared_function)getHostFunction(hostFunctions, "matrixSendViewport");
 
 	/* erase all */
 	matrixClearViewportFct(matrix);

@@ -37,12 +37,12 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 #ifdef HAS_GIF_LIB
 	GIFANIMATION* gif = (GIFANIMATION*)userData;
 	unsigned char* data;
-	host_function matrixSendViewportFct;
+	shared_function matrixSendViewportFct;
 	
 	if (!userData) return ANIMATION_FAILURE;
 	
 	/* get functions from host */
-	matrixSendViewportFct = (host_function)getHostFunction(hostFunctions, "matrixSendViewport");
+	matrixSendViewportFct = (shared_function)getHostFunction(hostFunctions, "matrixSendViewport");
 		
 	data = (unsigned char*) malloc(matrix->viewportWidth * matrix->viewportHeight*8);
 	
