@@ -72,8 +72,8 @@ int main(int argc, char **argv)
                 message = strdup(optarg);
                 break;
             case 's':
-				simulated = 1;
-				break;
+                simulated = 1;
+                break;
             default:
                 abort();
                 break;
