@@ -36,11 +36,12 @@ LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
 	matrix->model = (unsigned char*) malloc(1);
 	matrix->viewportHeight = height/8;
 	matrix->viewportWidth = width;
+    matrix->nbMatrix = width / 32;
 	matrix->viewport = (unsigned char*) malloc(matrix->viewportHeight * matrix->viewportWidth);
 	matrixClearViewport(matrix);
 	matrix->debugMode=0;
 	#ifdef __arm__
-	if (initDisplay(width/32, 32, height) < 0) {
+	if (initDisplay(matrix->nbMatrix, 32, height) < 0) {
 		printf("Erreur d'initialisation des matrices\n");
 	}
 	#endif
@@ -150,7 +151,7 @@ void matrixSendViewport(LEDMATRIX* matrix)
 		matrixDebugViewport(matrix);
 	} else {
 #ifdef __arm__
-	writeMatrix(matrix->viewport, matrix->viewportWidth/32, matrix->viewportWidth/3, 8);
+	writeMatrix(matrix->viewport, matrix->nbMatrix, matrix->viewportWidth/matrix->nbMatrix, matrix->viewportHeight*8);
 #endif
 	}
 }

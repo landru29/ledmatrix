@@ -23,6 +23,7 @@ typedef struct {
 	unsigned int modelHeight;
 	unsigned char* model;
 	unsigned char* viewport;
+    unsigned int nbMatrix;
 	FONT* font;
 	int debugMode;
 } LEDMATRIX;
