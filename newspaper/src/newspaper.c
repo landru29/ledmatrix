@@ -15,7 +15,7 @@
 #include "animationpool.h"
 #include "animationgif.h"
 
-#define DISPLAYS 3     // Nombre des matrices
+#define DISPLAYS 4     // Nombre des matrices
 #define HEIGHT   8     // Nombre de ligne sur une matrice
 #define WIDTH    32    // Nombre de colonnes sur une matrice
 
@@ -72,13 +72,14 @@ int main(int argc, char **argv)
                 message = strdup(optarg);
                 break;
             case 's':
-				simulated = 1;
-				break;
+                simulated = 1;
+                break;
             default:
                 abort();
                 break;
         }
     }
+    printf("Le message: %s\n", message);
 
 	/* check if a message was specified */
     if ((!message) || (!*message)) {
@@ -96,7 +97,7 @@ int main(int argc, char **argv)
     if (simulated) matrixSetDebugMode(matrix, 1);
     
     /* Wait for a while */
-    usleep(2000*1000);
+    //usleep(2000*1000);
 
     /* Animation in action */
     gif = openGifFile("../foo.gif");
@@ -106,12 +107,15 @@ int main(int argc, char **argv)
     enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(scrollV, -8, 0, 1, 150, 0));
+    enqueueAnimation(animations, createAnimation(fade, 15, 0, 1, 250, 0));
+    enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
+    enqueueAnimation(animations, createAnimation(fade, 0, 15, 1, 250, 0));
     enqueueAnimation(animations, createAnimation(blink, 0, 1, 1, 2000, 0));
-    enqueueAnimation(animations, createAnimation(scrollH, 0, DISPLAYS*WIDTH, 2, 150, 0));
+    /*enqueueAnimation(animations, createAnimation(scrollH, 0, DISPLAYS*WIDTH, 2, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(scrollH, DISPLAYS*WIDTH, 0-(strlen(message)*8), 2, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));
+    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));*/
     animate(matrix, animations);
 
 	/* Cleaning everything */

@@ -149,5 +149,32 @@ int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
 	return ANIMATION_SUCCESS;
 }
 
+/**
+ * Animation de fadeout
+ *
+ * @param  matrix      La matrice
+ * @param  frameNumber Le numéro de la frame courante
+ * @param  userData    Données spécifiques
+ *
+ * @return animation's status
+ */
+int fade(LEDMATRIX* matrix, int frameNumber, void* userData)
+{
+#ifdef __arm__
+	uint8_t i;
+#endif
+
+	/* Appel de la méthode clignotement sur bloc de la matrice */
+#ifdef __arm__
+	for (i=0; i < matrix->nbMatrix; i++) {
+		setBrightness(i, frameNumber);
+	}
+#else
+    matrixSendViewport(matrix);
+#endif
+	/* return the status */
+	return ANIMATION_SUCCESS;
+}
+
 /* vim: set expandtab ai ts=4 sw=4 nu:
 */

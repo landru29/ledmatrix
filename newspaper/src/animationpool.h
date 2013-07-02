@@ -68,6 +68,17 @@ int interval(LEDMATRIX* matrix, int frameNumber, void* userData);
  */
 int blink(LEDMATRIX* matrix, int frameNumber, void* userData);
 
+/**
+ * Animation de fadeout
+ *
+ * @param  matrix      La matrice
+ * @param  frameNumber Le numéro de la frame courante
+ * @param  userData    Données spécifiques
+ *
+ * @return animation's status
+ */
+int fade(LEDMATRIX* matrix, int frameNumber, void* userData);
+
 #endif
 
 /* vim: set expandtab ai ts=4 sw=4 nu:
