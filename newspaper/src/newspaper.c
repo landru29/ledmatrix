@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include "aipointe.h"
+#include "arial8.h"
 #include "perso.h"
 #include "font.h"
 #include "ledmatrix.h"
@@ -89,7 +90,7 @@ int main(int argc, char **argv)
 
 	/* Matrix initialisation */
     matrix = openLedMatrix(DISPLAYS*WIDTH, HEIGHT);
-    font = createFont(perso_font, perso_info, perso_mapping, 1);
+    font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
     matrixSetFont(matrix, font);
     matrixPushString(matrix, message);
     
@@ -100,9 +101,9 @@ int main(int argc, char **argv)
     //usleep(2000*1000);
 
     /* Animation in action */
-    gif = openGifFile("../foo.gif");
+    //gif = openGifFile("../foo.gif");
     animations = createAnimationQueue();
-    enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
+    //enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
     
     enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
@@ -122,7 +123,7 @@ int main(int argc, char **argv)
     destroyFont(font);
     closeLedMatrix(matrix);
     destroyAnimationQueue(animations);
-	closeGifFile(gif);
+	//closeGifFile(gif);
 
     return 0;
 }
