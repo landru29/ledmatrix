@@ -84,8 +84,12 @@ class HT1632C:
 
         self.spi = spidev.SpiDev()
         self.spi.open(bus, device)
+        #self.spi.mode = 0
         self.spi.max_speed_hz = self.SPI_SPEED
         self.spi.bits_per_word = 8
+        #self.spi.lsbfirst = False
+        #self.spi.loop = False
+        print "mode %d" % self.spi.mode
 
         self.gpio = wiringpi.GPIO(wiringpi.GPIO.WPI_MODE_PINS)
         self.gpio.pinMode(self.CS0, self.gpio.OUTPUT)
@@ -95,7 +99,7 @@ class HT1632C:
         self.gpio.digitalWrite(self.CS3, self.gpio.HIGH)
         self.font = font5x8.Font5x8
         self.col_offset = 0
-        self.bitmap = self.Bitmap(buffer_cols, buffer_rows)
+        self.bitmap = self.Bitmap(self.cols, self.rows)
 
     def reset(self):
         data = [0] * (self.cols / self.nbMatrix)
@@ -134,7 +138,7 @@ class HT1632C:
         "Reverses the byte order of an int (16-bit) or long (32-bit) value"
         # Courtesy Vishal Sapre
         byteCount = len(hex(data)[2:].replace('L','')[::2])
-        val       = 0
+        val = 0
         for i in range(byteCount):
             val    = (val << 8) | (data & 0xff)
             data >>= 8
@@ -144,24 +148,34 @@ class HT1632C:
         self.chipSelect(chip)
         self.gpio.delayMicroseconds(self.DELAY)
         length = len(bytes)
-        start = 0
+        print bytes
         data = [0] * (length + 2)
-        data[0] = 0xA0
-        data[1] = (0x00 | ((bytes[0] >> 2) & 0xff))
+        data[0] = 0b10100000
+        data[1] = 0x00 | ((bytes[0] >> 2) & 0xff)
         print "First data: 0x%02X" % data[0]
         print "Second data: 0x%02X" % data[1]
         j = 2
-        for i in range(start, length):
-            if i >= length-1:
-                nextByte = 0x00
+        for i in range(length):
+            if length == 32 and i >= length-1:
+                data[j] = (bytes[i] >> 6 & 0xff)
             else:
-                nextByte = ((bytes[i+1] >> 2) & 0xff)
-            data[j] = (((bytes[i] << 6) & 0xff) | nextByte)
+                data[j] = ((bytes[i] >> 6 & 0xff) | (bytes[i+1] >> 2 & 0x3f))
             print "0x%02X" % data[j]
             j += 1
         self.spi.writebytes(data)
+        #if length == 32:
+        #    data = 0x5
+        #    data <<= 7
+        #    data |= 0x3f
+        #    data <<= 4
+        #    data |= (0x0f & bytes[31])
+        #    data <<= 2
+        #    data = self.reverseByteOrder(data)
+        #    print "data: {0:X}".format(data)
+        #    write = [(0xf0 & data), (0x0f & data)]
+        #    self.spi.writebytes(write)
+
         self.gpio.delayMicroseconds(self.DELAY)
-        #self.gpio.delay(self.DELAY)
         self.chipSelect(99)
 
     def writeMatrix(self, bytes):
@@ -332,13 +346,33 @@ class HT1632C:
                         line += ' '
                 print('|'+line+'|')
 
+        def reverseByteOrder(self, data):
+            "Reverses the byte order of an int (16-bit) or long (32-bit) value"
+            # Courtesy Vishal Sapre
+            byteCount = len('{:0b}'.format(data))
+            val       = 0
+            for i in range(byteCount):
+                val    = (val << 1) | (data & 0x1)
+                data >>= 1
+            return val
+
         def draw_pixel(self, x, y, on=True):
-            if (x<0 or x>=self.cols or y<0 or y>=self.rows):
+            if (x<0 or x>=self.rows or y<0 or y>=self.cols):
                 return
-            mem_col = x
-            mem_row = y / 8
-            bit_mask = 1 << (y % 8)
-            offset = mem_row + self.rows/8 * mem_col
+            mem_row = x-1
+            mem_col = y-1
+            if mem_row%4 == 0:
+                bit_mask = 0x80
+            elif mem_row%4 == 1:
+                bit_mask = 0x40
+            elif mem_row%4 == 2:
+                bit_mask = 0x20
+            else:
+                bit_mask = 0x10
+            #bit_mask = 1 << (y % 8)
+            offset = x * y
+            print "offset: %d" % offset
+            print "bit_mask: {0:08b}".format(bit_mask)
             if on:
                 self.data[offset] |= bit_mask
             else:
