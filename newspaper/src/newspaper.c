@@ -90,7 +90,8 @@ int main(int argc, char **argv)
 
 	/* Matrix initialisation */
     matrix = openLedMatrix(DISPLAYS*WIDTH, HEIGHT);
-    font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
+    font = createFont(perso_font, perso_info, perso_mapping, 1);
+    //font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
     matrixSetFont(matrix, font);
     matrixPushString(matrix, message);
     
@@ -101,23 +102,25 @@ int main(int argc, char **argv)
     //usleep(2000*1000);
 
     /* Animation in action */
-    //gif = openGifFile("../foo.gif");
+    /*gif = openGifFile("./foo.gif");
     animations = createAnimationQueue();
-    //enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
-    
-    enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
+    enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
+    */
+    /*enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(scrollV, -8, 0, 1, 150, 0));
     enqueueAnimation(animations, createAnimation(fade, 15, 0, 1, 250, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(fade, 0, 15, 1, 250, 0));
     enqueueAnimation(animations, createAnimation(blink, 0, 1, 1, 2000, 0));
-    /*enqueueAnimation(animations, createAnimation(scrollH, 0, DISPLAYS*WIDTH, 2, 150, 0));
+    enqueueAnimation(animations, createAnimation(scrollH, 0, DISPLAYS*WIDTH, 2, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(scrollH, DISPLAYS*WIDTH, 0-(strlen(message)*8), 2, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));*/
-    animate(matrix, animations);
+    enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));
+    animate(matrix, animations);*/
+    matrixSendModel(matrix);
+    matrixSendViewport(matrix);
 
 	/* Cleaning everything */
     destroyFont(font);
