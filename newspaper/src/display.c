@@ -54,10 +54,10 @@
 // Délai d'attente entre l'écriture sur les matrices et l'activation des chipSelect
 #define DELAY        550
 
-#define CS0 22 //3 // GPIO 22
-#define CS1 23 //4 // GPIO 23
-#define CS2 24 //5 // GPIO 24
-#define CS3 25 //6 // GPIO 25 A activer en continu avec le 74HC138 (pin E3)
+#define CS0 3 // GPIO 22
+#define CS1 4 // GPIO 23
+#define CS2 5 // GPIO 24
+#define CS3 6 // GPIO 25 A activer en continu avec le 74HC138 (pin E3)
 
 //#define DEBUG
 
@@ -279,7 +279,7 @@ int8_t initDisplay(uint8_t nbMatrix, uint8_t width, uint8_t height)
     }
 
     // Initialise le GPIO
-    if (wiringPiSetupSys() < 0) {
+    if (wiringPiSetup() < 0) {
         printf("Setup Failed: %s\n", strerror(errno));
         return -1;
     }
