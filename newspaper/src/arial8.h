@@ -3,9 +3,12 @@
 #include "../config.h"
 
 char arial8_mapping[] =
-	"!\"#$\%&'()*+'-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+	" !\"#$\%&'()*+'-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 unsigned char arial8_font[] = {
+    // @0 ' ' (1 pixel wide)
+    0b00000000,
+
     // @0 '!' (1 pixels wide)
     0b11111101,
 
@@ -326,8 +329,8 @@ unsigned char arial8_font[] = {
 
     // @376 'G' (10 pixels wide)
     0b00011100,
-    0b00100000,
-    0b01000010,
+    0b00100010,
+    0b01000001,
     0b10000001,
     0b10000001,
     0b10001001,
@@ -410,12 +413,12 @@ unsigned char arial8_font[] = {
     // @480 'O' (10 pixels wide)
     0b00011000,
     0b00100100,
-    0b00000010,
+    0b01000010,
     0b10000001,
     0b10000001,
     0b10000001,
     0b10000001,
-    0b00000010,
+    0b01000010,
     0b00100100,
     0b00011000,
 
@@ -449,9 +452,9 @@ unsigned char arial8_font[] = {
     0b10001000,
     0b10001000,
     0b10001100,
-    0b10001000,
-    0b01010010,
-    0b00100001,
+    0b10001010,
+    0b01010001,
+    0b00100000,
 
     // @544 'S' (9 pixels wide)
     0b00000100,
@@ -612,7 +615,7 @@ unsigned char arial8_font[] = {
     0b00100001,
     0b00010010,
 
-    // @752 'd' (7 pixels wide)
+    // @752 'd' (6 pixels wide)
     0b00000110,
     0b00001001,
     0b00001001,
@@ -660,9 +663,8 @@ unsigned char arial8_font[] = {
     0b00000001,
     0b00101110,
 
-    // @808 'k' (7 pixels wide)
+    // @808 'k' (5 pixels wide)
     0b00111111,
-    0b00000000,
     0b00000100,
     0b00001100,
     0b00010010,
@@ -710,7 +712,7 @@ unsigned char arial8_font[] = {
     0b00100100,
     0b00011000,
 
-    // @864 'q' (7 pixels wide)
+    // @864 'q' (6 pixels wide)
     0b00011000,
     0b00100100,
     0b00100100,
@@ -824,6 +826,7 @@ unsigned char arial8_font[] = {
 };
 
 unsigned int arial8_info[] = {
+    1,// 
     1,// !
     4,// "
     9,// #
@@ -861,7 +864,7 @@ unsigned int arial8_info[] = {
     10,// C
     10,// D
     9,// E
-    8,// F
+    9,// F
     10,// G
     9,// H
     5,// I
@@ -883,7 +886,7 @@ unsigned int arial8_info[] = {
     9,// Y
     9,// Z
     3,// [
-    4,// \
+    4,// 
     3,// ]
     7,// ^
     9,// _
@@ -891,20 +894,20 @@ unsigned int arial8_info[] = {
     7,// a
     6,// b
     6,// c
-    7,// d
+    6,// d
     7,// e
     4,// f
     7,// g
     6,// h
     1,// i
     3,// j
-    7,// k
+    5,// k
     2,// l
     11,// m
     6,// n
     7,// o
     6,// p
-    7,// q
+    6,// q
     4,// r
     6,// s
     4,// t
