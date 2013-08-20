@@ -6,7 +6,7 @@
 // http://www.dafont.com/ai-pointe.font
 
 char perso_mapping[] =
-	"!\"#$\%&'()*+'-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+	"!\"#$\%&'()*+'-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_`abcdefghijklmnopqrstuvwxyz{|}~éèê";
 
 unsigned int perso_info[] = {
   2,	// !
@@ -102,7 +102,10 @@ unsigned int perso_info[] = {
   4,	// {
   1,	// |
   8,	// }
-  8		// ~
+  8,	// ~
+  5,  // é
+  5,  // è
+  5   // ê
 };
 
 unsigned char perso_font[] = {
@@ -539,7 +542,22 @@ unsigned char perso_font[] = {
   0b00100010,
   0b01000100,
   0b01001000,
-  0b00110000
+  0b00110000,
+  0b00101110, // é
+  0b01010101,
+  0b10010101,
+  0b00010101,
+  0b00001001,
+  0b00001110, // è
+  0b00010101,
+  0b10010101,
+  0b01010101,
+  0b00101001,
+  0b00101110, // ê
+  0b01010101,
+  0b10010101,
+  0b01010101,
+  0b00101001,
 };
 
 #endif
