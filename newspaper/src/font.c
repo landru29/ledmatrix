@@ -10,6 +10,8 @@
 #include "font.h"
 #include <malloc.h>
 #include <string.h>
+#include <wchar.h>
+#include <stdio.h>
 
 /**
  * Create a new font
@@ -21,8 +23,9 @@
  *
  * @return Font struct
  */
-FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight)
+FONT* createFont(char* data, unsigned int* sizeTable, wchar_t* mapping, unsigned char fontHeight)
 {
+	mapping = oteAccents(mapping);
 	unsigned int totalLetter = strlen(mapping);
 	FONT_INFO lastInfo;
 	unsigned int dataSize;
@@ -56,6 +59,64 @@ FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, un
 	font->letterSpacing = 1;
 
 	return font;
+}
+
+/* sansAccent : transforme un caractère accentué en la même lettre mais
+ * sans accent (é -> e, ç -> c, À -> A, ...)
+ * Entrées : le caractère
+ * Sorties : le même sans accent, ou le même s'il n'avait pas d'accent */
+wchar_t sansAccent(wchar_t c)
+{
+  switch (c)
+  {
+      case L'à': case L'á': case L'â': case L'ã': case L'ä': case L'å':
+          return L'a';
+      case L'À': case L'Á': case L'Â': case L'Ã': case L'Ä': case L'Å':
+          return L'A';
+      case L'ç':
+          return L'c';
+      case L'Ç':
+          return L'C';
+      case L'é': case L'è': case L'ê': case L'ë':
+          return L'e';
+      case L'É': case L'È': case L'Ê': case L'Ë':
+          return L'E';
+      case L'ì': case L'í': case L'î': case L'ï':
+          return L'i';
+      case L'Ì': case L'Í': case L'Î': case L'Ï':
+          return L'I';
+      case L'ñ':
+          return L'n';
+      case L'Ñ':
+          return L'N';
+      case L'ò': case L'ó': case L'ô': case L'õ': case L'ö':
+          return L'o';
+      case L'Ò': case L'Ó': case L'Ô': case L'Õ': case L'Ö':
+          return L'O';
+      case L'ù': case L'ú': case L'û': case L'ü':
+          return L'u';
+      case L'Ù': case L'Ú': case L'Û': case L'Ü':
+          return L'U';
+      case L'ý': case L'ÿ':
+          return L'y';
+      case L'Ý':
+          return L'Y';
+      default:
+          return c;
+    }
+}
+
+/* On enlèveles accent dans la chaine */
+void oteAccents(wchar_t* j)
+{
+    int i;
+    i = 1 ;
+    while ( j[i] != '\0' ) {
+        j[i] = sansAccent(j[i]);
+        i = i + 1;
+    }
+    j[i-1] = '\0';
+    return j;
 }
 
 /**

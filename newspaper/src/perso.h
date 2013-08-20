@@ -1,12 +1,13 @@
 #ifndef __PERSO_H
 #define __PERSO_H
 
+#include <wchar.h>
 #include "../config.h"
 
 // http://www.dafont.com/ai-pointe.font
 
-char perso_mapping[] =
-	"!\"#$\%&'()*+'-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_`abcdefghijklmnopqrstuvwxyz{|}~éèê";
+wchar_t perso_mapping[] =
+	"!\"#$\%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[ ]^_`abcdefghijklmnopqrstuvwxyz{|}~éèê";
 
 unsigned int perso_info[] = {
   2,	// !
@@ -20,7 +21,7 @@ unsigned int perso_info[] = {
   4,	// )
   4,	// *
   5,	// +
-  3,	// '
+  3,	// ,
   5,	// -
   3,	// .
   5,	// /
@@ -558,7 +559,7 @@ unsigned char perso_font[] = {
   0b01010101,
   0b10010101,
   0b01010101,
-  0b00101001,
+  0b00101001
 };
 
 #endif

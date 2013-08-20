@@ -2,6 +2,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <wchar.h>    /* Types et fonctions relatifs aux caractères étendus */
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -45,6 +46,7 @@ void usage(char **argv)
  */
 int main(int argc, char **argv)
 {
+    setlocale(LC_ALL, "");
     char optstring[] = "m:s";
     int option;
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
@@ -53,7 +55,7 @@ int main(int argc, char **argv)
     GIFANIMATION* gif;
     char* message=0;
     int simulated=
-#ifdef __arm__    
+#ifdef __arm__
     0;
 #else
     1;
@@ -94,10 +96,10 @@ int main(int argc, char **argv)
     //font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
     matrixSetFont(matrix, font);
     matrixPushString(matrix, message);
-    
+
     /* Switch on the simulator */
     if (simulated) matrixSetDebugMode(matrix, 1);
-    
+
     /* Wait for a while */
     //usleep(2000*1000);
 
