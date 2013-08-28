@@ -100,6 +100,24 @@ int main(int argc, char **argv)
     /* Switch on the simulator */
     if (simulated) matrixSetDebugMode(matrix, 1);
 
+    uint_8 lengthMsg, remaining, position;
+    lengthMsg = strlen(message);
+    remaining = lengthMsg;
+    position = 0;
+    if (lengthMsg > (DISPLAY*WIDTH)) {
+        animations = createAnimationQueue();
+        do {
+            enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
+            enqueueAnimation(animations, createAnimation(scrollH, position, remaining-(DISPLAY*WIDTH), 2, 150, 0));
+            remaining = remaining - (DISPLAY * WIDTH);
+            position = position - (DISPLAY * WIDTH);
+        } while(remaining > 0);
+        animate(matrix, animations);
+    } else {
+        matrixSendModel(matrix);
+        matrixSendViewport(matrix);
+    }
+
     /* Wait for a while */
     //usleep(2000*1000);
 
@@ -120,9 +138,9 @@ int main(int argc, char **argv)
     enqueueAnimation(animations, createAnimation(scrollH, DISPLAYS*WIDTH, 0-(strlen(message)*8), 2, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));
-    animate(matrix, animations);*/
+    animate(matrix, animations);
     matrixSendModel(matrix);
-    matrixSendViewport(matrix);
+    matrixSendViewport(matrix);*/
 
 	/* Cleaning everything */
     destroyFont(font);
