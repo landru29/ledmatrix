@@ -100,9 +100,9 @@ int selectChip(unsigned char id)
             digitalWrite(CS2, 0);
             break;
         case 1:
-            digitalWrite(CS0, 0);
+            digitalWrite(CS0, 1);
             digitalWrite(CS1, 0);
-            digitalWrite(CS2, 1);
+            digitalWrite(CS2, 0);
             break;
         case 2:
             digitalWrite(CS0, 0);
@@ -110,9 +110,9 @@ int selectChip(unsigned char id)
             digitalWrite(CS2, 0);
             break;
         case 3:
-            digitalWrite(CS0, 0);
+            digitalWrite(CS0, 1);
             digitalWrite(CS1, 1);
-            digitalWrite(CS2, 1);
+            digitalWrite(CS2, 0);
             break;
         default:
             digitalWrite(CS0, 1);
