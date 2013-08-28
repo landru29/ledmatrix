@@ -80,7 +80,7 @@ char* oteAccents(char* j)
  *
  * @return Font struct
  */
-FONT* createFont(char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight)
+FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight)
 {
 	mapping = oteAccents(mapping);
     data = oteAccents(data);
