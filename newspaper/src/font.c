@@ -10,7 +10,6 @@
 #include "font.h"
 #include <malloc.h>
 #include <string.h>
-#include <wchar.h>
 #include <stdio.h>
 
 /**
@@ -23,9 +22,10 @@
  *
  * @return Font struct
  */
-FONT* createFont(char* data, unsigned int* sizeTable, wchar_t* mapping, unsigned char fontHeight)
+FONT* createFont(char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight)
 {
 	mapping = oteAccents(mapping);
+    data = oteAccents(data);
 	unsigned int totalLetter = strlen(mapping);
 	FONT_INFO lastInfo;
 	unsigned int dataSize;
@@ -65,7 +65,7 @@ FONT* createFont(char* data, unsigned int* sizeTable, wchar_t* mapping, unsigned
  * sans accent (é -> e, ç -> c, À -> A, ...)
  * Entrées : le caractère
  * Sorties : le même sans accent, ou le même s'il n'avait pas d'accent */
-wchar_t sansAccent(wchar_t c)
+wchar_t sansAccent(char c)
 {
   switch (c)
   {
@@ -107,7 +107,7 @@ wchar_t sansAccent(wchar_t c)
 }
 
 /* On enlèveles accent dans la chaine */
-void oteAccents(wchar_t* j)
+wchar_t* oteAccents(char* j)
 {
     int i;
     i = 1 ;

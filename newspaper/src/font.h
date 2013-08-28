@@ -11,7 +11,6 @@
 #define __FONT_H
 
 #include <stdint.h>
-#include <wchar.h>
 #include "../config.h"
 
 /**
@@ -54,7 +53,7 @@ typedef struct {
  *
  * @return Font struct
  */
-FONT* createFont(unsigned char* data, unsigned int* sizeTable, wchar_t* mapping, unsigned char fontHeight);
+FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight);
 
 /**
  * Destroy the font object
