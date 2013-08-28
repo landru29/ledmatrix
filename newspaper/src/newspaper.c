@@ -99,7 +99,7 @@ int main(int argc, char **argv)
     /* Switch on the simulator */
     if (simulated) matrixSetDebugMode(matrix, 1);
 
-    uint_8 lengthMsg, remaining, position;
+    uint8_t lengthMsg, remaining, position;
     lengthMsg = strlen(message);
     remaining = lengthMsg;
     position = 0;
