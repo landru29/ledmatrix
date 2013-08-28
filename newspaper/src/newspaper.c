@@ -46,7 +46,6 @@ void usage(char **argv)
  */
 int main(int argc, char **argv)
 {
-    setlocale(LC_ALL, "");
     char optstring[] = "m:s";
     int option;
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
