@@ -16,7 +16,7 @@
  * sans accent (é -> e, ç -> c, À -> A, ...)
  * Entrées : le caractère
  * Sorties : le même sans accent, ou le même s'il n'avait pas d'accent */
-wchar_t sansAccent(char c)
+char sansAccent(char c)
 {
   switch (c)
   {
@@ -58,7 +58,7 @@ wchar_t sansAccent(char c)
 }
 
 /* On enlèveles accent dans la chaine */
-wchar_t* oteAccents(char* j)
+char* oteAccents(char* j)
 {
     int i;
     i = 1 ;
