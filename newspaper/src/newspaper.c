@@ -103,13 +103,13 @@ int main(int argc, char **argv)
     lengthMsg = strlen(message);
     remaining = lengthMsg;
     position = 0;
-    if (lengthMsg > (DISPLAY*WIDTH)) {
+    if (lengthMsg > (DISPLAYS*WIDTH)) {
         animations = createAnimationQueue();
         do {
+            remaining = remaining - (DISPLAYS * WIDTH);
             enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-            enqueueAnimation(animations, createAnimation(scrollH, position, remaining-(DISPLAY*WIDTH), 2, 150, 0));
-            remaining = remaining - (DISPLAY * WIDTH);
-            position = position - (DISPLAY * WIDTH);
+            enqueueAnimation(animations, createAnimation(scrollH, position, remaining, 2, 150, 0));
+            position = position - (DISPLAYS * WIDTH);
         } while(remaining > 0);
         animate(matrix, animations);
     } else {
