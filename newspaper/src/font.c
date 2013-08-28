@@ -12,55 +12,6 @@
 #include <string.h>
 #include <stdio.h>
 
-/**
- * Create a new font
- *
- * @param data            Tableau de la fonte au format binaire
- * @param sizeTable       Tableau d'information de taille des caractères
- * @param mapping         Mapping des caractères ascii et de la fonte
- * @param fontHeight      Hauteur de la fonte
- *
- * @return Font struct
- */
-FONT* createFont(char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight)
-{
-	mapping = oteAccents(mapping);
-    data = oteAccents(data);
-	unsigned int totalLetter = strlen(mapping);
-	FONT_INFO lastInfo;
-	unsigned int dataSize;
-	FONT* font = (FONT*)malloc(sizeof(FONT));
-	unsigned int i;
-	unsigned int offset = 0;
-
-	/* Copying mapping */
-	font->mapping = strdup(mapping);
-
-	/* Copying allocation table */
-	font->allocationTable = (FONT_INFO*) malloc(sizeof(FONT_INFO) * totalLetter);
-	memset(font->allocationTable, 0, sizeof(FONT_INFO) * totalLetter);
-	for(i=0; mapping[i]; i++) {
-		font->allocationTable[i].length = sizeTable[i];
-		font->allocationTable[i].offset = offset;
-		offset += sizeTable[i];
-	}
-
-	/* Computing the length of font data */
-	lastInfo = font->allocationTable[totalLetter-1];
-	dataSize = lastInfo.length + lastInfo.offset;
-
-	/* Copying font data */
-	font->data = (unsigned char*)malloc(dataSize);
-	memset(font->data, 0, dataSize);
-	memcpy(font->data, data, dataSize);
-
-	/* Setting height and letter spacing */
-	font->fontHeight = fontHeight;
-	font->letterSpacing = 1;
-
-	return font;
-}
-
 /* sansAccent : transforme un caractère accentué en la même lettre mais
  * sans accent (é -> e, ç -> c, À -> A, ...)
  * Entrées : le caractère
@@ -117,6 +68,55 @@ wchar_t* oteAccents(char* j)
     }
     j[i-1] = '\0';
     return j;
+}
+
+/**
+ * Create a new font
+ *
+ * @param data            Tableau de la fonte au format binaire
+ * @param sizeTable       Tableau d'information de taille des caractères
+ * @param mapping         Mapping des caractères ascii et de la fonte
+ * @param fontHeight      Hauteur de la fonte
+ *
+ * @return Font struct
+ */
+FONT* createFont(char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight)
+{
+	mapping = oteAccents(mapping);
+    data = oteAccents(data);
+	unsigned int totalLetter = strlen(mapping);
+	FONT_INFO lastInfo;
+	unsigned int dataSize;
+	FONT* font = (FONT*)malloc(sizeof(FONT));
+	unsigned int i;
+	unsigned int offset = 0;
+
+	/* Copying mapping */
+	font->mapping = strdup(mapping);
+
+	/* Copying allocation table */
+	font->allocationTable = (FONT_INFO*) malloc(sizeof(FONT_INFO) * totalLetter);
+	memset(font->allocationTable, 0, sizeof(FONT_INFO) * totalLetter);
+	for(i=0; mapping[i]; i++) {
+		font->allocationTable[i].length = sizeTable[i];
+		font->allocationTable[i].offset = offset;
+		offset += sizeTable[i];
+	}
+
+	/* Computing the length of font data */
+	lastInfo = font->allocationTable[totalLetter-1];
+	dataSize = lastInfo.length + lastInfo.offset;
+
+	/* Copying font data */
+	font->data = (unsigned char*)malloc(dataSize);
+	memset(font->data, 0, dataSize);
+	memcpy(font->data, data, dataSize);
+
+	/* Setting height and letter spacing */
+	font->fontHeight = fontHeight;
+	font->letterSpacing = 1;
+
+	return font;
 }
 
 /**
