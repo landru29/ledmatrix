@@ -48,17 +48,22 @@ int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 	unsigned int destinationWidth = matrix->viewportWidth-frameNumber;
 	unsigned int dataWidth = (destinationWidth<matrix->modelWidth ? destinationWidth : matrix->modelWidth);
-	int modelDataStart;
+	int modelDataStart, size;
 
 	/* erase all */
 	matrixClearViewport(matrix);
 
 	/* copy the data */
+    printf("frameNumber: %d\n", frameNumber);
 	if (frameNumber>=0) {
 		memcpy(&matrix->viewport[frameNumber], matrix->model, dataWidth);
 	} else {
-		modelDataStart = (-frameNumber < matrix->modelWidth ? -frameNumber : matrix->modelWidth);
-		memcpy(matrix->viewport, &matrix->model[modelDataStart], matrix->modelWidth-modelDataStart);
+		modelDataStart = (-frameNumber <= matrix->modelWidth ? -frameNumber : matrix->modelWidth);
+        printf("modelDataStart: %d\n", modelDataStart);
+        //printf("modelWidth: %s\n", *matrix->modelWidth[modelDataStart]);
+        printf("size: %d\n", matrix->modelWidth-modelDataStart);
+        size = ((matrix->modelWidth-modelDataStart)<(matrix->viewportWidth*matrix->viewportHeight)) ? matrix->modelWidth-modelDataStart : (matrix->viewportWidth*matrix->viewportHeight);
+		memcpy(matrix->viewport, &matrix->model[modelDataStart], size);
 	}
 
 	/* Send the data to the matrix */
