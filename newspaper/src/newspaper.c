@@ -17,7 +17,7 @@
 #include "animationpool.h"
 #include "animationgif.h"
 
-#define DISPLAYS 4     // Nombre des matrices
+#define DISPLAYS 3     // Nombre des matrices
 #define HEIGHT   8     // Nombre de ligne sur une matrice
 #define WIDTH    32    // Nombre de colonnes sur une matrice
 
@@ -53,6 +53,8 @@ int main(int argc, char **argv)
     ANIMATION_QUEUE* animations=0;
     GIFANIMATION* gif;
     char* message=0;
+    int i;
+    int graphic = 0;
     int simulated=
 #ifdef __arm__
     0;
@@ -70,6 +72,9 @@ int main(int argc, char **argv)
 
     while ((option = getopt(argc, argv, optstring)) != -1) {
         switch (option) {
+            case 'g':
+                graphic = 1;
+                break;
             case 'm': /* example of options with value */
                 message = strdup(optarg);
                 break;
@@ -81,7 +86,15 @@ int main(int argc, char **argv)
                 break;
         }
     }
-    printf("Le message: %s\n", message);
+
+	/* Matrix initialisation */
+    matrix = openLedMatrix(DISPLAYS*WIDTH, HEIGHT);
+    //printf("Matrices initialisées\n");
+    font = createFont(perso_font, perso_info, perso_mapping, 1);
+    //font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
+    //printf("fontes initialisées\n");
+    matrixSetFont(matrix, font);
+    //printf("fontes ajoutées aux matrices\n");
 
 	/* check if a message was specified */
     if ((!message) || (!*message)) {
@@ -89,28 +102,28 @@ int main(int argc, char **argv)
         return 0;
     }
 
-	/* Matrix initialisation */
-    matrix = openLedMatrix(DISPLAYS*WIDTH, HEIGHT);
-    font = createFont(perso_font, perso_info, perso_mapping, 1);
-    //font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
-    matrixSetFont(matrix, font);
+    printf("Le message: %s\n", message);
+
     matrixPushString(matrix, message);
+    //printf("Message ajouté aux matrices\n");
 
     /* Switch on the simulator */
     if (simulated) matrixSetDebugMode(matrix, 1);
 
-    uint8_t lengthMsg, remaining, position;
-    lengthMsg = strlen(message);
+    int lengthMsg, remaining, position;
+    lengthMsg = matrix->modelWidth * matrix->modelHeight;
+    //printf("length: %d\n", lengthMsg);
     remaining = lengthMsg;
     position = 0;
     if (lengthMsg > (DISPLAYS*WIDTH)) {
         animations = createAnimationQueue();
-        do {
-            remaining = remaining - (DISPLAYS * WIDTH);
+        remaining = lengthMsg-(DISPLAYS*WIDTH);
+        //for (i=0; i<3;i++) {
             enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-            enqueueAnimation(animations, createAnimation(scrollH, position, remaining, 2, 150, 0));
-            position = position - (DISPLAYS * WIDTH);
-        } while(remaining > 0);
+            enqueueAnimation(animations, createAnimation(scrollH, 0, -(remaining), 2, 150, 0));
+            enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
+            enqueueAnimation(animations, createAnimation(scrollH, -(remaining), 0, 2, 150, 0));
+        //}
         animate(matrix, animations);
     } else {
         matrixSendModel(matrix);
