@@ -54,15 +54,13 @@ int scrollH(LEDMATRIX* matrix, int frameNumber, void* userData)
 	matrixClearViewport(matrix);
 
 	/* copy the data */
-    printf("frameNumber: %d\n", frameNumber);
 	if (frameNumber>=0) {
 		memcpy(&matrix->viewport[frameNumber], matrix->model, dataWidth);
 	} else {
 		modelDataStart = (-frameNumber <= matrix->modelWidth ? -frameNumber : matrix->modelWidth);
-        printf("modelDataStart: %d\n", modelDataStart);
-        //printf("modelWidth: %s\n", *matrix->modelWidth[modelDataStart]);
-        printf("size: %d\n", matrix->modelWidth-modelDataStart);
-        size = ((matrix->modelWidth-modelDataStart)<(matrix->viewportWidth*matrix->viewportHeight)) ? matrix->modelWidth-modelDataStart : (matrix->viewportWidth*matrix->viewportHeight);
+        // Calcul le plus petit élément entre le buffer du model et celui du viewport
+        size = ((matrix->modelWidth - modelDataStart) < (matrix->viewportWidth * matrix->viewportHeight))
+            ? matrix->modelWidth - modelDataStart : (matrix->viewportWidth * matrix->viewportHeight);
 		memcpy(matrix->viewport, &matrix->model[modelDataStart], size);
 	}
 
