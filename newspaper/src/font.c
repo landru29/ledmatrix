@@ -61,8 +61,8 @@ char sansAccent(char c)
 char* oteAccents(char* j)
 {
     int i;
-    i = 1 ;
-    while ( j[i] != '\0' ) {
+    i = 0;
+    while (j[i] != '\0') {
         j[i] = sansAccent(j[i]);
         i = i + 1;
     }
@@ -82,8 +82,7 @@ char* oteAccents(char* j)
  */
 FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight)
 {
-	mapping = oteAccents(mapping);
-    data = oteAccents(data);
+    //data = oteAccents(data);
 	unsigned int totalLetter = strlen(mapping);
 	FONT_INFO lastInfo;
 	unsigned int dataSize;
