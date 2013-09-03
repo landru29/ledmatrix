@@ -23,6 +23,7 @@ $args = array(
 );
 
 $uri = $url . $resource . '.' . $format . '?' . implode('&',  $args);
+echo $uri;
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $uri);
