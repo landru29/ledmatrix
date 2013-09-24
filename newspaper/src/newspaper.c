@@ -16,10 +16,11 @@
 #include "animate.h"
 #include "animationpool.h"
 #include "animationgif.h"
+#include "ini.h"
+#include "display.h"
 
-#define DISPLAYS 3     // Nombre des matrices
-#define HEIGHT   8     // Nombre de ligne sur une matrice
-#define WIDTH    32    // Nombre de colonnes sur une matrice
+//#define HEIGHT   8     // Nombre de ligne sur une matrice
+//#define WIDTH    32    // Nombre de colonnes sur une matrice
 
 /**
  * Display usage of program on stdout
@@ -30,10 +31,12 @@
  */
 void usage(char **argv)
 {
-	fprintf(stdout, "Newspaper V1.0\n M. Hervo & C. Meichel\n2013, June\n");
-	fprintf(stdout, "Syntaxe : %s -m message [-d]\n", argv[0]);
-	fprintf(stdout, "\t-m message:\n\t\tmessage to send to the matrix\n");
-	fprintf(stdout, "\t-s:\n\t\tSimulate the matrix\n");
+    fprintf(stdout, "Newspaper V1.0\n M. Hervo & C. Meichel\n2013, June\n");
+    fprintf(stdout, "Syntaxe : %s -m message [-d]\n", argv[0]);
+    fprintf(stdout, "\t-m message:\n\t\tmessage to send to the matrix\n");
+    fprintf(stdout, "\t-s:\n\t\tSimulate the matrix\n");
+    fprintf(stdout, "\t-t number:\n\t\tindex of the matrix to completly switch on for a test\n");
+    fprintf(stdout, "\t-v:\n\t\tVerbose the configuration and exit\n");
 }
 
 /**
@@ -46,12 +49,19 @@ void usage(char **argv)
  */
 int main(int argc, char **argv)
 {
-    char optstring[] = "m:s";
+    char optstring[] = "m:t:sv";
     int option;
+    INI_LINE* configuration;
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT* font = 0;
     ANIMATION_QUEUE* animations=0;
     GIFANIMATION* gif;
+    unsigned char csValueTmp;
+    int testMatrixIndex=-1;
+    char* dataTest;
+    unsigned int matrixHeight; // nombre de ligne par matrice
+    unsigned int matrixWidth;  // nombre de colonnes par matrice
+    unsigned int displays;     // nombre de matrices
     char* message=0;
     int i;
     int graphic = 0;
@@ -62,7 +72,50 @@ int main(int argc, char **argv)
     1;
 #endif
 
-	/* check if there is at least one argument */
+    /* Check if launched by root */
+    if (getuid() !=0)
+        fprintf(stdout, "You should be root to launch this program\n");
+
+    /* read config */
+    configuration = iniParse("/etc/newspaper/conf.ini");
+    /* retrieve data from configuration */
+    if (iniHasKey(configuration, "displays")) {
+        sscanf(iniGet(configuration, "displays"), "%d", &displays);
+    } else {
+        displays = 3;
+    }
+    if (iniHasKey(configuration, "matrixHeight")) {
+        sscanf(iniGet(configuration, "matrixHeight"), "%d", &matrixHeight);
+    } else {
+        matrixHeight = 8;
+    }
+    if (iniHasKey(configuration, "matrixWidth")) {
+        sscanf(iniGet(configuration, "matrixWidth"), "%d", &matrixWidth);
+    } else {
+        matrixWidth = 32;
+    }
+    if (iniHasKey(configuration, "CS0")) {
+        sscanf(iniGet(configuration, "CS0"), "%d", &csValueTmp);
+        setCs(0, csValueTmp);
+    }
+    if (iniHasKey(configuration, "CS1")) {
+        sscanf(iniGet(configuration, "CS1"), "%d", &csValueTmp);
+        setCs(1, csValueTmp);
+    }
+    if (iniHasKey(configuration, "CS2")) {
+        sscanf(iniGet(configuration, "CS2"), "%d", &csValueTmp);
+        setCs(2, csValueTmp);
+    }
+    if (iniHasKey(configuration, "CS3")) {
+        sscanf(iniGet(configuration, "CS3"), "%d", &csValueTmp);
+        setCs(3, csValueTmp);
+    }
+
+    /* Release configuration */
+    iniDestroy(configuration);
+
+
+    /* check if there is at least one argument */
     if (argc<2) {
         usage(argv);
         return 0;
@@ -81,14 +134,38 @@ int main(int argc, char **argv)
             case 's':
                 simulated = 1;
                 break;
+            case 't':
+                sscanf(optarg, "%d", &testMatrixIndex);
+                break;
+            case 'v':
+                fprintf(stdout, "Nb matrix: %d\n", displays);
+                fprintf(stdout, "Matrix height: %d\n", matrixHeight);
+                fprintf(stdout, "Matrix width: %d\n", matrixWidth);
+                fprintf(stdout, "CS0: %d\nCS1: %d\nCS2: %d\nCS3: %d\n", getCs(0), getCs(1), getCs(2), getCs(3));
+                abort();
+                break;
             default:
                 abort();
                 break;
         }
     }
 
-	/* Matrix initialisation */
-    matrix = openLedMatrix(DISPLAYS*WIDTH, HEIGHT);
+
+    /* Matrix initialisation */
+    matrix = openLedMatrix(displays*matrixWidth, matrixHeight);
+
+    /* Switch on the simulator */
+    if (simulated) matrixSetDebugMode(matrix, 1);
+
+    if (testMatrixIndex>=0) {
+        fprintf(stdout, "Testing matrix %d\n", testMatrixIndex);
+        dataTest = (char*) malloc(matrixWidth*matrixHeight/8);
+        memset(dataTest, 0xff, matrixWidth*matrixHeight/8);
+        writeScreen(testMatrixIndex, dataTest, matrixWidth*matrixHeight/8, matrixWidth, matrixHeight);
+        free (dataTest);
+        return 0;
+    }
+
     //printf("Matrices initialisées\n");
     font = createFont(perso_font, perso_info, perso_mapping, 1);
     //font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
@@ -107,17 +184,14 @@ int main(int argc, char **argv)
     matrixPushString(matrix, message);
     //printf("Message ajouté aux matrices\n");
 
-    /* Switch on the simulator */
-    if (simulated) matrixSetDebugMode(matrix, 1);
-
     int lengthMsg, remaining, position;
     lengthMsg = matrix->modelWidth * matrix->modelHeight;
     //printf("length: %d\n", lengthMsg);
     remaining = lengthMsg;
     position = 0;
-    if (lengthMsg > (DISPLAYS*WIDTH)) {
+    if (lengthMsg > (displays*matrixWidth)) {
         animations = createAnimationQueue();
-        remaining = lengthMsg-(DISPLAYS*WIDTH);
+        remaining = lengthMsg-(displays*matrixWidth);
         //for (i=0; i<3;i++) {
             enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
             enqueueAnimation(animations, createAnimation(scrollH, 0, -(remaining), 2, 150, 0));
@@ -145,9 +219,9 @@ int main(int argc, char **argv)
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(fade, 0, 15, 1, 250, 0));
     enqueueAnimation(animations, createAnimation(blink, 0, 1, 1, 2000, 0));
-    enqueueAnimation(animations, createAnimation(scrollH, 0, DISPLAYS*WIDTH, 2, 150, 0));
+    enqueueAnimation(animations, createAnimation(scrollH, 0, displays*matrixWidth, 2, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-    enqueueAnimation(animations, createAnimation(scrollH, DISPLAYS*WIDTH, 0-(strlen(message)*8), 2, 150, 0));
+    enqueueAnimation(animations, createAnimation(scrollH, displays*matrixWidth, 0-(strlen(message)*8), 2, 150, 0));
     enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
     enqueueAnimation(animations, createAnimation(scrollH, -(strlen(message)*8), 0, 2, 150, 0));
     animate(matrix, animations);

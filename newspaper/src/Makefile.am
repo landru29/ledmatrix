@@ -8,6 +8,7 @@ newspaper_SOURCES = \
 	bit_array.c \
 	font.c \
 	newspaper.c \
+        ini.c \
 	aipointe.h \
 	animationpool.h \
 	font.h \
@@ -16,4 +17,8 @@ newspaper_SOURCES = \
 	ledmatrix.h \
 	animationgif.h \
 	display.h \
-	perso.h
+	perso.h \
+        ini.h
+
+newspaperconfdir=/etc/newspaper
+newspaperconf_DATA=../conf.ini
