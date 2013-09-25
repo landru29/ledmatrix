@@ -10,7 +10,7 @@
   <property name="build.src" value="./newspaper/src"/>
   <property name="basedir" value="./"/>
 
-  <target name="build" depends="sloccount,doxygen,compile" />
+  <target name="build" depends="sloccount,compile" />
 
   <!-- configuration du projet -->
   <target name="configure"

@@ -13,6 +13,23 @@
 #include "../config.h"
 
 /**
+ * Spécifie les pins de chip select
+ *
+ * @param id identifiant du chipSelect (0|1|2|3)
+ * @param value numéro de pin
+ */
+void setCs(unsigned char id, unsigned char value);
+
+/**
+ * Lit les pins de chip select
+ *
+ * @param id identifiant du chipSelect (0|1|2|3)
+ * @return numéro de pin
+ */
+int getCs(unsigned char id);
+
+
+/**
  * Initialisation des matrices
  *
  * @param nbMatrix Nombre de matrices à initialiser

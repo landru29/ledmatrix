@@ -16,4 +16,9 @@ newspaper_SOURCES = \
     display.h \
     perso.h \
     plugins.h \
-    plugins/animation.h
+    plugins/animation.h \
+    ini.c \
+    ini.h
+
+newspaperconfdir=/etc/newspaper
+newspaperconf_DATA=../conf.ini

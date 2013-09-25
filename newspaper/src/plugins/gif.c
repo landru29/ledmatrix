@@ -38,20 +38,20 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 	GIFANIMATION* gif = (GIFANIMATION*)userData;
 	unsigned char* data;
 	shared_function matrixSendViewportFct;
-	
+
 	if (!userData) return ANIMATION_FAILURE;
-	
+
 	/* get functions from host */
 	matrixSendViewportFct = (shared_function)getHostFunction(hostFunctions, "matrixSendViewport");
-		
+
 	data = (unsigned char*) malloc(matrix->viewportWidth * matrix->viewportHeight*8);
-	
+
 	extractRectangle(gif->gif, gif->frameCount-frameNumber-1, 0, 0, matrix->viewportHeight*8, matrix->viewportWidth, data);
 	rectangle2Matrix(matrix->viewport, data, matrix->viewportHeight*8, matrix->viewportWidth, gif->gif->SBackGroundColor);
-	
+
 	/* Send the data to the matrix */
 	matrixSendViewportFct(matrix);
-	
+
 	free(data);
 #endif
 	return ANIMATION_SUCCESS;
@@ -60,7 +60,7 @@ int gifAnimation(LEDMATRIX* matrix, int frameNumber, void* userData)
 /**
  * Create a new GIF animation
  *
- * @param filename   	filename of the GIF 
+ * @param filename filename of the GIF 
  *
  * @return Animation gif struct
  **/
@@ -68,18 +68,18 @@ GIFANIMATION* openGifFile(const char* filename)
 {
 	GIFANIMATION* gif;
 	gif = (GIFANIMATION*) malloc(sizeof(GIFANIMATION));
-	
+
 #ifdef HAS_GIF_LIB
 	if ((gif->gif = DGifOpenFileName(filename)) == 0) {
 		printf("An error occured while opening %s\n", filename);
 		return 0;
 	}
-	
+
 	if (DGifSlurp(gif->gif) != GIF_OK) {
 		printf("An error occured while reading %s\n", filename);
 		return 0;
 	}
-	
+
 	gif->frameCount = gif->gif->ImageCount;
 #else
 	gif->frameCount = 0;
@@ -90,8 +90,8 @@ GIFANIMATION* openGifFile(const char* filename)
 /**
  * Close a GIF animation
  *
- * @param gif	animation to close
- **/
+ * @param gif animation to close
+ */
 void closeGifFile(GIFANIMATION* gif)
 {
 #ifdef HAS_GIF_LIB
@@ -118,20 +118,20 @@ void closeGifFile(GIFANIMATION* gif)
  * 
  * @return Gif status
  * 
- **/
+ */
 int extractRectangle(GifFileType* gif, unsigned int frameNum, unsigned int top, unsigned int left, unsigned int height, unsigned int width, unsigned char* data)
 {
 	unsigned int realWidth = width;
 	unsigned int realHeight = height;
 	unsigned int x;
 	unsigned int y;
-	
+
 	if (frameNum>=gif->ImageCount) return GIF_ERROR;
 	memset(data, gif->SBackGroundColor, width*height);
-	
+
 	if (width+left > gif->SavedImages[frameNum].ImageDesc.Width) realWidth = gif->SavedImages[frameNum].ImageDesc.Width-left;
 	if (height+top > gif->SavedImages[frameNum].ImageDesc.Height) realHeight = gif->SavedImages[frameNum].ImageDesc.Height-top;
-	
+
 	for(y=top; y<realHeight+top; y++) {
 		for(x=left; x<realWidth+left; x++) {
 			data[(y-top) * width + x-left] = gif->SavedImages[frameNum].RasterBits[y*gif->SavedImages[frameNum].ImageDesc.Width+x];

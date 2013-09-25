@@ -14,11 +14,12 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <string.h>
+#include "display.h"
 #ifdef __arm__
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 #else
-    void digitalWrite(int a, int b) 
+    void digitalWrite(int a, int b)
     {
 		a = a;
 		b = b;
@@ -27,7 +28,7 @@
     {
 		a = a;
 		b = b;
-		c = c;		
+		c = c;
 	}
 #endif
 #include "bit_array.h"
@@ -54,15 +55,73 @@
 // Délai d'attente entre l'écriture sur les matrices et l'activation des chipSelect
 #define DELAY        550
 
-#define CS0 3 // GPIO 22
-#define CS1 4 // GPIO 23
-#define CS2 5 // GPIO 24
-#define CS3 6 // GPIO 24 A activer en continu avec le 74HC138 (pin E3)
+unsigned char CS0 = 3; //GPIO22
+unsigned char CS1 = 4; //GPIO23
+unsigned char CS2 = 5; //GPIO24
+unsigned char CS3 = 6; //GPIO25 A activer en continu avec le 74HC138 (pin E3)
+//#define CS0 3 // GPIO 22
+//#define CS1 4 // GPIO 23
+//#define CS2 5 // GPIO 24
+//#define CS3 6 // GPIO 25 A activer en continu avec le 74HC138 (pin E3)
 
 //#define DEBUG
 
 void print_byte(uint8_t x);
 void print_word(uint16_t x);
+
+/**
+ * Spécifie les pins de chip select
+ *
+ * @param id identifiant du chipSelect (0|1|2|3)
+ * @param value numéro de pin
+ */
+void setCs(unsigned char id, unsigned char value)
+{
+    switch (id) {
+        case 0:
+            CS0 = value;
+            break;
+        case 1:
+            CS1 = value;
+            break;
+        case 2:
+            CS2 = value;
+            break;
+        case 3:
+            CS3 = value;
+            break;
+        default:
+            break;
+    }
+}
+
+/**
+ * Lit les pins de chip select
+ *
+ * @param id identifiant du chipSelect (0|1|2|3)
+ * @return numéro de pin
+ */
+int getCs(unsigned char id)
+{
+    switch (id) {
+        case 0:
+            return CS0;
+            break;
+        case 1:
+            return CS1;
+            break;
+        case 2:
+            return CS2;
+            break;
+        case 3:
+            return CS3;
+            break;
+        default:
+            return -1;
+            break;
+    }
+}
+
 
 /**
  * Modifie le poids faible et le poids fort
@@ -100,9 +159,9 @@ int selectChip(unsigned char id)
             digitalWrite(CS2, 0);
             break;
         case 1:
-            digitalWrite(CS0, 0);
+            digitalWrite(CS0, 1);
             digitalWrite(CS1, 0);
-            digitalWrite(CS2, 1);
+            digitalWrite(CS2, 0);
             break;
         case 2:
             digitalWrite(CS0, 0);
@@ -110,9 +169,9 @@ int selectChip(unsigned char id)
             digitalWrite(CS2, 0);
             break;
         case 3:
-            digitalWrite(CS0, 0);
+            digitalWrite(CS0, 1);
             digitalWrite(CS1, 1);
-            digitalWrite(CS2, 1);
+            digitalWrite(CS2, 0);
             break;
         default:
             digitalWrite(CS0, 1);

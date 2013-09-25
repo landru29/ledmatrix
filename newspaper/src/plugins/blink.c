@@ -42,7 +42,7 @@ int blink(LEDMATRIX* matrix, int frameNumber, void* userData)
 	blink = (frameNumber > 0) ? 0 : 1;
 	/* Appel de la méthode clignotement sur bloc de la matrice */
 #ifdef __arm__
-	displayBlinkFct = (host_function)getHostFunction(hostFunctions, "displayBlink");
+	displayBlinkFct = (shared_function)getHostFunction(hostFunctions, "displayBlink");
 	for (i=0; i < matrix->viewportWidth/32; i++) {
 		displayBlinkFct(i, blink);
 	}
