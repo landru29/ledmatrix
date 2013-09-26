@@ -45,11 +45,11 @@ void usage(char **argv)
  */
 char* pluginsFolder()
 {
-	char currentPath[1000]="/usr/local/lib/newspaper/plugins";
+	//char currentPath[1000]="/usr/local/lib/newspaper/plugins";
 	/*if (getcwd(currentPath, sizeof(currentPath)) != 0) {
 		strcpy(&currentPath[strlen(currentPath)], "/src/plugins/.libs");
 	}*/
-	return strdup(currentPath);
+	return strdup(LIBDIR);
 }
 
 /**
@@ -63,6 +63,7 @@ char* pluginsFolder()
 int main(int argc, char **argv)
 {
     char optstring[] = "m:t:sv";
+    char confPath[200];
     int option;
     INI_LINE* configuration;
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
@@ -105,7 +106,8 @@ int main(int argc, char **argv)
         fprintf(stdout, "You should be root to launch this program\n");
 
     /* read config */
-    configuration = iniParse("/etc/newspaper/conf.ini");
+    sprintf(confPath, "%s/conf.ini", CONFDIR);
+    configuration = iniParse(confPath);
     /* retrieve data from configuration */
     if (iniHasKey(configuration, "displays")) {
         sscanf(iniGet(configuration, "displays"), "%d", &displays);

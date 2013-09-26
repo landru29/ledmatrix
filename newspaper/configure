@@ -11451,8 +11451,8 @@ ac_config_headers="$ac_config_headers config.h"
 
 
 
-#AM_CFLAGS = -DCONFDIR='"$(sysconfdir)"/newspaper'
-#AM_CFLAGS = -DLIBDIR='"$(libdir)"/newspaper/plugins'
+#AM_CFLAGS=$AM_CFLAGS -DCONFDIR=$(eval echo ${sysconfdir})\"/newspaper
+#AM_CFLAGS=$AM_CFLAGS -DLIBDIR=${libdir}/newspaper/plugins
 #AC_SUBST([PLUGINDIR], "$(libdir)/newspaper/plugins")
 #AC_SUBST([CONFDIR], "$(sysconfdir)/newspaper")
 

@@ -64,12 +64,16 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_newspaper_OBJECTS = animate.$(OBJEXT) display.$(OBJEXT) \
-	ledmatrix.$(OBJEXT) bit_array.$(OBJEXT) font.$(OBJEXT) \
-	newspaper.$(OBJEXT) plugins.$(OBJEXT) animation.$(OBJEXT) \
-	ini.$(OBJEXT)
+am_newspaper_OBJECTS = newspaper-animate.$(OBJEXT) \
+	newspaper-display.$(OBJEXT) newspaper-ledmatrix.$(OBJEXT) \
+	newspaper-bit_array.$(OBJEXT) newspaper-font.$(OBJEXT) \
+	newspaper-newspaper.$(OBJEXT) newspaper-plugins.$(OBJEXT) \
+	newspaper-animation.$(OBJEXT) newspaper-ini.$(OBJEXT)
 newspaper_OBJECTS = $(am_newspaper_OBJECTS)
 newspaper_LDADD = $(LDADD)
+newspaper_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(newspaper_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -227,6 +231,7 @@ newspaper_SOURCES = \
     ini.c \
     ini.h
 
+newspaper_CFLAGS = -DCONFDIR=\"${sysconfdir}/newspaper\" -DLIBDIR=\"${libdir}/newspaper/plugins\"
 all: all-am
 
 .SUFFIXES:
@@ -309,7 +314,7 @@ clean-binPROGRAMS:
 	rm -f $$list
 newspaper$(EXEEXT): $(newspaper_OBJECTS) $(newspaper_DEPENDENCIES) $(EXTRA_newspaper_DEPENDENCIES) 
 	@rm -f newspaper$(EXEEXT)
-	$(LINK) $(newspaper_OBJECTS) $(newspaper_LDADD) $(LIBS)
+	$(newspaper_LINK) $(newspaper_OBJECTS) $(newspaper_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -317,15 +322,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/animate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/animation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bit_array.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/display.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/font.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ini.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrix.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/plugins.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-animate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-animation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-bit_array.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-display.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-font.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-ini.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-ledmatrix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-newspaper.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-plugins.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -348,19 +353,131 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
-animation.o: plugins/animation.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT animation.o -MD -MP -MF $(DEPDIR)/animation.Tpo -c -o animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/animation.Tpo $(DEPDIR)/animation.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='animation.o' libtool=no @AMDEPBACKSLASH@
+newspaper-animate.o: animate.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-animate.o -MD -MP -MF $(DEPDIR)/newspaper-animate.Tpo -c -o newspaper-animate.o `test -f 'animate.c' || echo '$(srcdir)/'`animate.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-animate.Tpo $(DEPDIR)/newspaper-animate.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='animate.c' object='newspaper-animate.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-animate.o `test -f 'animate.c' || echo '$(srcdir)/'`animate.c
 
-animation.obj: plugins/animation.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT animation.obj -MD -MP -MF $(DEPDIR)/animation.Tpo -c -o animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/animation.Tpo $(DEPDIR)/animation.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='animation.obj' libtool=no @AMDEPBACKSLASH@
+newspaper-animate.obj: animate.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-animate.obj -MD -MP -MF $(DEPDIR)/newspaper-animate.Tpo -c -o newspaper-animate.obj `if test -f 'animate.c'; then $(CYGPATH_W) 'animate.c'; else $(CYGPATH_W) '$(srcdir)/animate.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-animate.Tpo $(DEPDIR)/newspaper-animate.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='animate.c' object='newspaper-animate.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-animate.obj `if test -f 'animate.c'; then $(CYGPATH_W) 'animate.c'; else $(CYGPATH_W) '$(srcdir)/animate.c'; fi`
+
+newspaper-display.o: display.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-display.o -MD -MP -MF $(DEPDIR)/newspaper-display.Tpo -c -o newspaper-display.o `test -f 'display.c' || echo '$(srcdir)/'`display.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-display.Tpo $(DEPDIR)/newspaper-display.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='display.c' object='newspaper-display.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-display.o `test -f 'display.c' || echo '$(srcdir)/'`display.c
+
+newspaper-display.obj: display.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-display.obj -MD -MP -MF $(DEPDIR)/newspaper-display.Tpo -c -o newspaper-display.obj `if test -f 'display.c'; then $(CYGPATH_W) 'display.c'; else $(CYGPATH_W) '$(srcdir)/display.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-display.Tpo $(DEPDIR)/newspaper-display.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='display.c' object='newspaper-display.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-display.obj `if test -f 'display.c'; then $(CYGPATH_W) 'display.c'; else $(CYGPATH_W) '$(srcdir)/display.c'; fi`
+
+newspaper-ledmatrix.o: ledmatrix.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-ledmatrix.o -MD -MP -MF $(DEPDIR)/newspaper-ledmatrix.Tpo -c -o newspaper-ledmatrix.o `test -f 'ledmatrix.c' || echo '$(srcdir)/'`ledmatrix.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-ledmatrix.Tpo $(DEPDIR)/newspaper-ledmatrix.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ledmatrix.c' object='newspaper-ledmatrix.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ledmatrix.o `test -f 'ledmatrix.c' || echo '$(srcdir)/'`ledmatrix.c
+
+newspaper-ledmatrix.obj: ledmatrix.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-ledmatrix.obj -MD -MP -MF $(DEPDIR)/newspaper-ledmatrix.Tpo -c -o newspaper-ledmatrix.obj `if test -f 'ledmatrix.c'; then $(CYGPATH_W) 'ledmatrix.c'; else $(CYGPATH_W) '$(srcdir)/ledmatrix.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-ledmatrix.Tpo $(DEPDIR)/newspaper-ledmatrix.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ledmatrix.c' object='newspaper-ledmatrix.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ledmatrix.obj `if test -f 'ledmatrix.c'; then $(CYGPATH_W) 'ledmatrix.c'; else $(CYGPATH_W) '$(srcdir)/ledmatrix.c'; fi`
+
+newspaper-bit_array.o: bit_array.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-bit_array.o -MD -MP -MF $(DEPDIR)/newspaper-bit_array.Tpo -c -o newspaper-bit_array.o `test -f 'bit_array.c' || echo '$(srcdir)/'`bit_array.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-bit_array.Tpo $(DEPDIR)/newspaper-bit_array.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bit_array.c' object='newspaper-bit_array.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-bit_array.o `test -f 'bit_array.c' || echo '$(srcdir)/'`bit_array.c
+
+newspaper-bit_array.obj: bit_array.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-bit_array.obj -MD -MP -MF $(DEPDIR)/newspaper-bit_array.Tpo -c -o newspaper-bit_array.obj `if test -f 'bit_array.c'; then $(CYGPATH_W) 'bit_array.c'; else $(CYGPATH_W) '$(srcdir)/bit_array.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-bit_array.Tpo $(DEPDIR)/newspaper-bit_array.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bit_array.c' object='newspaper-bit_array.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-bit_array.obj `if test -f 'bit_array.c'; then $(CYGPATH_W) 'bit_array.c'; else $(CYGPATH_W) '$(srcdir)/bit_array.c'; fi`
+
+newspaper-font.o: font.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-font.o -MD -MP -MF $(DEPDIR)/newspaper-font.Tpo -c -o newspaper-font.o `test -f 'font.c' || echo '$(srcdir)/'`font.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-font.Tpo $(DEPDIR)/newspaper-font.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='font.c' object='newspaper-font.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-font.o `test -f 'font.c' || echo '$(srcdir)/'`font.c
+
+newspaper-font.obj: font.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-font.obj -MD -MP -MF $(DEPDIR)/newspaper-font.Tpo -c -o newspaper-font.obj `if test -f 'font.c'; then $(CYGPATH_W) 'font.c'; else $(CYGPATH_W) '$(srcdir)/font.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-font.Tpo $(DEPDIR)/newspaper-font.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='font.c' object='newspaper-font.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-font.obj `if test -f 'font.c'; then $(CYGPATH_W) 'font.c'; else $(CYGPATH_W) '$(srcdir)/font.c'; fi`
+
+newspaper-newspaper.o: newspaper.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-newspaper.o -MD -MP -MF $(DEPDIR)/newspaper-newspaper.Tpo -c -o newspaper-newspaper.o `test -f 'newspaper.c' || echo '$(srcdir)/'`newspaper.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-newspaper.Tpo $(DEPDIR)/newspaper-newspaper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='newspaper.c' object='newspaper-newspaper.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-newspaper.o `test -f 'newspaper.c' || echo '$(srcdir)/'`newspaper.c
+
+newspaper-newspaper.obj: newspaper.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-newspaper.obj -MD -MP -MF $(DEPDIR)/newspaper-newspaper.Tpo -c -o newspaper-newspaper.obj `if test -f 'newspaper.c'; then $(CYGPATH_W) 'newspaper.c'; else $(CYGPATH_W) '$(srcdir)/newspaper.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-newspaper.Tpo $(DEPDIR)/newspaper-newspaper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='newspaper.c' object='newspaper-newspaper.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-newspaper.obj `if test -f 'newspaper.c'; then $(CYGPATH_W) 'newspaper.c'; else $(CYGPATH_W) '$(srcdir)/newspaper.c'; fi`
+
+newspaper-plugins.o: plugins.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-plugins.o -MD -MP -MF $(DEPDIR)/newspaper-plugins.Tpo -c -o newspaper-plugins.o `test -f 'plugins.c' || echo '$(srcdir)/'`plugins.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-plugins.Tpo $(DEPDIR)/newspaper-plugins.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins.c' object='newspaper-plugins.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-plugins.o `test -f 'plugins.c' || echo '$(srcdir)/'`plugins.c
+
+newspaper-plugins.obj: plugins.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-plugins.obj -MD -MP -MF $(DEPDIR)/newspaper-plugins.Tpo -c -o newspaper-plugins.obj `if test -f 'plugins.c'; then $(CYGPATH_W) 'plugins.c'; else $(CYGPATH_W) '$(srcdir)/plugins.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-plugins.Tpo $(DEPDIR)/newspaper-plugins.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins.c' object='newspaper-plugins.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-plugins.obj `if test -f 'plugins.c'; then $(CYGPATH_W) 'plugins.c'; else $(CYGPATH_W) '$(srcdir)/plugins.c'; fi`
+
+newspaper-animation.o: plugins/animation.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-animation.o -MD -MP -MF $(DEPDIR)/newspaper-animation.Tpo -c -o newspaper-animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-animation.Tpo $(DEPDIR)/newspaper-animation.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='newspaper-animation.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
+
+newspaper-animation.obj: plugins/animation.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-animation.obj -MD -MP -MF $(DEPDIR)/newspaper-animation.Tpo -c -o newspaper-animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-animation.Tpo $(DEPDIR)/newspaper-animation.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='newspaper-animation.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
+
+newspaper-ini.o: ini.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-ini.o -MD -MP -MF $(DEPDIR)/newspaper-ini.Tpo -c -o newspaper-ini.o `test -f 'ini.c' || echo '$(srcdir)/'`ini.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-ini.Tpo $(DEPDIR)/newspaper-ini.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ini.c' object='newspaper-ini.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ini.o `test -f 'ini.c' || echo '$(srcdir)/'`ini.c
+
+newspaper-ini.obj: ini.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-ini.obj -MD -MP -MF $(DEPDIR)/newspaper-ini.Tpo -c -o newspaper-ini.obj `if test -f 'ini.c'; then $(CYGPATH_W) 'ini.c'; else $(CYGPATH_W) '$(srcdir)/ini.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-ini.Tpo $(DEPDIR)/newspaper-ini.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ini.c' object='newspaper-ini.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ini.obj `if test -f 'ini.c'; then $(CYGPATH_W) 'ini.c'; else $(CYGPATH_W) '$(srcdir)/ini.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
