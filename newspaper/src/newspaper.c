@@ -45,10 +45,10 @@ void usage(char **argv)
  */
 char* pluginsFolder()
 {
-	char currentPath[1000]="";
-	if (getcwd(currentPath, sizeof(currentPath)) != 0) {
+	char currentPath[1000]="/usr/local/lib/newspaper/plugins";
+	/*if (getcwd(currentPath, sizeof(currentPath)) != 0) {
 		strcpy(&currentPath[strlen(currentPath)], "/src/plugins/.libs");
-	}
+	}*/
 	return strdup(currentPath);
 }
 

@@ -20,5 +20,3 @@ newspaper_SOURCES = \
     ini.c \
     ini.h
 
-newspaperconfdir=/etc/newspaper
-newspaperconf_DATA=../conf.ini

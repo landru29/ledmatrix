@@ -10817,6 +10817,7 @@ CC="$lt_save_CC"
 # Only expand once:
 
 
+
 am__api_version='1.11'
 
 # Find a good install program.  We prefer a C program (faster),
@@ -11448,6 +11449,12 @@ fi
 
 ac_config_headers="$ac_config_headers config.h"
 
+
+
+#AM_CFLAGS = -DCONFDIR='"$(sysconfdir)"/newspaper'
+#AM_CFLAGS = -DLIBDIR='"$(libdir)"/newspaper/plugins'
+#AC_SUBST([PLUGINDIR], "$(libdir)/newspaper/plugins")
+#AC_SUBST([CONFDIR], "$(sysconfdir)/newspaper")
 
 
 

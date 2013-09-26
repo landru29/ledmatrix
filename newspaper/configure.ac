@@ -3,11 +3,18 @@
 
 AC_PREREQ([2.69])
 AC_INIT([newspaper], [1.0], [noreply@gmail.com])
-LT_INIT
+AC_PROG_LIBTOOL
+LT_INIT([dlopen])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/ledmatrix.h])
 AC_CONFIG_SRCDIR([src/plugins/animation.h])
 AC_CONFIG_HEADERS([config.h])
+
+
+#AM_CFLAGS = -DCONFDIR='"$(sysconfdir)"/newspaper'
+#AM_CFLAGS = -DLIBDIR='"$(libdir)"/newspaper/plugins'
+#AC_SUBST([PLUGINDIR], "$(libdir)/newspaper/plugins")
+#AC_SUBST([CONFDIR], "$(sysconfdir)/newspaper")
 
 AC_CONFIG_MACRO_DIR([m4])
 

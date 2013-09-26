@@ -1,5 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4
 
+libdir = /usr/local/lib/newspaper/plugins
+
 lib_LTLIBRARIES = libmatrixScrollh.la libmatrixScrollv.la libmatrixIntervalle.la libmatrixBlink.la libmatrixGif.la
 
 libmatrixScrollh_la_SOURCES = scrollh.c animation.c
