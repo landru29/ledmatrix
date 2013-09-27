@@ -18,9 +18,6 @@
 #include "ini.h"
 #include "display.h"
 
-//#define HEIGHT   8     // Nombre de ligne sur une matrice
-//#define WIDTH    32    // Nombre de colonnes sur une matrice
-
 /**
  * Display usage of program on stdout
  *
@@ -45,12 +42,73 @@ void usage(char **argv)
  */
 char* pluginsFolder()
 {
-	//char currentPath[1000]="/usr/local/lib/newspaper/plugins";
-	/*if (getcwd(currentPath, sizeof(currentPath)) != 0) {
-		strcpy(&currentPath[strlen(currentPath)], "/src/plugins/.libs");
-	}*/
 	return strdup(LIBDIR);
 }
+
+/**
+ * Construit le chemin du fichi ini
+ *
+ * @return chemin absolu vers le fichier ini
+ */
+char* iniFile()
+{
+    char confPath[200];
+    sprintf(confPath, "%s/conf.ini", CONFDIR);
+    return strdup(confPath);
+}
+
+/**
+ * Charge la configuration depuis conf.ini
+ *
+ * @param displays nombre de matrices
+ * @param matrixHeight hauteur de matrice en pixels
+ * @param matrixWidth largeur de matrice en pixels
+ *
+ * @return void
+ */
+void loadConfiguration(unsigned int* displays, unsigned int* matrixHeight, unsigned int* matrixWidth)
+{
+    INI_LINE* configuration;
+    unsigned char csValueTmp;
+    /* read config */
+    configuration = iniParse(iniFile());
+    /* retrieve data from configuration */
+    if (iniHasKey(configuration, "displays")) {
+        sscanf(iniGet(configuration, "displays"), "%d", displays);
+    } else {
+        *displays = 3;
+    }
+    if (iniHasKey(configuration, "matrixHeight")) {
+        sscanf(iniGet(configuration, "matrixHeight"), "%d", matrixHeight);
+    } else {
+        *matrixHeight = 8;
+    }
+    if (iniHasKey(configuration, "matrixWidth")) {
+        sscanf(iniGet(configuration, "matrixWidth"), "%d", matrixWidth);
+    } else {
+        *matrixWidth = 32;
+    }
+    if (iniHasKey(configuration, "CS0")) {
+        sscanf(iniGet(configuration, "CS0"), "%d", &csValueTmp);
+        setCs(0, csValueTmp);
+    }
+    if (iniHasKey(configuration, "CS1")) {
+        sscanf(iniGet(configuration, "CS1"), "%d", &csValueTmp);
+        setCs(1, csValueTmp);
+    }
+    if (iniHasKey(configuration, "CS2")) {
+        sscanf(iniGet(configuration, "CS2"), "%d", &csValueTmp);
+        setCs(2, csValueTmp);
+    }
+    if (iniHasKey(configuration, "CS3")) {
+        sscanf(iniGet(configuration, "CS3"), "%d", &csValueTmp);
+        setCs(3, csValueTmp);
+    }
+
+    /* Release configuration */
+    iniDestroy(configuration);
+}
+
 
 /**
  * Méthode de lancement du programme
@@ -63,15 +121,12 @@ char* pluginsFolder()
 int main(int argc, char **argv)
 {
     char optstring[] = "m:t:sv";
-    char confPath[200];
     int option;
-    INI_LINE* configuration;
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT* font = 0;
     ANIMATION_QUEUE* animations=0;
     shared_function getFrames;
     //GIFANIMATION* gif;
-    unsigned char csValueTmp;
     int testMatrixIndex=-1;
     char* dataTest;
     unsigned int matrixHeight; // nombre de ligne par matrice
@@ -106,43 +161,7 @@ int main(int argc, char **argv)
         fprintf(stdout, "You should be root to launch this program\n");
 
     /* read config */
-    sprintf(confPath, "%s/conf.ini", CONFDIR);
-    configuration = iniParse(confPath);
-    /* retrieve data from configuration */
-    if (iniHasKey(configuration, "displays")) {
-        sscanf(iniGet(configuration, "displays"), "%d", &displays);
-    } else {
-        displays = 3;
-    }
-    if (iniHasKey(configuration, "matrixHeight")) {
-        sscanf(iniGet(configuration, "matrixHeight"), "%d", &matrixHeight);
-    } else {
-        matrixHeight = 8;
-    }
-    if (iniHasKey(configuration, "matrixWidth")) {
-        sscanf(iniGet(configuration, "matrixWidth"), "%d", &matrixWidth);
-    } else {
-        matrixWidth = 32;
-    }
-    if (iniHasKey(configuration, "CS0")) {
-        sscanf(iniGet(configuration, "CS0"), "%d", &csValueTmp);
-        setCs(0, csValueTmp);
-    }
-    if (iniHasKey(configuration, "CS1")) {
-        sscanf(iniGet(configuration, "CS1"), "%d", &csValueTmp);
-        setCs(1, csValueTmp);
-    }
-    if (iniHasKey(configuration, "CS2")) {
-        sscanf(iniGet(configuration, "CS2"), "%d", &csValueTmp);
-        setCs(2, csValueTmp);
-    }
-    if (iniHasKey(configuration, "CS3")) {
-        sscanf(iniGet(configuration, "CS3"), "%d", &csValueTmp);
-        setCs(3, csValueTmp);
-    }
-
-    /* Release configuration */
-    iniDestroy(configuration);
+    loadConfiguration(&displays, &matrixHeight, &matrixWidth);
 
     /* check if there is at least one argument */
     if (argc<2) {
@@ -215,7 +234,7 @@ int main(int argc, char **argv)
     printf("Le message: %s\n", message);
 
     matrixPushString(matrix, message);
-    
+
     /* Switch on the simulator */
     if (simulated) {
 		matrixSetDebugMode(matrix, 1);
@@ -242,9 +261,9 @@ int main(int argc, char **argv)
 		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 0, getFrames(userData), 1, 150, userData, plugAnimation->destruction));
 		userData = 0;
 	}*/
-    
+
     /*enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
-    
+
     enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
     //printf("Message ajouté aux matrices\n");
 
