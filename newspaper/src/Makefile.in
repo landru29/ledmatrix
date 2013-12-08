@@ -66,9 +66,9 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_newspaper_OBJECTS = newspaper-animate.$(OBJEXT) \
 	newspaper-display.$(OBJEXT) newspaper-ledmatrix.$(OBJEXT) \
-	newspaper-bit_array.$(OBJEXT) newspaper-font.$(OBJEXT) \
-	newspaper-newspaper.$(OBJEXT) newspaper-plugins.$(OBJEXT) \
-	newspaper-animation.$(OBJEXT) newspaper-ini.$(OBJEXT)
+	newspaper-font.$(OBJEXT) newspaper-newspaper.$(OBJEXT) \
+	newspaper-plugins.$(OBJEXT) newspaper-animation.$(OBJEXT) \
+	newspaper-ini.$(OBJEXT)
 newspaper_OBJECTS = $(am_newspaper_OBJECTS)
 newspaper_LDADD = $(LDADD)
 newspaper_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -214,7 +214,6 @@ newspaper_SOURCES = \
     animate.c \
     display.c \
     ledmatrix.c \
-    bit_array.c \
     font.c \
     newspaper.c \
     plugins.c \
@@ -222,7 +221,6 @@ newspaper_SOURCES = \
     aipointe.h \
     font.h \
     animate.h \
-    bit_array.h \
     ledmatrix.h \
     display.h \
     perso.h \
@@ -324,7 +322,6 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-animate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-animation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-bit_array.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-display.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-font.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-ini.Po@am__quote@
@@ -394,20 +391,6 @@ newspaper-ledmatrix.obj: ledmatrix.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ledmatrix.c' object='newspaper-ledmatrix.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ledmatrix.obj `if test -f 'ledmatrix.c'; then $(CYGPATH_W) 'ledmatrix.c'; else $(CYGPATH_W) '$(srcdir)/ledmatrix.c'; fi`
-
-newspaper-bit_array.o: bit_array.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-bit_array.o -MD -MP -MF $(DEPDIR)/newspaper-bit_array.Tpo -c -o newspaper-bit_array.o `test -f 'bit_array.c' || echo '$(srcdir)/'`bit_array.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-bit_array.Tpo $(DEPDIR)/newspaper-bit_array.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bit_array.c' object='newspaper-bit_array.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-bit_array.o `test -f 'bit_array.c' || echo '$(srcdir)/'`bit_array.c
-
-newspaper-bit_array.obj: bit_array.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-bit_array.obj -MD -MP -MF $(DEPDIR)/newspaper-bit_array.Tpo -c -o newspaper-bit_array.obj `if test -f 'bit_array.c'; then $(CYGPATH_W) 'bit_array.c'; else $(CYGPATH_W) '$(srcdir)/bit_array.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-bit_array.Tpo $(DEPDIR)/newspaper-bit_array.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bit_array.c' object='newspaper-bit_array.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-bit_array.obj `if test -f 'bit_array.c'; then $(CYGPATH_W) 'bit_array.c'; else $(CYGPATH_W) '$(srcdir)/bit_array.c'; fi`
 
 newspaper-font.o: font.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-font.o -MD -MP -MF $(DEPDIR)/newspaper-font.Tpo -c -o newspaper-font.o `test -f 'font.c' || echo '$(srcdir)/'`font.c

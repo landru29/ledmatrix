@@ -28,7 +28,6 @@ void setCs(unsigned char id, unsigned char value);
  */
 int getCs(unsigned char id);
 
-
 /**
  * Initialisation des matrices
  *
@@ -73,6 +72,24 @@ void displayBlink(uint8_t chip, uint8_t blinky);
  * @param pwm  Le niveau de luminosité (0 - 15)
  */
 void setBrightness(uint8_t chip, uint8_t pwm);
+
+/**
+ * Décaller un buffer de données de bitOffset bits vers la gauche
+ *
+ * @param buffer     le tampon de données à décaller
+ * @param byteLength la taille du tampon en octets
+ * @param bitOffset  le nombre de bit à décaller (<8)
+ */
+void bitShiftLeft(void* buffer, unsigned int byteLength, unsigned int bitOffset);
+
+/**
+ * Ecrit une colonne sur la matrice
+ *
+ * @param chip    Le numéro de matrice
+ * @param column  Données de la colonne
+ * @param address Adresse de la colonne
+ */
+void writeColumn(int chip, unsigned char column, unsigned char address);
 
 #endif
 

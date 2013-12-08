@@ -31,7 +31,6 @@
 		c = c;
 	}
 #endif
-#include "bit_array.h"
 
 // Vitesse de communication du SPI avec les matrices
 #define SPI_SPEED    2000000
@@ -124,20 +123,19 @@ int getCs(unsigned char id)
 
 
 /**
- * Modifie le poids faible et le poids fort
+ * Inverse le poids faible et le poids fort
  *
  * @param p    La référence de l'élément à modifier
  * @param size La taille de l'élément
  */
 void *reverseEndian(void *p, size_t size)
 {
-    char *head = (char *)p;
-    char *tail = head + size -1;
-
-    for(; tail > head; --tail, ++head) {
-        char temp = *head;
-        *head = *tail;
-        *tail = temp;
+    unsigned char temp;
+    unsigned int i;
+    for(i=0; i<size/2; i++) {
+        temp = ((unsigned char*)p)[i];
+        ((unsigned char*)p)[i] = ((unsigned char*)p)[size-1-i];
+        ((unsigned char*)p)[size-1-i] = temp;
     }
     return p;
 }
@@ -186,41 +184,54 @@ int selectChip(unsigned char id)
  *
  * @param chip   Le numéro de matrice
  * @param screen Pointeur sur les données
- * @param size   La taille à écrire
- * @param width  Largeur d'une matrice
- * @param height Hauteur d'une matrice
+ * @param byteLength   La taille à écrire
  */
-void writeScreen(int chip, unsigned char *screen, uint8_t size, uint8_t width, uint8_t height)
+void writeScreen(int chip, unsigned char *screen, uint8_t byteLength)
 {
 #ifdef DEBUG
     printf("writeScreen(%d, %d, %d)\n", chip, width, height);
 #endif
-    uint8_t *output = malloc(size+2);
+    uint8_t *output = malloc(byteLength+2);
     uint16_t data;
     uint8_t write;
 
     // Command ID WRITE
-    *output = 0b10100000;
-    *(output+1) = 0;
+    output[0] = 0;
+    output[1] = 0;
+    memcpy(output+2, screen, byteLength);
+    bitShiftLeft(output, byteLength+2, 6);
+    output[1] |= CMD_ID_WR << 5;
 
-    // Copy the data
-    bitarray_copy(screen, 0, width*height, (output+1), 2);
-    // Send data to SPI
+    // Send data to SPI except the last column (that is half a byte)
     selectChip(chip);
-    wiringPiSPIDataRW(0, (unsigned char*)output, size+1);
+    wiringPiSPIDataRW(0, (unsigned char*)output, byteLength+1);
     usleep(DELAY);
     selectChip(0x0f);
     // Free memory
     free(output);
-    output = NULL;
 
+    // Ecriture de la dernière colonne
+    writeColumn(chip, 0x0f & *(screen+31), 0x3f);
+}
+
+/**
+ * Ecrit une colonne sur la matrice
+ *
+ * @param chip    Le numéro de matrice
+ * @param column  Données de la colonne
+ * @param address Adresse de la colonne
+ */
+void writeColumn(int chip, unsigned char column, unsigned char address)
+{
+    uint16_t data;
     // Command ID WRITE
     data = CMD_ID_WR;
     data <<= 7;
-    data |= 0x3f; //last address on screen
+    //Address on screen
+    data |= 0x3f & address;
     data <<= 4;
-    write = (0x0f & *(screen+31));
-    data |= write;
+    // Data
+    data |= 0x0f & column;
     data <<= 2;
     reverseEndian(&data, sizeof(data));
     // Send data to SPI
@@ -228,6 +239,22 @@ void writeScreen(int chip, unsigned char *screen, uint8_t size, uint8_t width, u
     wiringPiSPIDataRW(0, (unsigned char*)&data, 2);
     usleep(DELAY);
     selectChip(0x0f);
+}
+
+/**
+ * Décaller un buffer de données de bitOffset bits vers la gauche
+ *
+ * @param buffer     le tampon de données à décaller
+ * @param byteLength la taille du tampon en octets
+ * @param bitOffset  le nombre de bit à décaller (<8)
+ */
+void bitShiftLeft(void* buffer, unsigned int byteLength, unsigned int bitOffset)
+{
+    unsigned int i;
+    for(i=0; i<byteLength; i++) {
+        ((unsigned char*)buffer)[i]  = (((unsigned char*)buffer)[i] << bitOffset)
+        | ((i+1<byteLength) ? ((unsigned char*)buffer)[i+1] >> (8-bitOffset) : 0);
+    }
 }
 
 #ifdef __arm__
@@ -245,9 +272,9 @@ void writeMatrix(unsigned char* viewport, uint8_t nbMatrix, uint8_t width, uint8
     printf("writeMatrix\n");
 #endif
     uint8_t i;
-    uint8_t size = width * height / 8;
+    uint8_t byteLength = width * height / 8;
     for (i = 0; i < nbMatrix; i++) {
-        writeScreen(i, viewport + (width * i), size, width, height);
+        writeScreen(i, viewport + (width * i), byteLength, width, height);
     }
 }
 #endif

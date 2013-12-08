@@ -10,7 +10,6 @@ AC_CONFIG_SRCDIR([src/ledmatrix.h])
 AC_CONFIG_SRCDIR([src/plugins/animation.h])
 AC_CONFIG_HEADERS([config.h])
 
-
 #AM_CFLAGS=$AM_CFLAGS -DCONFDIR=$(eval echo ${sysconfdir})\"/newspaper
 #AM_CFLAGS=$AM_CFLAGS -DLIBDIR=${libdir}/newspaper/plugins
 #AC_SUBST([PLUGINDIR], "$(libdir)/newspaper/plugins")
