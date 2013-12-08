@@ -189,7 +189,7 @@ int selectChip(unsigned char id)
 void writeScreen(int chip, unsigned char *screen, uint8_t byteLength)
 {
 #ifdef DEBUG
-    printf("writeScreen(%d, %d, %d)\n", chip, width, height);
+    printf("writeScreen(%d)\n", chip);
 #endif
     uint8_t *output = malloc(byteLength+2);
     uint16_t data;
@@ -274,7 +274,7 @@ void writeMatrix(unsigned char* viewport, uint8_t nbMatrix, uint8_t width, uint8
     uint8_t i;
     uint8_t byteLength = width * height / 8;
     for (i = 0; i < nbMatrix; i++) {
-        writeScreen(i, viewport + (width * i), byteLength, width, height);
+        writeScreen(i, viewport + (width * i), byteLength);
     }
 }
 #endif
