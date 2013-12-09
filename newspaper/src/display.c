@@ -200,7 +200,7 @@ void writeScreen(int chip, unsigned char *screen, uint8_t byteLength)
     output[1] = 0;
     memcpy(output+2, screen, byteLength);
     bitShiftLeft(output, byteLength+2, 6);
-    output[1] |= CMD_ID_WR << 5;
+    output[0] |= CMD_ID_WR << 5;
 
     // Send data to SPI except the last column (that is half a byte)
     selectChip(chip);
