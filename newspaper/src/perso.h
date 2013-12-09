@@ -102,7 +102,7 @@ unsigned int perso_info[] = {
   8,	// {
   8,	// |
   8,	// }
-  8	// ~
+  8 	// ~
 };
 
 unsigned char perso_font[] = {

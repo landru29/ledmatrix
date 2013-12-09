@@ -108,8 +108,9 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(newspaperconfdir)"
-DATA = $(newspaperconf_DATA)
+am__installdirs = "$(DESTDIR)$(fontdir)" \
+	"$(DESTDIR)$(newspaperconfdir)"
+DATA = $(font_DATA) $(newspaperconf_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -274,6 +275,8 @@ top_srcdir = @top_srcdir@
 SUBDIRS = src src/plugins
 newspaperconfdir = $(sysconfdir)/newspaper
 newspaperconf_DATA = conf.ini
+fontdir = $(sysconfdir)/newspaper/fonts
+font_DATA = fonts/basic.font
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -336,6 +339,27 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
+install-fontDATA: $(font_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(font_DATA)'; test -n "$(fontdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(fontdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(fontdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(fontdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(fontdir)" || exit $$?; \
+	done
+
+uninstall-fontDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(font_DATA)'; test -n "$(fontdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(fontdir)'; $(am__uninstall_files_from_dir)
 install-newspaperconfDATA: $(newspaperconf_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(newspaperconf_DATA)'; test -n "$(newspaperconfdir)" || list=; \
@@ -685,7 +709,7 @@ check: check-recursive
 all-am: Makefile $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(newspaperconfdir)"; do \
+	for dir in "$(DESTDIR)$(fontdir)" "$(DESTDIR)$(newspaperconfdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -740,7 +764,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-newspaperconfDATA
+install-data-am: install-fontDATA install-newspaperconfDATA
 
 install-dvi: install-dvi-recursive
 
@@ -786,7 +810,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-newspaperconfDATA
+uninstall-am: uninstall-fontDATA uninstall-newspaperconfDATA
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) all \
 	ctags-recursive install-am install-strip tags-recursive
@@ -799,14 +823,15 @@ uninstall-am: uninstall-newspaperconfDATA
 	distclean-libtool distclean-tags distcleancheck distdir \
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-newspaperconfDATA install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
-	uninstall uninstall-am uninstall-newspaperconfDATA
+	install-dvi-am install-exec install-exec-am install-fontDATA \
+	install-html install-html-am install-info install-info-am \
+	install-man install-newspaperconfDATA install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-am uninstall-fontDATA \
+	uninstall-newspaperconfDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

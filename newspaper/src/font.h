@@ -93,6 +93,15 @@ void binaryPrint(unsigned char n);
  */
 void letterDebug(LETTER letter);
 
+/**
+ * Load a font from a font file
+ *
+ * @param filename Font filename
+ *
+ * @return Font struct
+ */
+FONT* loadFont(char* filename);
+
 #endif
 
 /* vim: set expandtab ai ts=4 sw=4 nu:
