@@ -69,12 +69,13 @@ FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, un
  */
 FONT* loadFont(char* filename)
 {
-    FONT* font = (FONT*)malloc(sizeof(FONT));
+    FONT* font;
     FILE* pFile;
     char currentLetter=0;
     char* lineBuffer[200];
     size_t lineLen=0;
     unsigned char byte;
+    unsigned int dataSize=0;
     int i;
 
     pFile = fopen (filename,"r");
@@ -82,6 +83,14 @@ FONT* loadFont(char* filename)
         fprintf(stderr, "Couldnot open font file %s\n", filename);
         return 0;
     }
+
+    font = (FONT*)malloc(sizeof(FONT));
+    font->mapping = (char*)malloc(1);
+    font->mapping[0] = 0;
+    font->data = (unsigned char*)malloc(1);
+    font->fontHeight=1;
+    font->letterSpacing=1;
+    font->allocationTable = (FONT_INFO*)malloc(1);
 
     while (!feof(pFile)) {
         getline(&lineBuffer, &lineLen, pFile);
