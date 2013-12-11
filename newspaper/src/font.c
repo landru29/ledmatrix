@@ -12,6 +12,55 @@
 #include <string.h>
 #include <stdio.h>
 
+
+/**
+ * Trim a string (left and right)
+ *
+ * @param str string to trim (will be altered)
+ *
+ * @return trimmed string
+ */
+char* trim(char* str)
+{
+	unsigned int begin;
+	unsigned int end;
+	for(begin=0; (str[begin]) && (str[begin]<33); begin++);
+	for(end=begin; (str[end]) && (str[end]>32); end++);
+	str[end]=0;
+	strcpy(str, &str[begin]);
+	return str;
+}
+
+/**
+ * Append an empty  letter to the font
+ *
+ * @param font Font structure
+ *
+ * @return the new inserted letter
+ */
+LETTER* appendLetter(FONT* font)
+{
+	LETTER* currentLetter;
+	font->length++;
+        font->letters = (LETTER*)realloc(font->letters, font->length*sizeof(LETTER));
+        currentLetter = &font->letters[font->length-1];
+        currentLetter->data = (unsigned char*)malloc(1);
+	return currentLetter;
+}
+
+/**
+ * Append a byte the the data array of the letter
+ *
+ * @param letter Letter structure
+ * @param data the byte to add
+ */
+void appendLetterData(LETTER* letter, unsigned char data)
+{
+	letter->length++;
+	letter->data = (unsigned char*)realloc(letter->data, sizeof(unsigned char)*letter->length);
+	letter->data[letter->length-1] = data;
+}
+
 /**
  * Load a font from a font file
  *
@@ -19,54 +68,40 @@
  *
  * @return Font struct
  */
-FONT* loadFont(char* filename)
-{
-    FONT* font;
-    FILE* pFile;
-    LETTER* currentLetter;
-    char* lineBuffer[200];
-    size_t lineLen=0;
-    unsigned char byte;
-    unsigned int dataSize=0;
-    int i;
-
-    pFile = fopen (filename,"r");
-    if (pFile==NULL) {
-        fprintf(stderr, "Couldnot open font file %s\n", filename);
-        return 0;
-    }
-
-    font = (FONT*)malloc(sizeof(FONT));
-    font->letters = (LETTER*)malloc(1);
-    font->length = 0;
-    font->fontHeight=1;
-
-    while (!feof(pFile)) {
-        getline(&lineBuffer, &lineLen, pFile);
-        if (lineBuffer[0]<32) {
-            font->length++;
-            font->letters = (LETTER*)realloc(font->letters, sizeof(LETTER)*font->length);
-            currentLetter = &font->letters[font->length-1];
-            currentLetter->letter = 0;
-            currentLetter->data = (unsigned char*)malloc(1);
-            currentLetter->height=1;
-            currentLetter->length=0;
-        } else if (!currentLetter) {
-            currentLetter->letter = lineBuffer[0];
-        } else {
-            byte = 0;
-            for(i=0; (i<8) && (lineBuffer[i]); i++) {
-                byte <<= 1;
-                byte |= (lineBuffer[i]==1);
-            }
-            currentLetter->length++;
-            currentLetter->data = (unsigned char*)realloc(currentLetter->data, sizeof(unsigned char) * currentLetter->length);
-            currentLetter->data[currentLetter->length-1] = byte;
+FONT* loadFont(char* filename) {
+        FONT* font = (FONT*)malloc(sizeof(FONT));
+        LETTER* currentLetter;
+        font->length=0;
+        font->fontHeight=1;
+        char* buffer = (char*)malloc(200);
+        size_t len;
+	unsigned int i;
+	unsigned char byte;
+        FILE* f = fopen(filename, "r");
+        while (!feof(f)) {
+                getline(&buffer, &len, f);
+                trim(buffer);
+                if (strlen(buffer)>0) {
+                        fprintf(stdout, "%s\n", buffer);
+                        switch (buffer[0]) {
+                                case '[':
+                                        currentLetter = appendLetter(font);
+                                        currentLetter->letter = buffer[1];
+                                        break;
+                                case 'b':
+					for(i=1; (i<9) && (buffer[i]); i++) {
+                				byte <<= 1;
+                				byte |= (buffer[i]=='1');
+            				}
+					appendLetterData(currentLetter, byte);
+                                        break;
+                                default: break;
+                        }
+                }
         }
-    }
-
-    fclose (pFile);
-    return font;
+        fclose(f);
+        free(buffer);
+	return font;
 }
 
 /**
