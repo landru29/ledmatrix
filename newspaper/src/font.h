@@ -14,46 +14,24 @@
 #include "../config.h"
 
 /**
- * Structure d'information d'un caractère de la fonte
- */
-typedef struct {
-  unsigned char length;
-  uint16_t offset;
-} FONT_INFO;
-
-/**
- * Structure de la fonte
- */
-typedef struct {
-	char* mapping;
-	FONT_INFO* allocationTable;
-	unsigned char* data;
-	unsigned char fontHeight;
-	unsigned char letterSpacing;
-} FONT;
-
-/**
  * Structure d'un caractère de la fonte
  */
 typedef struct {
+    char letter;
 	unsigned char length;
 	unsigned char height;
 	unsigned char* data;
 	unsigned char spacing;
 } LETTER;
 
-
 /**
- * Create a new font
- *
- * @param data            Tableau de la fonte au format binaire
- * @param sizeTable       Tableau d'information de taille des caractères
- * @param mapping         Mapping des caractères ascii et de la fonte
- * @param fontHeight      Hauteur de la fonte
- *
- * @return Font struct
+ * Structure de la fonte
  */
-FONT* createFont(unsigned char* data, unsigned int* sizeTable, char* mapping, unsigned char fontHeight);
+typedef struct {
+    LETTER* letters;
+    unsigned int length;
+    unsigned char fontHeight;
+} FONT;
 
 /**
  * Destroy the font object
@@ -71,27 +49,6 @@ void destroyFont(FONT* font);
  * @return Letter struct
  */
 LETTER getLetter(char character, FONT* font);
-
-/**
- * Debug font struct
- *
- * @param font Font struct
- */
-void fontDebug(FONT* font);
-
-/**
- * Display word to binary
- *
- * @param n word to display
- */
-void binaryPrint(unsigned char n);
-
-/**
- * Debug letter struct
- *
- * @param letter Letter to display
- */
-void letterDebug(LETTER letter);
 
 /**
  * Load a font from a font file

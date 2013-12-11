@@ -18,4 +18,4 @@ newspaper_SOURCES = \
     ini.c \
     ini.h
 
-newspaper_CFLAGS=-DCONFDIR=\"${sysconfdir}/newspaper\" -DLIBDIR=\"${libdir}/newspaper/plugins\"
+newspaper_CFLAGS=-DCONFDIR=\"${sysconfdir}/newspaper\" -DLIBDIR=\"${libdir}/newspaper/plugins\" -DFONTDIR=\"${sysconfdir}/newspaper/fonts\"

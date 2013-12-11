@@ -53,7 +53,19 @@ char* pluginsFolder()
 char* iniFile()
 {
     char confPath[200];
-    sprintf(confPath, "%s/conf.ini", CONFDIR);
+    sprintf(confPath, "%s/conf.ini", FONTDIR);
+    return strdup(confPath);
+}
+
+/**
+ * Construit le chemin d'une font
+ *
+ * @return chemin absolu vers le fichier de font
+ */
+char* fontFile(char* basename)
+{
+    char confPath[200];
+    sprintf(confPath, "%s/%s", CONFDIR, basename);
     return strdup(confPath);
 }
 
@@ -218,7 +230,8 @@ int main(int argc, char **argv)
     }
 
     //printf("Matrices initialisées\n");
-    font = createFont(perso_font, perso_info, perso_mapping, 1);
+    //font = createFont(perso_font, perso_info, perso_mapping, 1);
+    font = loadFont(fontFile("basic.font"));
     //font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
     //printf("fontes initialisées\n");
     matrixSetFont(matrix, font);
