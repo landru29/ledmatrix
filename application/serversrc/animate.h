@@ -39,7 +39,7 @@
 #define ANIMATION_END 1
 
 typedef int (MYCALL *animationFrame) (LEDMATRIX* matrix, int frameNumber, void* userData);
-typedef void (*userDataDestructor) ();
+typedef void* (*userDataDestructor) ();
 
 typedef struct {
 	animationFrame animation;
@@ -66,6 +66,7 @@ typedef struct {
  * @param step              Step counter
  * @param millitime         Delay between two frames (in milliseconds)
  * @param userData			User data to pass to the animation function
+ * @param destructor        fonction de destruction de userData
  */
 ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
     unsigned int step, unsigned int millitime, void* userData, userDataDestructor destructor);

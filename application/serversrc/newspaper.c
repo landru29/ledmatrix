@@ -2,21 +2,19 @@
 
 #include <ctype.h>
 #include <stdio.h>
-#include <wchar.h>    /* Types et fonctions relatifs aux caractères étendus */
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdint.h>
-#include "aipointe.h"
-#include "arial8.h"
-#include "perso.h"
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "font.h"
 #include "ledmatrix.h"
 #include "animate.h"
 #include "plugins.h"
 #include "ini.h"
 #include "display.h"
+#include "constant.h"
 
 /**
  * Display usage of program on stdout
@@ -28,11 +26,8 @@
 void usage(char **argv)
 {
     fprintf(stdout, "Newspaper V1.0\n M. Hervo & C. Meichel\n2013, June\n");
-    fprintf(stdout, "Syntaxe : %s -m message [-d]\n", argv[0]);
-    fprintf(stdout, "\t-m message:\n\t\tmessage to send to the matrix\n");
+    fprintf(stdout, "Syntaxe : %s\n", argv[0]);
     fprintf(stdout, "\t-s:\n\t\tSimulate the matrix\n");
-    fprintf(stdout, "\t-t number:\n\t\tindex of the matrix to completly switch on for a test\n");
-    fprintf(stdout, "\t-f number:\n\t\tindex of the font to use\n");
     fprintf(stdout, "\t-v:\n\t\tVerbose the configuration and exit\n");
 }
 
@@ -165,6 +160,16 @@ ANIMATIONPLUGIN** loadAllPlugins()
     return plugins;
 }
 
+void createNode()
+{
+    mode_t oldMask = umask(0044);
+    if (mkfifo(NODE_NAME, 0646) !=0) {
+        fprintf(stderr, "Could not create the FIFO node\n");
+        exit(EXIT_FAILURE);
+    }
+    umask(oldMask);
+}
+
 /**
  * Load fonts
  *
@@ -194,7 +199,11 @@ FONT** loadFonts()
  */
 int main(int argc, char **argv)
 {
-    char optstring[] = "m:t:svf:";
+    char optstring[] = "sv";
+    int fifoFd;
+    FILE* fifoFile;
+    int exitCondition = 1;
+    char* dataBuffer;
     int option;
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
     FONT** fonts = 0;
@@ -236,30 +245,12 @@ int main(int argc, char **argv)
     /* Matrix initialisation */
     matrix = openLedMatrix(displays*matrixWidth, matrixHeight);
 
-    /* check if there is at least one argument */
-    if (argc<2) {
-        usage(argv);
-        return 0;
-    }
-
     opterr=0; /* Pas de message d'erreur automatique */
 
     while ((option = getopt(argc, argv, optstring)) != -1) {
         switch (option) {
-            case 'g':
-                graphic = 1;
-                break;
-            case 'm': /* example of options with value */
-                message = strdup(optarg);
-                break;
             case 's':
                 simulated = 1;
-                break;
-            case 'f':
-                sscanf(optarg, "%d", &fontSelector);
-                break;
-            case 't':
-                sscanf(optarg, "%d", &testMatrixIndex);
                 break;
             case 'v':
                 fprintf(stdout, "Nb matrix: %d\n", displays);
@@ -280,86 +271,70 @@ int main(int argc, char **argv)
     /* Switch on the simulator */
     if (simulated) matrixSetDebugMode(matrix, 1);
 
-    /* Check if a matrix mus be tested */
-    if (!checkMatrixToTest(testMatrixIndex, matrixHeight, matrixWidth)) {
+    /* Select font */
+    for (i=0; fonts[i]; i++);
+    fontSelector = (fontSelector<i?fontSelector:0);
+    matrixSetFont(matrix, fonts[fontSelector]);
 
-        /* Select font */
-        for (i=0; fonts[i]; i++);
-        fontSelector = (fontSelector<i?fontSelector:0);
-        matrixSetFont(matrix, fonts[fontSelector]);
-
-        /* check if a message was specified */
-        if ((!message) || (!*message)) {
-            printf("Le message est vide\n");
-            return 0;
-        }
-
-        /* send the message to the matrix model */
-        printf("Le message: %s\n", message);
-        matrixPushString(matrix, message);
-
-        /* Switch on the simulator */
-        if (simulated) {
-            matrixSetDebugMode(matrix, 1);
-            matrixDebugInit();
-        }
-
-        /* Animation in action */
-        animations = createAnimationQueue();
-
-        /* getting animation from plugin */
-        plugAnimation = getPluginAnimation(plugins, "scrollV");
-        if (plugAnimation) {
-            if (plugAnimation->creation)
-                userData = (plugAnimation->creation)();
-                enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, -8, 1, 150, userData, plugAnimation->destruction));
-                userData = 0;
-        }
-
-        /*plugAnimation = getPluginAnimation(plugins, "gif");
-        if (plugAnimation) {
-            if (plugAnimation->creation)
-                userData = (plugAnimation->creation)("foo.gif");
-            getFrames = getPluginFunction(plugAnimation, "getFrames");
-            enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 0, getFrames(userData), 1, 150, userData, plugAnimation->destruction));
-            userData = 0;
-        }*/
-
-        /*enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
-
-        enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
-        //printf("Message ajouté aux matrices\n");
-
-        int lengthMsg, remaining, position;
-        lengthMsg = matrix->modelWidth * matrix->modelHeight;
-        //printf("length: %d\n", lengthMsg);
-        remaining = lengthMsg;
-        position = 0;
-        if (lengthMsg > (displays*matrixWidth)) {
-            animations = createAnimationQueue();
-            remaining = lengthMsg-(displays*matrixWidth);
-            //for (i=0; i<3;i++) {
-                enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-                enqueueAnimation(animations, createAnimation(scrollH, 0, -(remaining), 2, 150, 0));
-                enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-                enqueueAnimation(animations, createAnimation(scrollH, -(remaining), 0, 2, 150, 0));
-            //}
-            animate(matrix, animations);
-        } else {
-            matrixSendModel(matrix);
-            matrixSendViewport(matrix);
-        }
-
-        /* Wait for a while */
-        //usleep(2000*1000);
-
-        /* Animation in action */
-        animate(matrix, animations);
-        matrixSendModel(matrix);
-        matrixSendViewport(matrix);
+    /* Switch on the simulator */
+    if (simulated) {
+        matrixSetDebugMode(matrix, 1);
+        matrixDebugInit();
     }
 
-	/* Cleaning everything */
+    // create the fifo node
+    createNode();
+
+    // Animation in action
+    animations = createAnimationQueue();
+
+    // getting animation from plugin
+    plugAnimation = getPluginAnimation(plugins, "scrollV");
+    if (plugAnimation) {
+        if (plugAnimation->creation) {
+            userData = (plugAnimation->creation)();
+        }
+        enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, 0, 1, 150, userData, plugAnimation->destruction));
+    }
+
+
+    // Open the FIFO
+    fifoFd = open(NODE_NAME, O_RDWR);
+    fifoFile = fdopen(fifoFd, "r");
+
+    // prepare the buffer
+    dataBuffer = (char*)malloc(DATA_BUFFER_SIZE);
+
+    while (exitCondition) {
+        fgets(dataBuffer, DATA_BUFFER_SIZE, fifoFile);
+        if (dataBuffer[strlen(dataBuffer)-1] == '\n')
+            dataBuffer[strlen(dataBuffer)-1] = 0;
+        if (strlen(dataBuffer)) {
+            if (strcmp(dataBuffer, "bye")==0) {
+                exitCondition = 0;
+            } else {
+                matrixCleanModel(matrix);
+                // send the message to the matrix model
+                matrixPushString(matrix, dataBuffer);
+                // Animation in action
+                animate(matrix, animations);
+                // wait for a while
+                sleep(5);
+            }
+        }
+    }
+
+    // release buffer
+    free(dataBuffer);
+
+    // close the FIFO
+    fclose(fifoFile);
+
+    // destroy the node
+    unlink(NODE_NAME);
+
+
+	// Cleaning everything
 	for (i=0; fonts[i]; i++)
         destroyFont(fonts[i]);
     free(fonts);

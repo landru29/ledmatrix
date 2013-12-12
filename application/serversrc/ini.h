@@ -6,6 +6,8 @@
  * @author  Manuel Hervo <mhervo@digitaleo.com>
  * @version 0.1
  */
+#ifndef __INI_H
+#define __INI_H
 
 typedef struct {
     char name[80];
@@ -69,3 +71,6 @@ INI_LINE* iniParse(char* filename);
  * @return void
  */
 void iniDestroy(INI_LINE* data);
+
+
+#endif

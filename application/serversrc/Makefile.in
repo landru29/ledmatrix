@@ -51,8 +51,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = newspaper$(EXEEXT)
-subdir = src
+bin_PROGRAMS = ledmatrixServer$(EXEEXT)
+subdir = serversrc
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -64,15 +64,18 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_newspaper_OBJECTS = newspaper-animate.$(OBJEXT) \
-	newspaper-display.$(OBJEXT) newspaper-ledmatrix.$(OBJEXT) \
-	newspaper-font.$(OBJEXT) newspaper-newspaper.$(OBJEXT) \
-	newspaper-plugins.$(OBJEXT) newspaper-animation.$(OBJEXT) \
-	newspaper-ini.$(OBJEXT)
-newspaper_OBJECTS = $(am_newspaper_OBJECTS)
-newspaper_LDADD = $(LDADD)
-newspaper_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(newspaper_CFLAGS) \
+am_ledmatrixServer_OBJECTS = ledmatrixServer-animate.$(OBJEXT) \
+	ledmatrixServer-display.$(OBJEXT) \
+	ledmatrixServer-ledmatrix.$(OBJEXT) \
+	ledmatrixServer-font.$(OBJEXT) \
+	ledmatrixServer-newspaper.$(OBJEXT) \
+	ledmatrixServer-plugins.$(OBJEXT) \
+	ledmatrixServer-animation.$(OBJEXT) \
+	ledmatrixServer-ini.$(OBJEXT)
+ledmatrixServer_OBJECTS = $(am_ledmatrixServer_OBJECTS)
+ledmatrixServer_LDADD = $(LDADD)
+ledmatrixServer_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(ledmatrixServer_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -87,8 +90,8 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(newspaper_SOURCES)
-DIST_SOURCES = $(newspaper_SOURCES)
+SOURCES = $(ledmatrixServer_SOURCES)
+DIST_SOURCES = $(ledmatrixServer_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -210,7 +213,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-newspaper_SOURCES = \
+ledmatrixServer_SOURCES = \
     animate.c \
     display.c \
     ledmatrix.c \
@@ -218,18 +221,16 @@ newspaper_SOURCES = \
     newspaper.c \
     plugins.c \
     plugins/animation.c \
-    aipointe.h \
     font.h \
     animate.h \
     ledmatrix.h \
     display.h \
-    perso.h \
     plugins.h \
     plugins/animation.h \
     ini.c \
     ini.h
 
-newspaper_CFLAGS = -DCONFDIR=\"${sysconfdir}/newspaper\" -DLIBDIR=\"${libdir}/newspaper/plugins\" -DFONTDIR=\"${sysconfdir}/newspaper/fonts\"
+ledmatrixServer_CFLAGS = -DCONFDIR=\"${sysconfdir}/ledmatrix\" -DLIBDIR=\"${libdir}/ledmatrix/plugins\" -DFONTDIR=\"${sysconfdir}/ledmatrix/fonts\"
 all: all-am
 
 .SUFFIXES:
@@ -243,9 +244,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu serversrc/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu src/Makefile
+	  $(AUTOMAKE) --gnu serversrc/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -310,9 +311,9 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
-newspaper$(EXEEXT): $(newspaper_OBJECTS) $(newspaper_DEPENDENCIES) $(EXTRA_newspaper_DEPENDENCIES) 
-	@rm -f newspaper$(EXEEXT)
-	$(newspaper_LINK) $(newspaper_OBJECTS) $(newspaper_LDADD) $(LIBS)
+ledmatrixServer$(EXEEXT): $(ledmatrixServer_OBJECTS) $(ledmatrixServer_DEPENDENCIES) $(EXTRA_ledmatrixServer_DEPENDENCIES) 
+	@rm -f ledmatrixServer$(EXEEXT)
+	$(ledmatrixServer_LINK) $(ledmatrixServer_OBJECTS) $(ledmatrixServer_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -320,14 +321,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-animate.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-animation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-display.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-font.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-ini.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-ledmatrix.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-newspaper.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/newspaper-plugins.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-animate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-animation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-display.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-font.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-ini.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-ledmatrix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-newspaper.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-plugins.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -350,117 +351,117 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
-newspaper-animate.o: animate.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-animate.o -MD -MP -MF $(DEPDIR)/newspaper-animate.Tpo -c -o newspaper-animate.o `test -f 'animate.c' || echo '$(srcdir)/'`animate.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-animate.Tpo $(DEPDIR)/newspaper-animate.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='animate.c' object='newspaper-animate.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-animate.o: animate.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-animate.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-animate.Tpo -c -o ledmatrixServer-animate.o `test -f 'animate.c' || echo '$(srcdir)/'`animate.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-animate.Tpo $(DEPDIR)/ledmatrixServer-animate.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='animate.c' object='ledmatrixServer-animate.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-animate.o `test -f 'animate.c' || echo '$(srcdir)/'`animate.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-animate.o `test -f 'animate.c' || echo '$(srcdir)/'`animate.c
 
-newspaper-animate.obj: animate.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-animate.obj -MD -MP -MF $(DEPDIR)/newspaper-animate.Tpo -c -o newspaper-animate.obj `if test -f 'animate.c'; then $(CYGPATH_W) 'animate.c'; else $(CYGPATH_W) '$(srcdir)/animate.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-animate.Tpo $(DEPDIR)/newspaper-animate.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='animate.c' object='newspaper-animate.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-animate.obj: animate.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-animate.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-animate.Tpo -c -o ledmatrixServer-animate.obj `if test -f 'animate.c'; then $(CYGPATH_W) 'animate.c'; else $(CYGPATH_W) '$(srcdir)/animate.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-animate.Tpo $(DEPDIR)/ledmatrixServer-animate.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='animate.c' object='ledmatrixServer-animate.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-animate.obj `if test -f 'animate.c'; then $(CYGPATH_W) 'animate.c'; else $(CYGPATH_W) '$(srcdir)/animate.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-animate.obj `if test -f 'animate.c'; then $(CYGPATH_W) 'animate.c'; else $(CYGPATH_W) '$(srcdir)/animate.c'; fi`
 
-newspaper-display.o: display.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-display.o -MD -MP -MF $(DEPDIR)/newspaper-display.Tpo -c -o newspaper-display.o `test -f 'display.c' || echo '$(srcdir)/'`display.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-display.Tpo $(DEPDIR)/newspaper-display.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='display.c' object='newspaper-display.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-display.o: display.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-display.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-display.Tpo -c -o ledmatrixServer-display.o `test -f 'display.c' || echo '$(srcdir)/'`display.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-display.Tpo $(DEPDIR)/ledmatrixServer-display.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='display.c' object='ledmatrixServer-display.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-display.o `test -f 'display.c' || echo '$(srcdir)/'`display.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-display.o `test -f 'display.c' || echo '$(srcdir)/'`display.c
 
-newspaper-display.obj: display.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-display.obj -MD -MP -MF $(DEPDIR)/newspaper-display.Tpo -c -o newspaper-display.obj `if test -f 'display.c'; then $(CYGPATH_W) 'display.c'; else $(CYGPATH_W) '$(srcdir)/display.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-display.Tpo $(DEPDIR)/newspaper-display.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='display.c' object='newspaper-display.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-display.obj: display.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-display.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-display.Tpo -c -o ledmatrixServer-display.obj `if test -f 'display.c'; then $(CYGPATH_W) 'display.c'; else $(CYGPATH_W) '$(srcdir)/display.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-display.Tpo $(DEPDIR)/ledmatrixServer-display.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='display.c' object='ledmatrixServer-display.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-display.obj `if test -f 'display.c'; then $(CYGPATH_W) 'display.c'; else $(CYGPATH_W) '$(srcdir)/display.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-display.obj `if test -f 'display.c'; then $(CYGPATH_W) 'display.c'; else $(CYGPATH_W) '$(srcdir)/display.c'; fi`
 
-newspaper-ledmatrix.o: ledmatrix.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-ledmatrix.o -MD -MP -MF $(DEPDIR)/newspaper-ledmatrix.Tpo -c -o newspaper-ledmatrix.o `test -f 'ledmatrix.c' || echo '$(srcdir)/'`ledmatrix.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-ledmatrix.Tpo $(DEPDIR)/newspaper-ledmatrix.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ledmatrix.c' object='newspaper-ledmatrix.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-ledmatrix.o: ledmatrix.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-ledmatrix.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-ledmatrix.Tpo -c -o ledmatrixServer-ledmatrix.o `test -f 'ledmatrix.c' || echo '$(srcdir)/'`ledmatrix.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-ledmatrix.Tpo $(DEPDIR)/ledmatrixServer-ledmatrix.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ledmatrix.c' object='ledmatrixServer-ledmatrix.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ledmatrix.o `test -f 'ledmatrix.c' || echo '$(srcdir)/'`ledmatrix.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-ledmatrix.o `test -f 'ledmatrix.c' || echo '$(srcdir)/'`ledmatrix.c
 
-newspaper-ledmatrix.obj: ledmatrix.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-ledmatrix.obj -MD -MP -MF $(DEPDIR)/newspaper-ledmatrix.Tpo -c -o newspaper-ledmatrix.obj `if test -f 'ledmatrix.c'; then $(CYGPATH_W) 'ledmatrix.c'; else $(CYGPATH_W) '$(srcdir)/ledmatrix.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-ledmatrix.Tpo $(DEPDIR)/newspaper-ledmatrix.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ledmatrix.c' object='newspaper-ledmatrix.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-ledmatrix.obj: ledmatrix.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-ledmatrix.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-ledmatrix.Tpo -c -o ledmatrixServer-ledmatrix.obj `if test -f 'ledmatrix.c'; then $(CYGPATH_W) 'ledmatrix.c'; else $(CYGPATH_W) '$(srcdir)/ledmatrix.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-ledmatrix.Tpo $(DEPDIR)/ledmatrixServer-ledmatrix.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ledmatrix.c' object='ledmatrixServer-ledmatrix.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ledmatrix.obj `if test -f 'ledmatrix.c'; then $(CYGPATH_W) 'ledmatrix.c'; else $(CYGPATH_W) '$(srcdir)/ledmatrix.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-ledmatrix.obj `if test -f 'ledmatrix.c'; then $(CYGPATH_W) 'ledmatrix.c'; else $(CYGPATH_W) '$(srcdir)/ledmatrix.c'; fi`
 
-newspaper-font.o: font.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-font.o -MD -MP -MF $(DEPDIR)/newspaper-font.Tpo -c -o newspaper-font.o `test -f 'font.c' || echo '$(srcdir)/'`font.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-font.Tpo $(DEPDIR)/newspaper-font.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='font.c' object='newspaper-font.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-font.o: font.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-font.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-font.Tpo -c -o ledmatrixServer-font.o `test -f 'font.c' || echo '$(srcdir)/'`font.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-font.Tpo $(DEPDIR)/ledmatrixServer-font.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='font.c' object='ledmatrixServer-font.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-font.o `test -f 'font.c' || echo '$(srcdir)/'`font.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-font.o `test -f 'font.c' || echo '$(srcdir)/'`font.c
 
-newspaper-font.obj: font.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-font.obj -MD -MP -MF $(DEPDIR)/newspaper-font.Tpo -c -o newspaper-font.obj `if test -f 'font.c'; then $(CYGPATH_W) 'font.c'; else $(CYGPATH_W) '$(srcdir)/font.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-font.Tpo $(DEPDIR)/newspaper-font.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='font.c' object='newspaper-font.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-font.obj: font.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-font.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-font.Tpo -c -o ledmatrixServer-font.obj `if test -f 'font.c'; then $(CYGPATH_W) 'font.c'; else $(CYGPATH_W) '$(srcdir)/font.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-font.Tpo $(DEPDIR)/ledmatrixServer-font.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='font.c' object='ledmatrixServer-font.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-font.obj `if test -f 'font.c'; then $(CYGPATH_W) 'font.c'; else $(CYGPATH_W) '$(srcdir)/font.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-font.obj `if test -f 'font.c'; then $(CYGPATH_W) 'font.c'; else $(CYGPATH_W) '$(srcdir)/font.c'; fi`
 
-newspaper-newspaper.o: newspaper.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-newspaper.o -MD -MP -MF $(DEPDIR)/newspaper-newspaper.Tpo -c -o newspaper-newspaper.o `test -f 'newspaper.c' || echo '$(srcdir)/'`newspaper.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-newspaper.Tpo $(DEPDIR)/newspaper-newspaper.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='newspaper.c' object='newspaper-newspaper.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-newspaper.o: newspaper.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-newspaper.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-newspaper.Tpo -c -o ledmatrixServer-newspaper.o `test -f 'newspaper.c' || echo '$(srcdir)/'`newspaper.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-newspaper.Tpo $(DEPDIR)/ledmatrixServer-newspaper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='newspaper.c' object='ledmatrixServer-newspaper.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-newspaper.o `test -f 'newspaper.c' || echo '$(srcdir)/'`newspaper.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-newspaper.o `test -f 'newspaper.c' || echo '$(srcdir)/'`newspaper.c
 
-newspaper-newspaper.obj: newspaper.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-newspaper.obj -MD -MP -MF $(DEPDIR)/newspaper-newspaper.Tpo -c -o newspaper-newspaper.obj `if test -f 'newspaper.c'; then $(CYGPATH_W) 'newspaper.c'; else $(CYGPATH_W) '$(srcdir)/newspaper.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-newspaper.Tpo $(DEPDIR)/newspaper-newspaper.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='newspaper.c' object='newspaper-newspaper.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-newspaper.obj: newspaper.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-newspaper.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-newspaper.Tpo -c -o ledmatrixServer-newspaper.obj `if test -f 'newspaper.c'; then $(CYGPATH_W) 'newspaper.c'; else $(CYGPATH_W) '$(srcdir)/newspaper.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-newspaper.Tpo $(DEPDIR)/ledmatrixServer-newspaper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='newspaper.c' object='ledmatrixServer-newspaper.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-newspaper.obj `if test -f 'newspaper.c'; then $(CYGPATH_W) 'newspaper.c'; else $(CYGPATH_W) '$(srcdir)/newspaper.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-newspaper.obj `if test -f 'newspaper.c'; then $(CYGPATH_W) 'newspaper.c'; else $(CYGPATH_W) '$(srcdir)/newspaper.c'; fi`
 
-newspaper-plugins.o: plugins.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-plugins.o -MD -MP -MF $(DEPDIR)/newspaper-plugins.Tpo -c -o newspaper-plugins.o `test -f 'plugins.c' || echo '$(srcdir)/'`plugins.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-plugins.Tpo $(DEPDIR)/newspaper-plugins.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins.c' object='newspaper-plugins.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-plugins.o: plugins.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-plugins.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-plugins.Tpo -c -o ledmatrixServer-plugins.o `test -f 'plugins.c' || echo '$(srcdir)/'`plugins.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-plugins.Tpo $(DEPDIR)/ledmatrixServer-plugins.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins.c' object='ledmatrixServer-plugins.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-plugins.o `test -f 'plugins.c' || echo '$(srcdir)/'`plugins.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-plugins.o `test -f 'plugins.c' || echo '$(srcdir)/'`plugins.c
 
-newspaper-plugins.obj: plugins.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-plugins.obj -MD -MP -MF $(DEPDIR)/newspaper-plugins.Tpo -c -o newspaper-plugins.obj `if test -f 'plugins.c'; then $(CYGPATH_W) 'plugins.c'; else $(CYGPATH_W) '$(srcdir)/plugins.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-plugins.Tpo $(DEPDIR)/newspaper-plugins.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins.c' object='newspaper-plugins.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-plugins.obj: plugins.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-plugins.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-plugins.Tpo -c -o ledmatrixServer-plugins.obj `if test -f 'plugins.c'; then $(CYGPATH_W) 'plugins.c'; else $(CYGPATH_W) '$(srcdir)/plugins.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-plugins.Tpo $(DEPDIR)/ledmatrixServer-plugins.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins.c' object='ledmatrixServer-plugins.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-plugins.obj `if test -f 'plugins.c'; then $(CYGPATH_W) 'plugins.c'; else $(CYGPATH_W) '$(srcdir)/plugins.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-plugins.obj `if test -f 'plugins.c'; then $(CYGPATH_W) 'plugins.c'; else $(CYGPATH_W) '$(srcdir)/plugins.c'; fi`
 
-newspaper-animation.o: plugins/animation.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-animation.o -MD -MP -MF $(DEPDIR)/newspaper-animation.Tpo -c -o newspaper-animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-animation.Tpo $(DEPDIR)/newspaper-animation.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='newspaper-animation.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-animation.o: plugins/animation.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-animation.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-animation.Tpo -c -o ledmatrixServer-animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-animation.Tpo $(DEPDIR)/ledmatrixServer-animation.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='ledmatrixServer-animation.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-animation.o `test -f 'plugins/animation.c' || echo '$(srcdir)/'`plugins/animation.c
 
-newspaper-animation.obj: plugins/animation.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-animation.obj -MD -MP -MF $(DEPDIR)/newspaper-animation.Tpo -c -o newspaper-animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-animation.Tpo $(DEPDIR)/newspaper-animation.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='newspaper-animation.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-animation.obj: plugins/animation.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-animation.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-animation.Tpo -c -o ledmatrixServer-animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-animation.Tpo $(DEPDIR)/ledmatrixServer-animation.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='plugins/animation.c' object='ledmatrixServer-animation.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-animation.obj `if test -f 'plugins/animation.c'; then $(CYGPATH_W) 'plugins/animation.c'; else $(CYGPATH_W) '$(srcdir)/plugins/animation.c'; fi`
 
-newspaper-ini.o: ini.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-ini.o -MD -MP -MF $(DEPDIR)/newspaper-ini.Tpo -c -o newspaper-ini.o `test -f 'ini.c' || echo '$(srcdir)/'`ini.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-ini.Tpo $(DEPDIR)/newspaper-ini.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ini.c' object='newspaper-ini.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-ini.o: ini.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-ini.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-ini.Tpo -c -o ledmatrixServer-ini.o `test -f 'ini.c' || echo '$(srcdir)/'`ini.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-ini.Tpo $(DEPDIR)/ledmatrixServer-ini.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ini.c' object='ledmatrixServer-ini.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ini.o `test -f 'ini.c' || echo '$(srcdir)/'`ini.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-ini.o `test -f 'ini.c' || echo '$(srcdir)/'`ini.c
 
-newspaper-ini.obj: ini.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -MT newspaper-ini.obj -MD -MP -MF $(DEPDIR)/newspaper-ini.Tpo -c -o newspaper-ini.obj `if test -f 'ini.c'; then $(CYGPATH_W) 'ini.c'; else $(CYGPATH_W) '$(srcdir)/ini.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/newspaper-ini.Tpo $(DEPDIR)/newspaper-ini.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ini.c' object='newspaper-ini.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-ini.obj: ini.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-ini.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-ini.Tpo -c -o ledmatrixServer-ini.obj `if test -f 'ini.c'; then $(CYGPATH_W) 'ini.c'; else $(CYGPATH_W) '$(srcdir)/ini.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-ini.Tpo $(DEPDIR)/ledmatrixServer-ini.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ini.c' object='ledmatrixServer-ini.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(newspaper_CFLAGS) $(CFLAGS) -c -o newspaper-ini.obj `if test -f 'ini.c'; then $(CYGPATH_W) 'ini.c'; else $(CYGPATH_W) '$(srcdir)/ini.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-ini.obj `if test -f 'ini.c'; then $(CYGPATH_W) 'ini.c'; else $(CYGPATH_W) '$(srcdir)/ini.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

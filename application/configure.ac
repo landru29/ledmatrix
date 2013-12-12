@@ -6,14 +6,10 @@ AC_INIT([newspaper], [1.0], [noreply@gmail.com])
 AC_PROG_LIBTOOL
 LT_INIT([dlopen])
 AM_INIT_AUTOMAKE
-AC_CONFIG_SRCDIR([src/ledmatrix.h])
-AC_CONFIG_SRCDIR([src/plugins/animation.h])
+AC_CONFIG_SRCDIR([serversrc/ledmatrix.h])
+AC_CONFIG_SRCDIR([serversrc/plugins/animation.h])
+AC_CONFIG_SRCDIR([clientsrc/main.c])
 AC_CONFIG_HEADERS([config.h])
-
-#AM_CFLAGS=$AM_CFLAGS -DCONFDIR=$(eval echo ${sysconfdir})\"/newspaper
-#AM_CFLAGS=$AM_CFLAGS -DLIBDIR=${libdir}/newspaper/plugins
-#AC_SUBST([PLUGINDIR], "$(libdir)/newspaper/plugins")
-#AC_SUBST([CONFDIR], "$(sysconfdir)/newspaper")
 
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -48,5 +44,5 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset strdup strerror])
 
-AC_CONFIG_FILES([Makefile src/Makefile src/plugins/Makefile])
+AC_CONFIG_FILES([Makefile serversrc/Makefile serversrc/plugins/Makefile clientsrc/Makefile])
 AC_OUTPUT

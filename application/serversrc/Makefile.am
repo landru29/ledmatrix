@@ -1,5 +1,5 @@
-bin_PROGRAMS = newspaper
-newspaper_SOURCES = \
+bin_PROGRAMS = ledmatrixServer
+ledmatrixServer_SOURCES = \
     animate.c \
     display.c \
     ledmatrix.c \
@@ -7,15 +7,13 @@ newspaper_SOURCES = \
     newspaper.c \
     plugins.c \
     plugins/animation.c \
-    aipointe.h \
     font.h \
     animate.h \
     ledmatrix.h \
     display.h \
-    perso.h \
     plugins.h \
     plugins/animation.h \
     ini.c \
     ini.h
 
-newspaper_CFLAGS=-DCONFDIR=\"${sysconfdir}/newspaper\" -DLIBDIR=\"${libdir}/newspaper/plugins\" -DFONTDIR=\"${sysconfdir}/newspaper/fonts\"
+ledmatrixServer_CFLAGS=-DCONFDIR=\"${sysconfdir}/ledmatrix\" -DLIBDIR=\"${libdir}/ledmatrix/plugins\" -DFONTDIR=\"${sysconfdir}/ledmatrix/fonts\"

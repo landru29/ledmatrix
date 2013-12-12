@@ -107,8 +107,10 @@ void matrixSendModel(LEDMATRIX* matrix);
 
 /**
  * Initialize the console for debuging
+ *
+ * @return status code
  */
-void matrixDebugInit();
+int matrixDebugInit();
 
 /**
  * Set the debug mode

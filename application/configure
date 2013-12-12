@@ -631,8 +631,9 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_unique_file="src/ledmatrix.h"
-ac_unique_file="src/plugins/animation.h"
+ac_unique_file="serversrc/ledmatrix.h"
+ac_unique_file="serversrc/plugins/animation.h"
+ac_unique_file="clientsrc/main.c"
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
@@ -11455,13 +11456,9 @@ fi
 
 
 
+
 ac_config_headers="$ac_config_headers config.h"
 
-
-#AM_CFLAGS=$AM_CFLAGS -DCONFDIR=$(eval echo ${sysconfdir})\"/newspaper
-#AM_CFLAGS=$AM_CFLAGS -DLIBDIR=${libdir}/newspaper/plugins
-#AC_SUBST([PLUGINDIR], "$(libdir)/newspaper/plugins")
-#AC_SUBST([CONFDIR], "$(sysconfdir)/newspaper")
 
 
 
@@ -12369,7 +12366,7 @@ fi
 done
 
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/plugins/Makefile"
+ac_config_files="$ac_config_files Makefile serversrc/Makefile serversrc/plugins/Makefile clientsrc/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -13369,8 +13366,9 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
-    "src/plugins/Makefile") CONFIG_FILES="$CONFIG_FILES src/plugins/Makefile" ;;
+    "serversrc/Makefile") CONFIG_FILES="$CONFIG_FILES serversrc/Makefile" ;;
+    "serversrc/plugins/Makefile") CONFIG_FILES="$CONFIG_FILES serversrc/plugins/Makefile" ;;
+    "clientsrc/Makefile") CONFIG_FILES="$CONFIG_FILES clientsrc/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

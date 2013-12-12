@@ -97,7 +97,6 @@ void matrixPushString(LEDMATRIX* matrix, char* string)
 	unsigned int i;
 	for(i=0; string[i]; i++) {
 		letter = getLetter(string[i], matrix->font);
-		printf("%c\n", string[i]);
 		matrixPushLetter(matrix, letter);
 	}
 }
@@ -191,9 +190,9 @@ void matrixDebugViewport(LEDMATRIX* matrix)
 /**
  * Initialize the console for debuging
  */
-void matrixDebugInit()
+int matrixDebugInit()
 {
-	system("clear");
+	return system("clear");
 }
 
 /**

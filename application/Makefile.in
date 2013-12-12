@@ -272,10 +272,10 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = src src/plugins
-newspaperconfdir = $(sysconfdir)/newspaper
+SUBDIRS = serversrc serversrc/plugins clientsrc
+newspaperconfdir = $(sysconfdir)/ledmatrix
 newspaperconf_DATA = conf.ini
-fontdir = $(sysconfdir)/newspaper/fonts
+fontdir = $(sysconfdir)/ledmatrix/fonts
 font_DATA = fonts/basic.font
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

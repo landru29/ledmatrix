@@ -85,7 +85,7 @@ SHAREDFUNCTIONLIST initializeFunctionList();
  * @param plugin    plugin
  * @param name      nom de la fonction
  * @param function  fonction à ajouter
- * 
+ *
  */
 void pluginAppendFunction(ANIMATIONPLUGIN* plugin, char* name, shared_function function);
 
@@ -93,7 +93,7 @@ void pluginAppendFunction(ANIMATIONPLUGIN* plugin, char* name, shared_function f
  * liste les fonctions spécifiques du plugin
  *
  * @param plugin    plugin
- * 
+ *
  */
 void pluginListFunctions(ANIMATIONPLUGIN* plugin);
 
@@ -101,7 +101,7 @@ void pluginListFunctions(ANIMATIONPLUGIN* plugin);
  * liste les fonctions spécifiques du plugin
  *
  * @param list      liste de fonctions
- * 
+ *
  */
 void listFunctions(SHAREDFUNCTIONLIST list);
 
@@ -111,13 +111,13 @@ void listFunctions(SHAREDFUNCTIONLIST list);
  * @param list      liste de fonctions
  * @param name      nom de la fonction
  * @param function  fonction à ajouter
- * 
+ *
  */
 SHAREDFUNCTIONLIST appendFunction(SHAREDFUNCTIONLIST list, char* name, shared_function function);
 
 /**
  * Initialise un plugin
- * 
+ *
  * @param name        nom du plugin
  * @param animation   fonction principale de l'animation
  * @param createUser  fonction d'initialisation de données utilisables dans l'animation
