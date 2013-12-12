@@ -13,6 +13,10 @@
 #include <stdio.h>
 
 
+void fontDebug(FONT* font);
+void letterDebug(LETTER letter);
+unsigned char fromBinary(char* binary);
+
 /**
  * Trim a string (left and right)
  *
@@ -45,6 +49,8 @@ LETTER* appendLetter(FONT* font)
         font->letters = (LETTER*)realloc(font->letters, font->length*sizeof(LETTER));
         currentLetter = &font->letters[font->length-1];
         currentLetter->data = (unsigned char*)malloc(1);
+        currentLetter->length=0;
+        currentLetter->spacing=1;
 	return currentLetter;
 }
 
@@ -70,30 +76,30 @@ void appendLetterData(LETTER* letter, unsigned char data)
  */
 FONT* loadFont(char* filename) {
         FONT* font = (FONT*)malloc(sizeof(FONT));
-        LETTER* currentLetter;
+        LETTER* currentLetter=0;
         font->length=0;
         font->fontHeight=1;
         char* buffer = (char*)malloc(200);
         size_t len;
 	unsigned int i;
-	unsigned char byte;
         FILE* f = fopen(filename, "r");
+	if (!f) {
+		fprintf(stderr, "  * Could not open font %s\n", filename);
+		return 0;
+	}
+	fprintf(stdout, "  * Opening font %s", filename);
+	fflush(stdout);
         while (!feof(f)) {
                 getline(&buffer, &len, f);
                 trim(buffer);
                 if (strlen(buffer)>0) {
-                        fprintf(stdout, "%s\n", buffer);
                         switch (buffer[0]) {
                                 case '[':
                                         currentLetter = appendLetter(font);
                                         currentLetter->letter = buffer[1];
                                         break;
                                 case 'b':
-					for(i=1; (i<9) && (buffer[i]); i++) {
-                				byte <<= 1;
-                				byte |= (buffer[i]=='1');
-            				}
-					appendLetterData(currentLetter, byte);
+					appendLetterData(currentLetter, fromBinary(&buffer[1]));
                                         break;
                                 default: break;
                         }
@@ -101,7 +107,29 @@ FONT* loadFont(char* filename) {
         }
         fclose(f);
         free(buffer);
+	fprintf(stdout, " => %d characteres loaded\n", font->length);
+        //fontDebug(font);
+        //LETTER letterTest = getLetter('c', font);
+        //letterDebug(letterTest);
 	return font;
+}
+
+/**
+ * Convert a binary writing in a byte
+ *
+ * @param binary binary representation
+ *
+ * @return byte
+ */
+unsigned char fromBinary(char* binary)
+{
+    unsigned char byte = 0;
+    unsigned char i;
+    for(i=0; (i<8) && (binary[i]!=0); i++) {
+        byte <<= 1;
+        byte |= (binary[i]=='1');
+    }
+    return byte;
 }
 
 /**
@@ -129,17 +157,18 @@ void destroyFont(FONT* font)
  */
 LETTER getLetter(char character, FONT* font)
 {
-	LETTER letter;
-	unsigned int i;
-	letter.length=0;
-	if (!font) return letter;
-	/* Loocking for the parameter */
-	for(i=0; (i<font->length); i++) {
+    LETTER letter;
+    unsigned int i;
+    letter.length=0;
+    if (!font) return letter;
+    /* Loocking for the parameter */
+    for(i=0; (i<font->length); i++) {
         if (font->letters[i].letter == character) {
+            font->letters[i].height = font->fontHeight;
             return font->letters[i];
         }
-	}
-	return letter;
+    }
+    return letter;
 }
 
 
@@ -150,12 +179,13 @@ LETTER getLetter(char character, FONT* font)
  */
 void fontDebug(FONT* font)
 {
-	unsigned int i;
-	printf(" === Debugging Font ===\n");
-	printf("   - Length: %s\n", font->length);
-	for(i=0; i<font->length; i++) {
-		printf("     => %c: %d\n", font->letters[i].letter, font->letters[i].length);
-	}
+    unsigned int i, j;
+    printf(" === Debugging Font ===\n");
+    printf("   - Length: %d\n", font->length);
+    printf("   - height: %d\n", font->fontHeight);
+    for(i=0; i<font->length; i++) {
+        letterDebug(font->letters[i]);
+    }
 }
 
 /**
@@ -183,13 +213,11 @@ void binaryPrint(unsigned char n)
  */
 void letterDebug(LETTER letter)
 {
-	unsigned int i;
-	printf(" === Debugging Letter (length: %d) ===\n", letter.length);
-	for(i=0; i<letter.length; i++) {
-		printf("   - data %02X ", letter.data[i]);
-		binaryPrint(letter.data[i]);
-		printf("\n");
-	}
+    unsigned int i;
+    printf("     => %c: %d [sp:%d]--> ", letter.letter, letter.length, letter.spacing);
+    for(i=0; i<letter.length; i++)
+        printf("%02X ", letter.data[i]);
+    printf("\n");
 }
 
 /* vim: set expandtab ai ts=4 sw=4 nu:

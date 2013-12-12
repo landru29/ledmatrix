@@ -32,20 +32,20 @@ void columnDebug(unsigned char n, unsigned int column);
  */
 LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
 {
-	LEDMATRIX* matrix = (LEDMATRIX*) malloc(sizeof(LEDMATRIX));
-	matrix->model = (unsigned char*) malloc(1);
-	matrix->viewportHeight = height/8;
-	matrix->viewportWidth = width;
+    LEDMATRIX* matrix = (LEDMATRIX*) malloc(sizeof(LEDMATRIX));
+    matrix->model = (unsigned char*) malloc(1);
+    matrix->viewportHeight = height/8;
+    matrix->viewportWidth = width;
     matrix->nbMatrix = width / 32;
-	matrix->viewport = (unsigned char*) malloc(matrix->viewportHeight * matrix->viewportWidth);
-	matrixClearViewport(matrix);
-	matrix->debugMode=0;
-	#ifdef __arm__
-	if (initDisplay(matrix->nbMatrix, 32, height) < 0) {
-		printf("Erreur d'initialisation des matrices\n");
-	}
-	#endif
-	return matrix;
+    matrix->viewport = (unsigned char*) malloc(matrix->viewportHeight * matrix->viewportWidth);
+    matrixClearViewport(matrix);
+    matrix->debugMode=0;
+#ifdef __arm__
+    if (initDisplay(matrix->nbMatrix, 32, height) < 0) {
+        printf("Erreur d'initialisation des matrices\n");
+    }
+#endif
+    return matrix;
 }
 
 /**
@@ -55,12 +55,12 @@ LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
  */
 void closeLedMatrix(LEDMATRIX* matrix)
 {
-	if (!matrix) return;
-	if (matrix->model)
-		free(matrix->model);
-	if (matrix->viewport)
-		free(matrix->viewport);
-	free(matrix);
+    if (!matrix) return;
+    if (matrix->model)
+        free(matrix->model);
+    if (matrix->viewport)
+        free(matrix->viewport);
+    free(matrix);
 }
 
 /**

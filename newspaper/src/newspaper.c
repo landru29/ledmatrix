@@ -53,7 +53,7 @@ char* pluginsFolder()
 char* iniFile()
 {
     char confPath[200];
-    sprintf(confPath, "%s/conf.ini", FONTDIR);
+    sprintf(confPath, "%s/conf.ini", CONFDIR);
     return strdup(confPath);
 }
 
@@ -65,7 +65,7 @@ char* iniFile()
 char* fontFile(char* basename)
 {
     char confPath[200];
-    sprintf(confPath, "%s/%s", CONFDIR, basename);
+    sprintf(confPath, "%s/%s", FONTDIR, basename);
     return strdup(confPath);
 }
 
@@ -81,7 +81,7 @@ char* fontFile(char* basename)
 void loadConfiguration(unsigned int* displays, unsigned int* matrixHeight, unsigned int* matrixWidth)
 {
     INI_LINE* configuration;
-    unsigned char csValueTmp;
+    int csValueTmp;
     /* read config */
     configuration = iniParse(iniFile());
     /* retrieve data from configuration */
@@ -102,19 +102,19 @@ void loadConfiguration(unsigned int* displays, unsigned int* matrixHeight, unsig
     }
     if (iniHasKey(configuration, "CS0")) {
         sscanf(iniGet(configuration, "CS0"), "%d", &csValueTmp);
-        setCs(0, csValueTmp);
+        setCs(0, (unsigned char)csValueTmp);
     }
     if (iniHasKey(configuration, "CS1")) {
         sscanf(iniGet(configuration, "CS1"), "%d", &csValueTmp);
-        setCs(1, csValueTmp);
+        setCs(1, (unsigned char)csValueTmp);
     }
     if (iniHasKey(configuration, "CS2")) {
         sscanf(iniGet(configuration, "CS2"), "%d", &csValueTmp);
-        setCs(2, csValueTmp);
+        setCs(2, (unsigned char)csValueTmp);
     }
     if (iniHasKey(configuration, "CS3")) {
         sscanf(iniGet(configuration, "CS3"), "%d", &csValueTmp);
-        setCs(3, csValueTmp);
+        setCs(3, (unsigned char)csValueTmp);
     }
 
     /* Release configuration */
@@ -175,6 +175,10 @@ int main(int argc, char **argv)
     /* read config */
     loadConfiguration(&displays, &matrixHeight, &matrixWidth);
 
+    // read fonts
+    fprintf(stdout, "Loading fonts\n");
+    font = loadFont(fontFile("basic.font"));
+
     /* check if there is at least one argument */
     if (argc<2) {
         usage(argv);
@@ -230,10 +234,6 @@ int main(int argc, char **argv)
     }
 
     //printf("Matrices initialisées\n");
-    //font = createFont(perso_font, perso_info, perso_mapping, 1);
-    font = loadFont(fontFile("basic.font"));
-    //font = createFont(arial8_font, arial8_info, arial8_mapping, 1);
-    //printf("fontes initialisées\n");
     matrixSetFont(matrix, font);
     //printf("fontes ajoutées aux matrices\n");
 
@@ -250,9 +250,9 @@ int main(int argc, char **argv)
 
     /* Switch on the simulator */
     if (simulated) {
-		matrixSetDebugMode(matrix, 1);
-		matrixDebugInit();
-	}
+        matrixSetDebugMode(matrix, 1);
+        matrixDebugInit();
+    }
 
     /* Animation in action */
     animations = createAnimationQueue();
@@ -260,10 +260,10 @@ int main(int argc, char **argv)
     /* getting animation from plugin */
     plugAnimation = getPluginAnimation(plugins, "scrollV");
     if (plugAnimation) {
-		if (plugAnimation->creation)
-			userData = (plugAnimation->creation)();
-		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, -8, 1, 150, userData, plugAnimation->destruction));
-		userData = 0;
+        if (plugAnimation->creation)
+            userData = (plugAnimation->creation)();
+            enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, -8, 1, 150, userData, plugAnimation->destruction));
+            userData = 0;
     }
 
     /*plugAnimation = getPluginAnimation(plugins, "gif");
