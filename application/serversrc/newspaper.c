@@ -282,6 +282,10 @@ int main(int argc, char **argv)
         matrixDebugInit();
     }
 
+    /* Check if launched by root */
+    if (getuid() !=0)
+        fprintf(stdout, "You should be root to launch this program\n");
+
     // create the fifo node
     createNode();
 
