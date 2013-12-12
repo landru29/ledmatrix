@@ -32,6 +32,7 @@ void usage(char **argv)
     fprintf(stdout, "\t-m message:\n\t\tmessage to send to the matrix\n");
     fprintf(stdout, "\t-s:\n\t\tSimulate the matrix\n");
     fprintf(stdout, "\t-t number:\n\t\tindex of the matrix to completly switch on for a test\n");
+    fprintf(stdout, "\t-f number:\n\t\tindex of the font to use\n");
     fprintf(stdout, "\t-v:\n\t\tVerbose the configuration and exit\n");
 }
 
@@ -121,6 +122,67 @@ void loadConfiguration(unsigned int* displays, unsigned int* matrixHeight, unsig
     iniDestroy(configuration);
 }
 
+/**
+ * Check if matrix must be tested and test it
+ *
+ * @param testMatrixIndex matrix index to test
+ * @param matrixHeight matrix height in dots
+ * @param matrixWidth matrix width in dots
+ *
+ * @return 1 if tested otherwise 0
+ */
+int checkMatrixToTest(int testMatrixIndex, unsigned int matrixHeight, unsigned int matrixWidth)
+{
+    char* dataTest;
+    if (testMatrixIndex>=0) {
+        fprintf(stdout, "Testing matrix %d\n", testMatrixIndex);
+        dataTest = (char*) malloc(matrixWidth*matrixHeight/8);
+        memset(dataTest, 0xff, matrixWidth*matrixHeight/8);
+        writeScreen(testMatrixIndex, dataTest, matrixWidth*matrixHeight/8, matrixWidth, matrixHeight);
+        free (dataTest);
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * Load plugins
+ *
+ * @return plugins collections
+ */
+ANIMATIONPLUGIN** loadAllPlugins()
+{
+    unsigned int i;
+    ANIMATIONPLUGIN** plugins;
+    /* Load plugins */
+    plugins = loadPlugins(pluginsFolder());
+	if (!plugins) {
+		printf("No plugins ! Exiting.\n");
+		return 0;
+	}
+    for(i=0; plugins[i]; i++)
+		printf("%s was loaded\n", plugins[i]->name);
+    return plugins;
+}
+
+/**
+ * Load fonts
+ *
+ * @return font collections
+ */
+FONT** loadFonts()
+{
+    unsigned int len=0;
+    FONT** fonts = (FONT**) malloc(sizeof(FONT*));
+    fonts[0]=0;
+    fprintf(stdout, "Loading fonts\n");
+    len++;
+    fonts = (FONT**)realloc(fonts, sizeof(FONT*) * (len+1));
+    fonts[len-1] = loadFont(fontFile("basic.font"));
+    fonts[len] = 0;
+    return fonts;
+}
+
 
 /**
  * Méthode de lancement du programme
@@ -132,15 +194,15 @@ void loadConfiguration(unsigned int* displays, unsigned int* matrixHeight, unsig
  */
 int main(int argc, char **argv)
 {
-    char optstring[] = "m:t:sv";
+    char optstring[] = "m:t:svf:";
     int option;
     LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
-    FONT* font = 0;
+    FONT** fonts = 0;
+    unsigned int fontSelector=0;
     ANIMATION_QUEUE* animations=0;
     shared_function getFrames;
     //GIFANIMATION* gif;
     int testMatrixIndex=-1;
-    char* dataTest;
     unsigned int matrixHeight; // nombre de ligne par matrice
     unsigned int matrixWidth;  // nombre de colonnes par matrice
     unsigned int displays;     // nombre de matrices
@@ -158,26 +220,21 @@ int main(int argc, char **argv)
     void* userData = 0;
     unsigned int i;
 
-    /* Load plugins */
-    plugins = loadPlugins(pluginsFolder());
-	if (!plugins) {
-		printf("No plugins ! Exiting.\n");
-		return 0;
-	}
-    for(i=0; plugins[i]; i++)
-		printf("%s was loaded\n", plugins[i]->name);
+    /* read config */
+    loadConfiguration(&displays, &matrixHeight, &matrixWidth);
 
+    /* Load plugins */
+    plugins = loadAllPlugins();
+
+    // read fonts
+    fonts = loadFonts();
 
     /* Check if launched by root */
     if (getuid() !=0)
         fprintf(stdout, "You should be root to launch this program\n");
 
-    /* read config */
-    loadConfiguration(&displays, &matrixHeight, &matrixWidth);
-
-    // read fonts
-    fprintf(stdout, "Loading fonts\n");
-    font = loadFont(fontFile("basic.font"));
+    /* Matrix initialisation */
+    matrix = openLedMatrix(displays*matrixWidth, matrixHeight);
 
     /* check if there is at least one argument */
     if (argc<2) {
@@ -198,6 +255,9 @@ int main(int argc, char **argv)
             case 's':
                 simulated = 1;
                 break;
+            case 'f':
+                sscanf(optarg, "%d", &fontSelector);
+                break;
             case 't':
                 sscanf(optarg, "%d", &testMatrixIndex);
                 break;
@@ -217,99 +277,92 @@ int main(int argc, char **argv)
     simulated = 1;
 #endif
 
-
-    /* Matrix initialisation */
-    matrix = openLedMatrix(displays*matrixWidth, matrixHeight);
-
     /* Switch on the simulator */
     if (simulated) matrixSetDebugMode(matrix, 1);
 
-    if (testMatrixIndex>=0) {
-        fprintf(stdout, "Testing matrix %d\n", testMatrixIndex);
-        dataTest = (char*) malloc(matrixWidth*matrixHeight/8);
-        memset(dataTest, 0xff, matrixWidth*matrixHeight/8);
-        writeScreen(testMatrixIndex, dataTest, matrixWidth*matrixHeight/8, matrixWidth, matrixHeight);
-        free (dataTest);
-        return 0;
-    }
+    /* Check if a matrix mus be tested */
+    if (!checkMatrixToTest(testMatrixIndex, matrixHeight, matrixWidth)) {
 
-    //printf("Matrices initialisées\n");
-    matrixSetFont(matrix, font);
-    //printf("fontes ajoutées aux matrices\n");
+        /* Select font */
+        for (i=0; fonts[i]; i++);
+        fontSelector = (fontSelector<i?fontSelector:0);
+        matrixSetFont(matrix, fonts[fontSelector]);
 
-	/* check if a message was specified */
-    if ((!message) || (!*message)) {
-        printf("Le message est vide\n");
-        return 0;
-    }
+        /* check if a message was specified */
+        if ((!message) || (!*message)) {
+            printf("Le message est vide\n");
+            return 0;
+        }
 
+        /* send the message to the matrix model */
+        printf("Le message: %s\n", message);
+        matrixPushString(matrix, message);
 
-    printf("Le message: %s\n", message);
+        /* Switch on the simulator */
+        if (simulated) {
+            matrixSetDebugMode(matrix, 1);
+            matrixDebugInit();
+        }
 
-    matrixPushString(matrix, message);
-
-    /* Switch on the simulator */
-    if (simulated) {
-        matrixSetDebugMode(matrix, 1);
-        matrixDebugInit();
-    }
-
-    /* Animation in action */
-    animations = createAnimationQueue();
-
-    /* getting animation from plugin */
-    plugAnimation = getPluginAnimation(plugins, "scrollV");
-    if (plugAnimation) {
-        if (plugAnimation->creation)
-            userData = (plugAnimation->creation)();
-            enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, -8, 1, 150, userData, plugAnimation->destruction));
-            userData = 0;
-    }
-
-    /*plugAnimation = getPluginAnimation(plugins, "gif");
-    if (plugAnimation) {
-		if (plugAnimation->creation)
-			userData = (plugAnimation->creation)("foo.gif");
-		getFrames = getPluginFunction(plugAnimation, "getFrames");
-		enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 0, getFrames(userData), 1, 150, userData, plugAnimation->destruction));
-		userData = 0;
-	}*/
-
-    /*enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
-
-    enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
-    //printf("Message ajouté aux matrices\n");
-
-    int lengthMsg, remaining, position;
-    lengthMsg = matrix->modelWidth * matrix->modelHeight;
-    //printf("length: %d\n", lengthMsg);
-    remaining = lengthMsg;
-    position = 0;
-    if (lengthMsg > (displays*matrixWidth)) {
+        /* Animation in action */
         animations = createAnimationQueue();
-        remaining = lengthMsg-(displays*matrixWidth);
-        //for (i=0; i<3;i++) {
-            enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-            enqueueAnimation(animations, createAnimation(scrollH, 0, -(remaining), 2, 150, 0));
-            enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
-            enqueueAnimation(animations, createAnimation(scrollH, -(remaining), 0, 2, 150, 0));
-        //}
+
+        /* getting animation from plugin */
+        plugAnimation = getPluginAnimation(plugins, "scrollV");
+        if (plugAnimation) {
+            if (plugAnimation->creation)
+                userData = (plugAnimation->creation)();
+                enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, -8, 1, 150, userData, plugAnimation->destruction));
+                userData = 0;
+        }
+
+        /*plugAnimation = getPluginAnimation(plugins, "gif");
+        if (plugAnimation) {
+            if (plugAnimation->creation)
+                userData = (plugAnimation->creation)("foo.gif");
+            getFrames = getPluginFunction(plugAnimation, "getFrames");
+            enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 0, getFrames(userData), 1, 150, userData, plugAnimation->destruction));
+            userData = 0;
+        }*/
+
+        /*enqueueAnimation(animations, createAnimation(gifAnimation, 0, gif->frameCount-1, 1, 150, gif));
+
+        enqueueAnimation(animations, createAnimation(scrollV, 8, -8, 1, 150, 0));
+        //printf("Message ajouté aux matrices\n");
+
+        int lengthMsg, remaining, position;
+        lengthMsg = matrix->modelWidth * matrix->modelHeight;
+        //printf("length: %d\n", lengthMsg);
+        remaining = lengthMsg;
+        position = 0;
+        if (lengthMsg > (displays*matrixWidth)) {
+            animations = createAnimationQueue();
+            remaining = lengthMsg-(displays*matrixWidth);
+            //for (i=0; i<3;i++) {
+                enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
+                enqueueAnimation(animations, createAnimation(scrollH, 0, -(remaining), 2, 150, 0));
+                enqueueAnimation(animations, createAnimation(interval, 0, 1, 1, 500, 0));
+                enqueueAnimation(animations, createAnimation(scrollH, -(remaining), 0, 2, 150, 0));
+            //}
+            animate(matrix, animations);
+        } else {
+            matrixSendModel(matrix);
+            matrixSendViewport(matrix);
+        }
+
+        /* Wait for a while */
+        //usleep(2000*1000);
+
+        /* Animation in action */
         animate(matrix, animations);
-    } else {
         matrixSendModel(matrix);
         matrixSendViewport(matrix);
     }
 
-    /* Wait for a while */
-    //usleep(2000*1000);
-
-    /* Animation in action */
-    animate(matrix, animations);
-    matrixSendModel(matrix);
-    matrixSendViewport(matrix);
-
 	/* Cleaning everything */
-    destroyFont(font);
+	for (i=0; fonts[i]; i++)
+        destroyFont(fonts[i]);
+    free(fonts);
     closeLedMatrix(matrix);
     destroyAnimationQueue(animations);
     closePlugins(plugins);

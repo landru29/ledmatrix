@@ -34,6 +34,7 @@ LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
 {
     LEDMATRIX* matrix = (LEDMATRIX*) malloc(sizeof(LEDMATRIX));
     matrix->model = (unsigned char*) malloc(1);
+    matrix->modelWidth=0;
     matrix->viewportHeight = height/8;
     matrix->viewportWidth = width;
     matrix->nbMatrix = width / 32;
@@ -96,6 +97,7 @@ void matrixPushString(LEDMATRIX* matrix, char* string)
 	unsigned int i;
 	for(i=0; string[i]; i++) {
 		letter = getLetter(string[i], matrix->font);
+		printf("%c\n", string[i]);
 		matrixPushLetter(matrix, letter);
 	}
 }
