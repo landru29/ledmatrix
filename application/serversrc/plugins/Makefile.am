@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-libdir = /usr/local/lib/newspaper/plugins
+libdir = /usr/local/lib/ledmatrix/plugins
 
 lib_LTLIBRARIES = libmatrixScrollh.la libmatrixScrollv.la libmatrixIntervalle.la libmatrixBlink.la libmatrixGif.la
 
