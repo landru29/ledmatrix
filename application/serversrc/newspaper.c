@@ -309,6 +309,12 @@ int main(int argc, char **argv)
     // prepare the buffer
     dataBuffer = (char*)malloc(DATA_BUFFER_SIZE);
 
+    // alive message
+    matrixCleanModel(matrix);
+    matrixPushString(matrix, "Let's go !");
+    matrixSendModel(matrix);
+
+    // main loop
     while (exitCondition) {
         fgets(dataBuffer, DATA_BUFFER_SIZE, fifoFile);
         if (dataBuffer[strlen(dataBuffer)-1] == '\n')
@@ -337,10 +343,14 @@ int main(int argc, char **argv)
     // destroy the node
     unlink(NODE_NAME);
 
+    // Dead message
+    matrixCleanModel(matrix);
+    matrixPushString(matrix, "I'm dead !");
+    matrixSendModel(matrix);
 
-	// Cleaning everything
-	for (i=0; fonts[i]; i++)
-        destroyFont(fonts[i]);
+    // Cleaning everything
+    for (i=0; fonts[i]; i++)
+    destroyFont(fonts[i]);
     free(fonts);
     closeLedMatrix(matrix);
     destroyAnimationQueue(animations);

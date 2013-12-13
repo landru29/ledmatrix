@@ -4,7 +4,7 @@
 
 $dateStart = date('d-m-Y', mktime(0,0,0,date('n'),1));
 $dateEnd = date('d-m-Y', mktime(
-  23,59,59,date('n'), 
+  23,59,59,date('n'),
   date('d', mktime(0,0,0,date('n')+1,0))
 ));
 $key = 'baseokey';
@@ -23,7 +23,7 @@ $args = array(
 );
 
 $uri = $url . $resource . '.' . $format . '?' . implode('&',  $args);
-echo $uri;
+echo "Requesting " . $uri . "\n";
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $uri);
@@ -34,15 +34,21 @@ $response = curl_exec($ch);
 $infos = curl_getinfo($ch);
 curl_close($ch);
 
+echo "Answer catched\n";
+
 if (false === $response) {
   // gérer l'erreur
+  echo "Error\n";
   file_put_contents('php://stderr', date('c') . ': Erreur de requête sur l\'API Messengeo.');
   file_put_contents('php://stderr', date('c') . ': ' . var_export($infos, true));
 } else {
+  echo "Success\n";
   $result = json_decode($response);
   var_dump($result);
   $total = $result->total;
-  $command = 'sudo /usr/local/bin/newspaper -m "@ INTG: ' . $total . '"';
+  $command = 'ledmatrix "@ INTG: ' . $total . '"';
+  echo "Launching " . $command . "\n";
+  //$command = 'sudo /usr/local/bin/newspaper -m "@ INTG: ' . $total . '"';
   exec($command, $result);
 }
 ?>
