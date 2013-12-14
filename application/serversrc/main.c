@@ -313,6 +313,7 @@ int main(int argc, char **argv)
     matrixCleanModel(matrix);
     matrixPushString(matrix, "Let's go !");
     matrixSendModel(matrix);
+    matrixSendViewport(matrix);
 
     // main loop
     while (exitCondition) {
@@ -347,6 +348,7 @@ int main(int argc, char **argv)
     matrixCleanModel(matrix);
     matrixPushString(matrix, "I'm dead !");
     matrixSendModel(matrix);
+    matrixSendViewport(matrix);
 
     // Cleaning everything
     for (i=0; fonts[i]; i++)

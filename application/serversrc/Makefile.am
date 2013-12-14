@@ -4,7 +4,7 @@ ledmatrixServer_SOURCES = \
     display.c \
     ledmatrix.c \
     font.c \
-    newspaper.c \
+    server.c \
     plugins.c \
     plugins/animation.c \
     font.h \

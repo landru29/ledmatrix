@@ -101,22 +101,6 @@ void matrixPushString(LEDMATRIX* matrix, char* string)
 	}
 }
 
-
-/*void matrixModelPrint(LEDMATRIX *matrix, const char *format, ...)
-{
-	va_list arg;
-	char buffer[1024];
-
-	va_start (arg, format);
-	sprintf(buffer, format, arg);
-	va_end (arg);
-
-	matrixCleanModel(matrix);
-
-
-	matrixPushString(matrix, buffer);
-}*/
-
 /**
  * Set a font to the matrix
  *

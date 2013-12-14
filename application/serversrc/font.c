@@ -29,8 +29,8 @@ char* trim(char* str)
 	unsigned int begin;
 	unsigned int end;
 	for(begin=0; (str[begin]) && (str[begin]<33); begin++);
-	for(end=begin; (str[end]) && (str[end]>32); end++);
-	str[end]=0;
+	for(end=strlen(str); (str[end]) && (end>0); end--);
+	str[end+1]=0;
 	strcpy(str, &str[begin]);
 	return str;
 }
