@@ -1,12 +1,16 @@
 bin_PROGRAMS = ledmatrixServer
 ledmatrixServer_SOURCES = \
+    daemon.c \
+    process.c \
     animate.c \
     display.c \
     ledmatrix.c \
     font.c \
-    server.c \
+    main.c \
     plugins.c \
     plugins/animation.c \
+    daemon.h \
+    process.h \
     font.h \
     animate.h \
     ledmatrix.h \

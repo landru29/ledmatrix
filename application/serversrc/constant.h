@@ -14,5 +14,6 @@
 
 #define DATA_BUFFER_SIZE 65536
 
+#define PID_FILENAME "/var/run/ledmatrix.pid"
 
 #endif

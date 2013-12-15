@@ -64,11 +64,12 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ledmatrixServer_OBJECTS = ledmatrixServer-animate.$(OBJEXT) \
+am_ledmatrixServer_OBJECTS = ledmatrixServer-daemon.$(OBJEXT) \
+	ledmatrixServer-process.$(OBJEXT) \
+	ledmatrixServer-animate.$(OBJEXT) \
 	ledmatrixServer-display.$(OBJEXT) \
 	ledmatrixServer-ledmatrix.$(OBJEXT) \
-	ledmatrixServer-font.$(OBJEXT) \
-	ledmatrixServer-server.$(OBJEXT) \
+	ledmatrixServer-font.$(OBJEXT) ledmatrixServer-main.$(OBJEXT) \
 	ledmatrixServer-plugins.$(OBJEXT) \
 	ledmatrixServer-animation.$(OBJEXT) \
 	ledmatrixServer-ini.$(OBJEXT)
@@ -214,13 +215,17 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ledmatrixServer_SOURCES = \
+    daemon.c \
+    process.c \
     animate.c \
     display.c \
     ledmatrix.c \
     font.c \
-    server.c \
+    main.c \
     plugins.c \
     plugins/animation.c \
+    daemon.h \
+    process.h \
     font.h \
     animate.h \
     ledmatrix.h \
@@ -323,12 +328,14 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-animate.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-animation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-daemon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-display.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-font.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-ini.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-ledmatrix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-plugins.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ledmatrixServer-process.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -350,6 +357,34 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+ledmatrixServer-daemon.o: daemon.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-daemon.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-daemon.Tpo -c -o ledmatrixServer-daemon.o `test -f 'daemon.c' || echo '$(srcdir)/'`daemon.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-daemon.Tpo $(DEPDIR)/ledmatrixServer-daemon.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='daemon.c' object='ledmatrixServer-daemon.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-daemon.o `test -f 'daemon.c' || echo '$(srcdir)/'`daemon.c
+
+ledmatrixServer-daemon.obj: daemon.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-daemon.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-daemon.Tpo -c -o ledmatrixServer-daemon.obj `if test -f 'daemon.c'; then $(CYGPATH_W) 'daemon.c'; else $(CYGPATH_W) '$(srcdir)/daemon.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-daemon.Tpo $(DEPDIR)/ledmatrixServer-daemon.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='daemon.c' object='ledmatrixServer-daemon.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-daemon.obj `if test -f 'daemon.c'; then $(CYGPATH_W) 'daemon.c'; else $(CYGPATH_W) '$(srcdir)/daemon.c'; fi`
+
+ledmatrixServer-process.o: process.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-process.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-process.Tpo -c -o ledmatrixServer-process.o `test -f 'process.c' || echo '$(srcdir)/'`process.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-process.Tpo $(DEPDIR)/ledmatrixServer-process.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='process.c' object='ledmatrixServer-process.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-process.o `test -f 'process.c' || echo '$(srcdir)/'`process.c
+
+ledmatrixServer-process.obj: process.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-process.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-process.Tpo -c -o ledmatrixServer-process.obj `if test -f 'process.c'; then $(CYGPATH_W) 'process.c'; else $(CYGPATH_W) '$(srcdir)/process.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-process.Tpo $(DEPDIR)/ledmatrixServer-process.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='process.c' object='ledmatrixServer-process.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-process.obj `if test -f 'process.c'; then $(CYGPATH_W) 'process.c'; else $(CYGPATH_W) '$(srcdir)/process.c'; fi`
 
 ledmatrixServer-animate.o: animate.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-animate.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-animate.Tpo -c -o ledmatrixServer-animate.o `test -f 'animate.c' || echo '$(srcdir)/'`animate.c
@@ -407,19 +442,19 @@ ledmatrixServer-font.obj: font.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-font.obj `if test -f 'font.c'; then $(CYGPATH_W) 'font.c'; else $(CYGPATH_W) '$(srcdir)/font.c'; fi`
 
-ledmatrixServer-server.o: server.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-server.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-server.Tpo -c -o ledmatrixServer-server.o `test -f 'server.c' || echo '$(srcdir)/'`server.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-server.Tpo $(DEPDIR)/ledmatrixServer-server.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='server.c' object='ledmatrixServer-server.o' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-main.o: main.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-main.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-main.Tpo -c -o ledmatrixServer-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-main.Tpo $(DEPDIR)/ledmatrixServer-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='ledmatrixServer-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-server.o `test -f 'server.c' || echo '$(srcdir)/'`server.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
 
-ledmatrixServer-server.obj: server.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-server.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-server.Tpo -c -o ledmatrixServer-server.obj `if test -f 'server.c'; then $(CYGPATH_W) 'server.c'; else $(CYGPATH_W) '$(srcdir)/server.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-server.Tpo $(DEPDIR)/ledmatrixServer-server.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='server.c' object='ledmatrixServer-server.obj' libtool=no @AMDEPBACKSLASH@
+ledmatrixServer-main.obj: main.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-main.obj -MD -MP -MF $(DEPDIR)/ledmatrixServer-main.Tpo -c -o ledmatrixServer-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/ledmatrixServer-main.Tpo $(DEPDIR)/ledmatrixServer-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='main.c' object='ledmatrixServer-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-server.obj `if test -f 'server.c'; then $(CYGPATH_W) 'server.c'; else $(CYGPATH_W) '$(srcdir)/server.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -c -o ledmatrixServer-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
 
 ledmatrixServer-plugins.o: plugins.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ledmatrixServer_CFLAGS) $(CFLAGS) -MT ledmatrixServer-plugins.o -MD -MP -MF $(DEPDIR)/ledmatrixServer-plugins.Tpo -c -o ledmatrixServer-plugins.o `test -f 'plugins.c' || echo '$(srcdir)/'`plugins.c

@@ -12,6 +12,8 @@
 #include "../config.h"
 #include "plugins/animation.h"
 
+int exitCondition;
+
 /**
  * Charge tous les plugins d'animation
  *

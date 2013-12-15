@@ -1,9 +1,6 @@
-#define DEBUG
-
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
-#include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -15,21 +12,7 @@
 #include "ini.h"
 #include "display.h"
 #include "constant.h"
-
-/**
- * Display usage of program on stdout
- *
- * @param argv Parameters of program
- *
- * @return void
- */
-void usage(char **argv)
-{
-    fprintf(stdout, "Newspaper V1.0\n M. Hervo & C. Meichel\n2013, June\n");
-    fprintf(stdout, "Syntaxe : %s\n", argv[0]);
-    fprintf(stdout, "\t-s:\n\t\tSimulate the matrix\n");
-    fprintf(stdout, "\t-v:\n\t\tVerbose the configuration and exit\n");
-}
+#include "process.h"
 
 /**
  * Construit le chemin vers le dossier des plugins
@@ -51,24 +34,6 @@ char* iniFile()
     char confPath[200];
     sprintf(confPath, "%s/conf.ini", CONFDIR);
     return strdup(confPath);
-}
-
-/**
- * Vérifie l'existance d'un fichier
- *
- * @param filename fichier à tester
- *
- * @return vrai si le fichier existe
- */
-int file_exists (char * fileName)
-{
-    struct stat buf;
-    int i = stat ( fileName, &buf );
-    /* File found */
-    if ( i == 0 ) {
-        return 1;
-    }
-    return 0;
 }
 
 /**
@@ -178,15 +143,14 @@ ANIMATIONPLUGIN** loadAllPlugins()
     return plugins;
 }
 
+
+
+
 /**
- * Create the file node for communication
+ * Create a node file for communication client-server
  */
 void createNode()
 {
-    if (file_exists(NODE_NAME)) {
-        fprintf(stderr, "%s exists: erasing\n", NODE_NAME);
-        unlink(NODE_NAME);
-    }
     mode_t oldMask = umask(0044);
     if (mkfifo(NODE_NAME, 0646) !=0) {
         fprintf(stderr, "Could not create the FIFO node\n");
@@ -213,106 +177,149 @@ FONT** loadFonts()
     return fonts;
 }
 
-
 /**
- * Méthode de lancement du programme
+ * Select a font by index
  *
- * @param argc Number of parameters
- * @param argv Parameters of program
+ * @param matrix       ledmatrix to assign font
+ * @param fonts        fonts collection
+ * @param fontSelector index of the font
  *
- * @return status
+ * @return number of fonts
  */
-int main(int argc, char **argv)
+int selectFont(LEDMATRIX* matrix, FONT** fonts, unsigned int fontSelector)
 {
-    char optstring[] = "sv";
-    int fifoFd;
-    FILE* fifoFile;
-    int exitCondition = 1;
-    char* dataBuffer;
-    int option;
-    LEDMATRIX* matrix = 0; // Espace mémoire pour l'écriture sur les matrices
-    FONT** fonts = 0;
-    unsigned int fontSelector=0;
-    ANIMATION_QUEUE* animations=0;
-    shared_function getFrames;
-    //GIFANIMATION* gif;
-    int testMatrixIndex=-1;
-    unsigned int matrixHeight; // nombre de ligne par matrice
-    unsigned int matrixWidth;  // nombre de colonnes par matrice
-    unsigned int displays;     // nombre de matrices
-    char* message=0;
-    int graphic = 0;
-    int simulated=
-#ifdef __arm__
-    0;
-#else
-    1;
-#endif
-
-    ANIMATIONPLUGIN** plugins;
-    ANIMATIONPLUGIN* plugAnimation;
-    void* userData = 0;
     unsigned int i;
-
-    /* read config */
-    loadConfiguration(&displays, &matrixHeight, &matrixWidth);
-
-    /* Load plugins */
-    plugins = loadAllPlugins();
-
-    // read fonts
-    fonts = loadFonts();
-
-    /* Check if launched by root */
-    if (getuid() !=0)
-        fprintf(stdout, "You should be root to launch this program\n");
-
-    /* Matrix initialisation */
-    matrix = openLedMatrix(displays*matrixWidth, matrixHeight);
-
-    opterr=0; /* Pas de message d'erreur automatique */
-
-    while ((option = getopt(argc, argv, optstring)) != -1) {
-        switch (option) {
-            case 's':
-                simulated = 1;
-                break;
-            case 'v':
-                fprintf(stdout, "Nb matrix: %d\n", displays);
-                fprintf(stdout, "Matrix height: %d\n", matrixHeight);
-                fprintf(stdout, "Matrix width: %d\n", matrixWidth);
-                fprintf(stdout, "CS0: %d\nCS1: %d\nCS2: %d\nCS3: %d\n", getCs(0), getCs(1), getCs(2), getCs(3));
-                abort();
-                break;
-            default:
-                abort();
-                break;
-        }
-    }
-#ifndef __arm__
-    simulated = 1;
-#endif
-
-    /* Switch on the simulator */
-    if (simulated) matrixSetDebugMode(matrix, 1);
-
     /* Select font */
     for (i=0; fonts[i]; i++);
     fontSelector = (fontSelector<i?fontSelector:0);
-    matrixSetFont(matrix, fonts[fontSelector]);
-
-    /* Switch on the simulator */
-    if (simulated) {
-        matrixSetDebugMode(matrix, 1);
-        matrixDebugInit();
+    if (fontSelector>=0) {
+        matrixSetFont(matrix, fonts[fontSelector]);
     }
+    return i;
+}
 
-    /* Check if launched by root */
-    if (getuid() !=0)
-        fprintf(stdout, "You should be root to launch this program\n");
+/**
+ * close all fonts and release memory
+ *
+ * @param fonts list of all loaded fonts
+ */
+void unloadFonts(FONT** fonts)
+{
+    unsigned int i;
+    for (i=0; fonts[i]; i++)
+    destroyFont(fonts[i]);
+    free(fonts);
+}
 
-    // create the fifo node
-    createNode();
+/**
+ * Open the communication pipe
+ */
+FILE* openCommunicationPipe()
+{
+    int fifoFd;
+    FILE* fifoFile;
+    if (!file_exists(NODE_NAME)) {
+        // Create the node if not exists
+        createNode();
+    }
+    // Open the FIFO
+    fifoFd = open(NODE_NAME, O_RDWR);
+    fifoFile = fdopen(fifoFd, "r");
+    return fifoFile;
+}
+
+/**
+ * Close the communication pipe
+ */
+void closeCommunicationPipe(FILE* pipe)
+{
+    // close the FIFO
+    fclose(pipe);
+    // destroy the node
+    unlink(NODE_NAME);
+}
+
+/**
+ * Check if a file exists
+ *
+ * @param filename file to check
+ *
+ * @return true if exists
+ */
+int file_exists (char * fileName)
+{
+    struct stat buf;
+    int i = stat ( fileName, &buf );
+    /* File found */
+    if ( i == 0 ) {
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * Send a message without any animation
+ *
+ * @param matrix  the matrix to present the message
+ * @param message the message to display
+ */
+void quickMessage(LEDMATRIX* matrix, char* message)
+{
+    // alive message
+    matrixCleanModel(matrix);
+    matrixPushString(matrix, message);
+    matrixSendModel(matrix);
+    matrixSendViewport(matrix);
+}
+
+/**
+ * Read a command from the pipe
+ *
+ * @param pipe Pipe to read
+ * @param data Data passed from the command
+ *
+ * @return command Identifier
+ */
+int readCommand(FILE* pipe, char* data)
+{
+    char* dataBuffer;
+    dataBuffer = (char*)malloc(DATA_BUFFER_SIZE);
+    if (fgets(dataBuffer, DATA_BUFFER_SIZE, pipe)) {
+        if (dataBuffer[strlen(dataBuffer)-1] == '\n') {
+            dataBuffer[strlen(dataBuffer)-1] = 0;
+        }
+        if (strcmp(dataBuffer, "bye")==0) {
+            return COMMAND_QUIT;
+        }
+        if (strlen(dataBuffer)) {
+            strcpy(data, dataBuffer);
+        }
+        free(dataBuffer);
+        return COMMAND_MSG;
+    }
+    return COMMAND_BAD;
+}
+
+/**
+ * Daemon main loop
+ *
+ * @param matrix  the matrix !
+ * @param plugins plugins collection
+ * @param fonts   fonts collection
+ *
+ * @return status
+ */
+int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
+{
+    char* dataBuffer;
+    FILE* fifoFile;
+    ANIMATIONPLUGIN* plugAnimation;
+    void* userData = 0;
+    ANIMATION_QUEUE* animations=0;
+    unsigned int fontSelector=0;
+    int command;
+
+    exitCondition = 1;
 
     // Animation in action
     animations = createAnimationQueue();
@@ -326,29 +333,23 @@ int main(int argc, char **argv)
         enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, 0, 1, 150, userData, plugAnimation->destruction));
     }
 
-
-    // Open the FIFO
-    fifoFd = open(NODE_NAME, O_RDWR);
-    fifoFile = fdopen(fifoFd, "r");
-
     // prepare the buffer
     dataBuffer = (char*)malloc(DATA_BUFFER_SIZE);
 
+    // Open the communication pipe
+    fifoFile = openCommunicationPipe();
+
+    /* Select font */
+    selectFont(matrix, fonts, fontSelector);
+
     // alive message
-    matrixCleanModel(matrix);
-    matrixPushString(matrix, "Let's go !");
-    matrixSendModel(matrix);
-    matrixSendViewport(matrix);
+    quickMessage(matrix, "Let's go !");
 
     // main loop
     while (exitCondition) {
-        fgets(dataBuffer, DATA_BUFFER_SIZE, fifoFile);
-        if (dataBuffer[strlen(dataBuffer)-1] == '\n')
-            dataBuffer[strlen(dataBuffer)-1] = 0;
-        if (strlen(dataBuffer)) {
-            if (strcmp(dataBuffer, "bye")==0) {
-                exitCondition = 0;
-            } else {
+        command = readCommand(fifoFile, dataBuffer);
+        switch (command) {
+            case COMMAND_MSG:
                 matrixCleanModel(matrix);
                 // send the message to the matrix model
                 matrixPushString(matrix, dataBuffer);
@@ -356,35 +357,25 @@ int main(int argc, char **argv)
                 animate(matrix, animations);
                 // wait for a while
                 sleep(5);
-            }
+                break;
+            case COMMAND_QUIT:
+                exitCondition = 0;
+                break;
+            default: break;
         }
     }
+
+    // destroy the animation structure
+    destroyAnimationQueue(animations);
+
+    // close the communication pipe
+    closeCommunicationPipe(fifoFile);
+
+    // Dead message
+    quickMessage(matrix, "I'm dead !");
 
     // release buffer
     free(dataBuffer);
 
-    // close the FIFO
-    fclose(fifoFile);
-
-    // destroy the node
-    unlink(NODE_NAME);
-
-    // Dead message
-    matrixCleanModel(matrix);
-    matrixPushString(matrix, "I'm dead !");
-    matrixSendModel(matrix);
-    matrixSendViewport(matrix);
-
-    // Cleaning everything
-    for (i=0; fonts[i]; i++)
-    destroyFont(fonts[i]);
-    free(fonts);
-    closeLedMatrix(matrix);
-    destroyAnimationQueue(animations);
-    closePlugins(plugins);
-
     return 0;
 }
-
-/* vim: set expandtab ai ts=4 sw=4 nu:
-*/
