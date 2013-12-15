@@ -107,8 +107,13 @@ int main(int argc, char **argv)
 
 
     if (strcmp(daemonCommand, "start") == 0) {
-        pid_child = daemonStart();
-        daemonStatus = (pid_child >= 0) ? DAEMON_STARTED : DAEMON_STOPPED;
+        if (getMyPid()==0) {
+            pid_child = daemonStart();
+            daemonStatus = (pid_child >= 0) ? DAEMON_STARTED : DAEMON_STOPPED;
+        } else {
+            fprintf(stdout,"Daemon is still alive\n");
+            daemonStatus = DAEMON_STARTED;
+        }
     }
 
     if (strcmp(daemonCommand, "stop") == 0) {
