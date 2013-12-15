@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <regex.h>
 #include "font.h"
 #include "ledmatrix.h"
 #include "animate.h"
@@ -147,16 +148,29 @@ ANIMATIONPLUGIN** loadAllPlugins()
 
 
 /**
- * Create a node file for communication client-server
+ * Create two nodes file for communication client-server
  */
-void createNode()
+void createNodes()
 {
-    mode_t oldMask = umask(0044);
-    if (mkfifo(NODE_NAME, 0646) !=0) {
-        fprintf(stderr, "Could not create the FIFO node\n");
+    mode_t oldMask = umask(0040);
+    if (mkfifo(NODE_NAME, 0642) !=0) {
+        fprintf(stderr, "Could not create the FIFO IN node\n");
+        exit(EXIT_FAILURE);
+    }
+    if (mkfifo(RETURN_NODE_NAME, 0644) !=0) {
+        fprintf(stderr, "Could not create the FIFO OUT node\n");
         exit(EXIT_FAILURE);
     }
     umask(oldMask);
+}
+
+/**
+ * destroy the communication nodes
+ */
+void destroyNodes()
+{
+    unlink(NODE_NAME);
+    unlink(RETURN_NODE_NAME);
 }
 
 /**
@@ -186,7 +200,7 @@ FONT** loadFonts()
  *
  * @return number of fonts
  */
-int selectFont(LEDMATRIX* matrix, FONT** fonts, unsigned int fontSelector)
+int selectFont(LEDMATRIX* matrix, FONT** fonts, int fontSelector)
 {
     unsigned int i;
     /* Select font */
@@ -194,6 +208,8 @@ int selectFont(LEDMATRIX* matrix, FONT** fonts, unsigned int fontSelector)
     fontSelector = (fontSelector<i?fontSelector:0);
     if (fontSelector>=0) {
         matrixSetFont(matrix, fonts[fontSelector]);
+    } else {
+        matrixSetFont(matrix, fonts[i-1]);
     }
     return i;
 }
@@ -214,29 +230,37 @@ void unloadFonts(FONT** fonts)
 /**
  * Open the communication pipe
  */
-FILE* openCommunicationPipe()
+FILE** openCommunicationPipe()
 {
     int fifoFd;
     FILE* fifoFile;
+    int returnFd;
+    FILE* returnFile;
+    FILE** files = (FILE**)malloc(sizeof(FILE*)*2);
+    printf("Opening communication nodes\n");
     if (!file_exists(NODE_NAME)) {
         // Create the node if not exists
-        createNode();
+        createNodes();
     }
     // Open the FIFO
     fifoFd = open(NODE_NAME, O_RDWR);
-    fifoFile = fdopen(fifoFd, "r");
-    return fifoFile;
+    returnFd = open(RETURN_NODE_NAME, O_RDWR);
+    files[0] = fdopen(fifoFd, "r");
+    files[1] = fdopen(returnFd, "w");
+    return files;
 }
 
 /**
  * Close the communication pipe
  */
-void closeCommunicationPipe(FILE* pipe)
+void closeCommunicationPipe(FILE** pipe)
 {
     // close the FIFO
-    fclose(pipe);
-    // destroy the node
-    unlink(NODE_NAME);
+    printf("Closing communication nodes\n");
+    fclose(pipe[0]);
+    fclose(pipe[1]);
+    free(pipe);
+    destroyNodes();
 }
 
 /**
@@ -277,27 +301,83 @@ void quickMessage(LEDMATRIX* matrix, char* message)
  *
  * @param pipe Pipe to read
  * @param data Data passed from the command
+ * @param len  Length of data string
  *
  * @return command Identifier
  */
-int readCommand(FILE* pipe, char* data)
+int readCommand(FILE* pipe, char* data, size_t len)
 {
     char* dataBuffer;
+    int returnCode=COMMAND_BAD;
+    char* command = (char*)malloc(sizeof(char)*len);
     dataBuffer = (char*)malloc(DATA_BUFFER_SIZE);
     if (fgets(dataBuffer, DATA_BUFFER_SIZE, pipe)) {
+        // delete return carriage
         if (dataBuffer[strlen(dataBuffer)-1] == '\n') {
             dataBuffer[strlen(dataBuffer)-1] = 0;
         }
-        if (strcmp(dataBuffer, "bye")==0) {
-            return COMMAND_QUIT;
-        }
-        if (strlen(dataBuffer)) {
-            strcpy(data, dataBuffer);
+        // treat the command
+        printf("Recieving %s\n", dataBuffer);
+        if (commandParse(dataBuffer, command, data, 200)==0) {
+            if (strcmp(command, "goodbye")==0) {
+                returnCode = COMMAND_QUIT;
+            }
+            if (strcmp(command, "message")==0) {
+                returnCode = COMMAND_MSG;
+            }
+            if (strcmp(command, "selectFont")==0) {
+                returnCode = COMMAND_FONT_SELECT;
+            }
         }
         free(dataBuffer);
-        return COMMAND_MSG;
+        free(command);
     }
-    return COMMAND_BAD;
+    return returnCode;
+}
+
+/**
+ * Extract a command from a data
+ *
+ * @param data     data to parse
+ * @param command  parsed command
+ * @param argument parsed argument
+ * @param len      length of the argument and command
+ *
+ * @return 0 on success
+ */
+int commandParse(char* data, char* command, char* argument, size_t len)
+{
+    int match;
+    size_t nMatch;
+    size_t commandLen;
+    size_t argumentLen;
+    int i;
+    regex_t preg;
+    regmatch_t* matches;
+    memset(command, 0, len);
+    memset(argument, 0, len);
+    char entry[] = "mycommand    :  et hop";
+
+    if (regcomp(&preg, "^(\\w*)\\s*:(.*)$", REG_EXTENDED)) {
+        return 1;
+    }
+
+    nMatch = preg.re_nsub+1;
+    matches = (regmatch_t*)malloc(sizeof(regmatch_t)*nMatch);
+
+    match = regexec (&preg, data, nMatch, matches, 0);
+    regfree(&preg);
+
+    if (!match) {
+        commandLen = matches[1].rm_eo - matches[1].rm_so;
+        argumentLen = matches[2].rm_eo - matches[2].rm_so;
+        memcpy(command, &data[matches[1].rm_so], (commandLen < len) ? commandLen : len);
+        memcpy(argument, &data[matches[2].rm_so], (argumentLen < len) ? argumentLen : len);
+    }
+
+    free(matches);
+
+    return match;
 }
 
 /**
@@ -312,7 +392,7 @@ int readCommand(FILE* pipe, char* data)
 int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
 {
     char* dataBuffer;
-    FILE* fifoFile;
+    FILE** fifoFiles;
     ANIMATIONPLUGIN* plugAnimation;
     void* userData = 0;
     ANIMATION_QUEUE* animations=0;
@@ -337,7 +417,7 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
     dataBuffer = (char*)malloc(DATA_BUFFER_SIZE);
 
     // Open the communication pipe
-    fifoFile = openCommunicationPipe();
+    fifoFiles = openCommunicationPipe();
 
     /* Select font */
     selectFont(matrix, fonts, fontSelector);
@@ -347,9 +427,10 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
 
     // main loop
     while (exitCondition) {
-        command = readCommand(fifoFile, dataBuffer);
+        command = readCommand(fifoFiles[0], dataBuffer, DATA_BUFFER_SIZE);
         switch (command) {
             case COMMAND_MSG:
+                fprintf(fifoFiles[1], "OK\n");
                 matrixCleanModel(matrix);
                 // send the message to the matrix model
                 matrixPushString(matrix, dataBuffer);
@@ -360,16 +441,24 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
                 break;
             case COMMAND_QUIT:
                 exitCondition = 0;
+                fprintf(fifoFiles[1], "Daemon is down\n");
+                break;
+            case COMMAND_FONT_SELECT:
+                sscanf(dataBuffer, "%d", &fontSelector);
+                selectFont(matrix, fonts, fontSelector);
+                fprintf(fifoFiles[1], "OK\n");
                 break;
             default: break;
         }
     }
 
+    printf("Exiting\n");
+
     // destroy the animation structure
     destroyAnimationQueue(animations);
 
     // close the communication pipe
-    closeCommunicationPipe(fifoFile);
+    closeCommunicationPipe(fifoFiles);
 
     // Dead message
     quickMessage(matrix, "I'm dead !");

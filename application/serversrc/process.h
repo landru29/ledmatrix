@@ -12,6 +12,7 @@
 #define COMMAND_BAD 0
 #define COMMAND_MSG 1
 #define COMMAND_QUIT 2
+#define COMMAND_FONT_SELECT 3
 
 /**
  * Charge la configuration depuis conf.ini
@@ -45,8 +46,12 @@ ANIMATIONPLUGIN** loadAllPlugins();
 /**
  * Create a node file for communication client-server
  */
-void createNode();
+void createNodes();
 
+/**
+ * destroy the communication nodes
+ */
+void destroyNodes();
 
 /**
  * Load fonts
@@ -71,17 +76,17 @@ void unloadFonts(FONT** fonts);
  *
  * @return number of fonts
  */
-int selectFont(LEDMATRIX* matrix, FONT** fonts, unsigned int fontSelector);
+int selectFont(LEDMATRIX* matrix, FONT** fonts, int fontSelector);
 
 /**
  * Open the communication pipe
  */
-FILE* openCommunicationPipe();
+FILE** openCommunicationPipe();
 
 /**
  * Close the communication pipe
  */
-void closeCommunicationPipe(FILE* pipe);
+void closeCommunicationPipe(FILE** pipe);
 
 /**
  * Check if a file exists
@@ -99,6 +104,18 @@ int file_exists (char * fileName);
  * @param message the message to display
  */
 void quickMessage(LEDMATRIX* matrix, char* message);
+
+/**
+ * Extract a command from a data
+ *
+ * @param data     data to parse
+ * @param command  parsed command
+ * @param argument parsed argument
+ * @param len      length of the argument and command
+ *
+ * @return 0 on success
+ */
+int commandParse(char* data, char* command, char* argument, size_t len);
 
 /**
  * Daemon main loop
@@ -119,7 +136,7 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts);
  *
  * @return command Identifier
  */
-int readCommand(FILE* pipe, char* data);
+int readCommand(FILE* pipe, char* data, size_t len);
 
 
 #endif // DAEMON_H_INCLUDED

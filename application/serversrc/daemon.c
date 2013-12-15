@@ -90,6 +90,7 @@ int daemonStop()
     pid = destroyMyPid();
     if (pid>0) {
         kill(pid, SIGKILL);
+        destroyNodes();
         fprintf(stdout, "OK\n");
         return 1;
     }

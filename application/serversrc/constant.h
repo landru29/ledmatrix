@@ -10,7 +10,8 @@
 #define __CONSTANT_H
 
 
-#define NODE_NAME "/dev/ledmatrix"
+#define NODE_NAME "/dev/ledmatrixOut"
+#define RETURN_NODE_NAME "/dev/ledmatrixIn"
 
 #define DATA_BUFFER_SIZE 65536
 
