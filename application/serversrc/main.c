@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     unsigned int matrixHeight; // nombre de ligne par matrice
     unsigned int matrixWidth;  // nombre de colonnes par matrice
     unsigned int displays;     // nombre de matrices
-    int simulated;
+    int simulated=0;
     ANIMATIONPLUGIN** plugins;
     int daemonStatus = DAEMON_STOPPED;
     pid_t pid_child = -1;

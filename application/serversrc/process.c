@@ -246,7 +246,7 @@ FILE** openCommunicationPipe()
     fifoFd = open(NODE_NAME, O_RDWR);
     returnFd = open(RETURN_NODE_NAME, O_RDWR);
     files[0] = fdopen(fifoFd, "r");
-    files[1] = fdopen(returnFd, "w");
+    //files[1] = fdopen(returnFd, "w");
     return files;
 }
 
@@ -258,7 +258,7 @@ void closeCommunicationPipe(FILE** pipe)
     // close the FIFO
     printf("Closing communication nodes\n");
     fclose(pipe[0]);
-    fclose(pipe[1]);
+    //fclose(pipe[1]);
     free(pipe);
     destroyNodes();
 }
@@ -430,7 +430,7 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
         command = readCommand(fifoFiles[0], dataBuffer, DATA_BUFFER_SIZE);
         switch (command) {
             case COMMAND_MSG:
-                fprintf(fifoFiles[1], "OK\n");
+                //fprintf(fifoFiles[1], "OK\n");
                 matrixCleanModel(matrix);
                 // send the message to the matrix model
                 matrixPushString(matrix, dataBuffer);
@@ -441,12 +441,12 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
                 break;
             case COMMAND_QUIT:
                 exitCondition = 0;
-                fprintf(fifoFiles[1], "Daemon is down\n");
+                //fprintf(fifoFiles[1], "Daemon is down\n");
                 break;
             case COMMAND_FONT_SELECT:
                 sscanf(dataBuffer, "%d", &fontSelector);
                 selectFont(matrix, fonts, fontSelector);
-                fprintf(fifoFiles[1], "OK\n");
+                //fprintf(fifoFiles[1], "OK\n");
                 break;
             default: break;
         }
