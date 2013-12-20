@@ -1,7 +1,7 @@
 /**
  * Plugin d'animation de scrolling vertical
  *
- * @file    scrollv.c
+ * @file    none.c
  * @author  Cyrille Meichel <cmeichel@digitaleo.com>
  * @author  Manuel Hervo <mhervo@digitaleo.com>
  * @version 0.1
@@ -15,7 +15,7 @@
 SHAREDFUNCTION** hostFunctions;
 
 /**
- * Animation that scroll the text vertically
+ * Animation that display
  *
  * @param  matrix      La matrice
  * @param  frameNumber Le numéro de la frame courante
@@ -23,11 +23,11 @@ SHAREDFUNCTION** hostFunctions;
  *
  * @return Animation's status
  */
-int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData)
+int none(LEDMATRIX* matrix, int frameNumber, void* userData)
 {
 	unsigned int i;
 	unsigned char data;
-        unsigned int dataLength = (matrix->modelWidth > matrix->viewportWidth) ? matrix->viewportWidth : matrix->modelWidth;
+	unsigned int dataLength = (matrix->modelWidth > matrix->viewportWidth) ? matrix->viewportWidth : matrix->modelWidth;
 	shared_function matrixClearViewportFct;
 	shared_function matrixSendViewportFct;
 
@@ -38,14 +38,10 @@ int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData)
 	/* erase all */
 	matrixClearViewportFct(matrix);
 
-        printf("Plugin ScrollV: copying %d bytes to the viewport\n", dataLength);
+        printf("Plugin none: copying %d bytes to the viewport\n", dataLength);
 	for(i=0; i<dataLength; i++) {
 		data = matrix->model[i];
-		if (frameNumber>0) {
-			matrix->viewport[i] = data << frameNumber;
-		} else {
-			matrix->viewport[i] = data >> -frameNumber;
-		}
+                matrix->viewport[i] = data;
 	}
 
 	/* Send the data to the matrix */
@@ -57,13 +53,13 @@ int scrollV(LEDMATRIX* matrix, int frameNumber, void* userData)
 
 /**
  * Return the name of the animation function
- * 
+ *
  * @return animation plugin
  **/
 ANIMATIONPLUGIN* init(SHAREDFUNCTION** hostFunc)
 {
 	hostFunctions = hostFunc;
-	return createAnimationPlugin("scrollV", scrollV, 0, 0);
+	return createAnimationPlugin("none", none, 0, 0);
 }
 
 /* vim: set expandtab ai ts=4 sw=4 nu:

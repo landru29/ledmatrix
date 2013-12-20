@@ -3,6 +3,8 @@
 #include "constant.h"
 #include <string.h>
 #include <signal.h>
+#include <errno.h>
+#include <sys/stat.h>
 #include "process.h"
 
 /**
@@ -14,7 +16,9 @@ pid_t getMyPid()
 {
     FILE* f;
     char strPid[200];
+    char pidNode[200];
     int pid;
+    struct stat sts;
     if ((f = fopen(PID_FILENAME, "r"))) {
         if (fgets(strPid, 200, f)) {
             if (strlen(strPid) ==0) {
@@ -23,6 +27,11 @@ pid_t getMyPid()
         }
         fclose(f);
         sscanf(strPid, "%d", &pid);
+        // check if the process exists
+        sprintf(pidNode, "/proc/%d", pid);
+        if (stat(pidNode, &sts) == -1 && errno == ENOENT) {
+            return 0;
+        }
         return (pid_t)pid;
     } else {
         return 0;

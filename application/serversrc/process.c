@@ -318,7 +318,7 @@ int readCommand(FILE* pipe, char* data, size_t len)
         }
         // treat the command
         printf("Recieving %s\n", dataBuffer);
-        if (commandParse(dataBuffer, command, data, 200)==0) {
+        if (commandParse(dataBuffer, command, data, len)==0) {
             if (strcmp(command, "goodbye")==0) {
                 returnCode = COMMAND_QUIT;
             }
@@ -356,7 +356,7 @@ int commandParse(char* data, char* command, char* argument, size_t len)
     regmatch_t* matches;
     memset(command, 0, len);
     memset(argument, 0, len);
-    char entry[] = "mycommand    :  et hop";
+    //char entry[] = "mycommand    :  et hop";
 
     if (regcomp(&preg, "^(\\w*)\\s*:(.*)$", REG_EXTENDED)) {
         return 1;

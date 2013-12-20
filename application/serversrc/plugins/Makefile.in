@@ -108,6 +108,12 @@ libmatrixIntervalle_la_OBJECTS = $(am_libmatrixIntervalle_la_OBJECTS)
 libmatrixIntervalle_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(libmatrixIntervalle_la_LDFLAGS) $(LDFLAGS) -o $@
+libmatrixNone_la_LIBADD =
+am_libmatrixNone_la_OBJECTS = none.lo animation.lo
+libmatrixNone_la_OBJECTS = $(am_libmatrixNone_la_OBJECTS)
+libmatrixNone_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(libmatrixNone_la_LDFLAGS) $(LDFLAGS) -o $@
 libmatrixScrollh_la_LIBADD =
 am_libmatrixScrollh_la_OBJECTS = scrollh.lo animation.lo
 libmatrixScrollh_la_OBJECTS = $(am_libmatrixScrollh_la_OBJECTS)
@@ -134,10 +140,10 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libmatrixBlink_la_SOURCES) $(libmatrixGif_la_SOURCES) \
-	$(libmatrixIntervalle_la_SOURCES) \
+	$(libmatrixIntervalle_la_SOURCES) $(libmatrixNone_la_SOURCES) \
 	$(libmatrixScrollh_la_SOURCES) $(libmatrixScrollv_la_SOURCES)
 DIST_SOURCES = $(libmatrixBlink_la_SOURCES) $(libmatrixGif_la_SOURCES) \
-	$(libmatrixIntervalle_la_SOURCES) \
+	$(libmatrixIntervalle_la_SOURCES) $(libmatrixNone_la_SOURCES) \
 	$(libmatrixScrollh_la_SOURCES) $(libmatrixScrollv_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -261,7 +267,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-lib_LTLIBRARIES = libmatrixScrollh.la libmatrixScrollv.la libmatrixIntervalle.la libmatrixBlink.la libmatrixGif.la
+lib_LTLIBRARIES = libmatrixScrollh.la libmatrixScrollv.la libmatrixIntervalle.la libmatrixBlink.la libmatrixGif.la libmatrixNone.la
 libmatrixScrollh_la_SOURCES = scrollh.c animation.c
 libmatrixScrollh_la_LDFLAGS = -version-info 0:0:0
 libmatrixScrollv_la_SOURCES = scrollv.c animation.c
@@ -272,6 +278,8 @@ libmatrixBlink_la_SOURCES = blink.c animation.c
 libmatrixBlink_la_LDFLAGS = -version-info 0:0:0
 libmatrixGif_la_SOURCES = gif.c animation.c
 libmatrixGif_la_LDFLAGS = -version-info 0:0:0
+libmatrixNone_la_SOURCES = none.c animation.c
+libmatrixNone_la_LDFLAGS = -version-info 0:0:0
 all: all-am
 
 .SUFFIXES:
@@ -344,6 +352,8 @@ libmatrixGif.la: $(libmatrixGif_la_OBJECTS) $(libmatrixGif_la_DEPENDENCIES) $(EX
 	$(libmatrixGif_la_LINK) -rpath $(libdir) $(libmatrixGif_la_OBJECTS) $(libmatrixGif_la_LIBADD) $(LIBS)
 libmatrixIntervalle.la: $(libmatrixIntervalle_la_OBJECTS) $(libmatrixIntervalle_la_DEPENDENCIES) $(EXTRA_libmatrixIntervalle_la_DEPENDENCIES) 
 	$(libmatrixIntervalle_la_LINK) -rpath $(libdir) $(libmatrixIntervalle_la_OBJECTS) $(libmatrixIntervalle_la_LIBADD) $(LIBS)
+libmatrixNone.la: $(libmatrixNone_la_OBJECTS) $(libmatrixNone_la_DEPENDENCIES) $(EXTRA_libmatrixNone_la_DEPENDENCIES) 
+	$(libmatrixNone_la_LINK) -rpath $(libdir) $(libmatrixNone_la_OBJECTS) $(libmatrixNone_la_LIBADD) $(LIBS)
 libmatrixScrollh.la: $(libmatrixScrollh_la_OBJECTS) $(libmatrixScrollh_la_DEPENDENCIES) $(EXTRA_libmatrixScrollh_la_DEPENDENCIES) 
 	$(libmatrixScrollh_la_LINK) -rpath $(libdir) $(libmatrixScrollh_la_OBJECTS) $(libmatrixScrollh_la_LIBADD) $(LIBS)
 libmatrixScrollv.la: $(libmatrixScrollv_la_OBJECTS) $(libmatrixScrollv_la_DEPENDENCIES) $(EXTRA_libmatrixScrollv_la_DEPENDENCIES) 
@@ -359,6 +369,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/blink.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gif.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/intervalle.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/none.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scrollh.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scrollv.Plo@am__quote@
 
