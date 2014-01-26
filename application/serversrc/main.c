@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <locale.h>
 #include "daemon.h"
 #include "process.h"
 #include "display.h"
@@ -52,6 +53,9 @@ int main(int argc, char **argv)
     ANIMATIONPLUGIN** plugins;
     int daemonStatus = DAEMON_STOPPED;
     pid_t pid_child = -1;
+
+    /* set system local */
+    setlocale(LC_ALL, "");
 
     /* read config */
     loadConfiguration(&displays, &matrixHeight, &matrixWidth);

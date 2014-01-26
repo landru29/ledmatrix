@@ -11,13 +11,15 @@
 #define __FONT_H
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <wchar.h>
 #include "../config.h"
 
 /**
  * Structure d'un caractère de la fonte
  */
 typedef struct {
-    char letter;
+    wchar_t letter;
 	unsigned char length;
 	unsigned char height;
 	unsigned char* data;
@@ -48,7 +50,7 @@ void destroyFont(FONT* font);
  *
  * @return Letter struct
  */
-LETTER getLetter(char character, FONT* font);
+LETTER getLetter(wchar_t character, FONT* font);
 
 /**
  * Load a font from a font file

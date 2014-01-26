@@ -11,6 +11,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
+#include <wchar.h>
 
 
 void fontDebug(FONT* font);
@@ -81,9 +82,12 @@ void appendLetterData(LETTER* letter, unsigned char data)
 FONT* loadFont(char* filename) {
     FONT* font = (FONT*)malloc(sizeof(FONT));
     LETTER* currentLetter=0;
+    wchar_t wideBuffer[10];
+    mbstate_t conversionState;
     font->length=0;
     font->fontHeight=1;
     char* buffer = (char*)malloc(200);
+    const char* convStr;
     size_t len;
 	unsigned int i;
     FILE* f = fopen(filename, "r");
@@ -99,8 +103,16 @@ FONT* loadFont(char* filename) {
                 if (strlen(buffer)>0) {
                         switch (buffer[0]) {
                                 case '[':
+                                    convStr = buffer;
+                                    printf("1\n");
+                                    memset(&conversionState, 0, sizeof(mbstate_t));
+                                    printf("2\n");
+                                    mbsrtowcs(wideBuffer, &convStr, strlen(buffer), &conversionState);
+                                    printf("3\n");
                                     currentLetter = appendLetter(font);
-                                    currentLetter->letter = buffer[1];
+                                    printf("4\n");
+                                    currentLetter->letter = wideBuffer[1];
+                                    printf("5\n");
                                     break;
                                 case 'b':
                                     appendLetterData(currentLetter, fromBinary(&buffer[1]));
@@ -109,12 +121,10 @@ FONT* loadFont(char* filename) {
                         }
                 }
         }
+        printf("Done\n");
         fclose(f);
         free(buffer);
 	fprintf(stdout, " => %d characteres loaded\n", font->length);
-        //fontDebug(font);
-        //LETTER letterTest = getLetter('c', font);
-        //letterDebug(letterTest);
 	return font;
 }
 
@@ -159,7 +169,7 @@ void destroyFont(FONT* font)
  *
  * @return Letter struct
  */
-LETTER getLetter(char character, FONT* font)
+LETTER getLetter(wchar_t character, FONT* font)
 {
     LETTER letter;
     unsigned int i;
@@ -218,7 +228,7 @@ void binaryPrint(unsigned char n)
 void letterDebug(LETTER letter)
 {
     unsigned int i;
-    printf("     => %c: %d [sp:%d]--> ", letter.letter, letter.length, letter.spacing);
+    printf("     => %d: %d [sp:%d]--> ", letter.letter, letter.length, letter.spacing);
     for(i=0; i<letter.length; i++)
         printf("%02X ", letter.data[i]);
     printf("\n");

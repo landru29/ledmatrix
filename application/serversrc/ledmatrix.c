@@ -93,14 +93,26 @@ void matrixPushLetter(LEDMATRIX* matrix, LETTER letter)
  * @param matrix Matrix object
  * @param string String to push
  */
-void matrixPushString(LEDMATRIX* matrix, char* string)
+void matrixPushString(LEDMATRIX* matrix, const char* string)
 {
 	LETTER letter;
 	unsigned int i;
-	for(i=0; string[i]; i++) {
-		letter = getLetter(string[i], matrix->font);
+	wchar_t *buffer;
+	size_t nbChar;
+	mbstate_t conversionState;
+	// Prepare conversion
+	memset(&conversionState, 0, sizeof(mbstate_t));
+	buffer = (wchar_t*)malloc(sizeof(wchar_t)*strlen(string));
+	memset(buffer, 0, sizeof(wchar_t)*strlen(string));
+	// string conversion
+	mbsrtowcs(buffer, &string, strlen(string), &conversionState);
+	// scan all wide char
+	nbChar = wcslen(buffer);
+	for(i=0; i<nbChar; i++) {
+		letter = getLetter(buffer[i], matrix->font);
 		matrixPushLetter(matrix, letter);
 	}
+	free(buffer);
 }
 
 /**
@@ -166,10 +178,10 @@ void matrixDebugViewport(LEDMATRIX* matrix)
 	}
 	column = i;
 	for (i=0 ; i<8 ; i++)
-	{;
-		printf("\033[%d;%dH|\n", i, column);
+	{
+		printf("\033[%d;%dH|\n", i+1, column);
 	}
-	printf("\033[%d;%dH-\n", 8, column);
+	printf("\033[%d;%dH-\n", 9, column);
 	fflush(stdout);
 }
 
@@ -217,10 +229,10 @@ void columnDebug(unsigned char n, unsigned int column)
 	for (i=0 ; i<8 ; i++)
 	{
 		bit = (n & mask) >> (7-i) ;
-		printf("\033[%d;%dH%c\n", i, column, (bit ? '@':' '));
+		printf("\033[%d;%dH%c\n", i+1, column, (bit ? '@':' '));
 		mask >>= 1 ;
 	}
-	printf("\033[%d;%dH-\n", 8, column);
+	printf("\033[%d;%dH-\n", 9, column);
 }
 
 /* ################################################################### */

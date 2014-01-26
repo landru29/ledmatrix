@@ -62,7 +62,7 @@ void matrixPushLetter(LEDMATRIX* matrix, LETTER letter);
  * @param matrix Matrix object
  * @param string String to push
  */
-void matrixPushString(LEDMATRIX* matrix, char* string);
+void matrixPushString(LEDMATRIX* matrix, const char* string);
 
 /**
  * Set a font to the matrix

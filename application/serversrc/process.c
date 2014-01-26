@@ -466,7 +466,7 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
     selectFont(matrix, fonts, fontSelector);
 
     // alive message
-    quickMessage(matrix, "Let's go !");
+    quickMessage(matrix, "Let's go");
 
     // main loop
     while (exitCondition) {
@@ -504,7 +504,7 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
     closeCommunicationPipe(fifoFiles);
 
     // Dead message
-    quickMessage(matrix, "I'm dead !");
+    quickMessage(matrix, "I'm dead");
 
     // release buffer
     free(dataBuffer);
