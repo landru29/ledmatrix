@@ -135,7 +135,7 @@ int main(int argc, char **argv)
         plugins = loadAllPlugins();
 
         // read fonts
-        fonts = loadFonts();
+        fonts = loadFonts(0,0);
 
         /* Matrix initialisation */
         matrix = openLedMatrix(displays*matrixWidth, matrixHeight);

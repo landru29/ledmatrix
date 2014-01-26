@@ -20,22 +20,31 @@
  * @param step              Step counter
  * @param millitime         Delay between two frames (in milliseconds)
  * @param userData			User data to pass to the animation function
+ * @param constructor       fonction de construction de userData
  * @param destructor        fonction de destruction de userData
  *
  * @return struct animation
  */
-ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
-    unsigned int step, unsigned int millitime, void* userData, userDataDestructor destructor)
+ANIMATION* createAnimation(
+    pluginFunction animationFunction,
+    int startFrameNumber,
+    int endFrameNumber,
+    unsigned int step,
+    unsigned int millitime,
+    void* userData,
+    pluginFunction constructor,
+    pluginFunction destructor)
 {
 	ANIMATION* animation;
 	animation = (ANIMATION*) malloc(sizeof(ANIMATION));
-	animation->animation = animationFunction;
 	animation->startFrameNumber = startFrameNumber;
 	animation->endFrameNumber = endFrameNumber;
 	animation->step = (step<2?1:step);
 	animation->millitime = millitime;
 	animation->userData = userData;
+	animation->animation = animationFunction;
 	animation->destructor = destructor;
+	animation->constructor = constructor;
 	return animation;
 }
 
@@ -106,11 +115,15 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
 	unsigned long int animationDelay = 100;
 	int currentFrameNumber;
 	int status = ANIMATION_SUCCESS;
-	/* Check if everything is allright */
+	// Check if everything is allright
 	if ((!matrix) || (!animation) || (!animation->animation)) return ANIMATION_FAILURE;
-	/* check animation delay */
+	// check animation delay
 	if (animation->millitime) animationDelay = animation->millitime;
-	/* Launching animation */
+	// building userData
+	if (animation->constructor) {
+		(animation->constructor)(animation->userData);
+	}
+	// Launching animation
 	if (animation->startFrameNumber > animation->endFrameNumber) {
 		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber >= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber -= animation->step) {
 			status = (animation->animation)(matrix, currentFrameNumber, animation->userData);
@@ -125,7 +138,7 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
 	/* checking status*/
 	if ((status != ANIMATION_FAILURE) && (currentFrameNumber==animation->endFrameNumber)) status = ANIMATION_END;
 	/* destroying userData */
-	if ((animation->destructor) && (animation->userData)) {
+	if (animation->destructor) {
 		(animation->destructor)(animation->userData);
 	}
 	return status;

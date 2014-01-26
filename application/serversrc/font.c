@@ -46,11 +46,15 @@ LETTER* appendLetter(FONT* font)
 {
 	LETTER* currentLetter;
 	font->length++;
+	if (font->length>1) {
         font->letters = (LETTER*)realloc(font->letters, font->length*sizeof(LETTER));
-        currentLetter = &font->letters[font->length-1];
-        currentLetter->data = (unsigned char*)malloc(1);
-        currentLetter->length=0;
-        currentLetter->spacing=1;
+	} else {
+        font->letters = (LETTER*)malloc(font->length*sizeof(LETTER));
+    }
+    currentLetter = &font->letters[font->length-1];
+    currentLetter->data = (unsigned char*)malloc(1);
+    currentLetter->length=0;
+    currentLetter->spacing=1;
 	return currentLetter;
 }
 
@@ -75,14 +79,14 @@ void appendLetterData(LETTER* letter, unsigned char data)
  * @return Font struct
  */
 FONT* loadFont(char* filename) {
-        FONT* font = (FONT*)malloc(sizeof(FONT));
-        LETTER* currentLetter=0;
-        font->length=0;
-        font->fontHeight=1;
-        char* buffer = (char*)malloc(200);
-        size_t len;
+    FONT* font = (FONT*)malloc(sizeof(FONT));
+    LETTER* currentLetter=0;
+    font->length=0;
+    font->fontHeight=1;
+    char* buffer = (char*)malloc(200);
+    size_t len;
 	unsigned int i;
-        FILE* f = fopen(filename, "r");
+    FILE* f = fopen(filename, "r");
 	if (!f) {
 		fprintf(stderr, "  * Could not open font %s\n", filename);
 		return 0;
@@ -95,12 +99,12 @@ FONT* loadFont(char* filename) {
                 if (strlen(buffer)>0) {
                         switch (buffer[0]) {
                                 case '[':
-                                        currentLetter = appendLetter(font);
-                                        currentLetter->letter = buffer[1];
-                                        break;
+                                    currentLetter = appendLetter(font);
+                                    currentLetter->letter = buffer[1];
+                                    break;
                                 case 'b':
-					appendLetterData(currentLetter, fromBinary(&buffer[1]));
-                                        break;
+                                    appendLetterData(currentLetter, fromBinary(&buffer[1]));
+                                    break;
                                 default: break;
                         }
                 }

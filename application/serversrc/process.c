@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <regex.h>
@@ -14,6 +15,7 @@
 #include "display.h"
 #include "constant.h"
 #include "process.h"
+#include "tools.h"
 
 /**
  * Construit le chemin vers le dossier des plugins
@@ -178,16 +180,47 @@ void destroyNodes()
  *
  * @return font collections
  */
-FONT** loadFonts()
+FONT** loadFonts(char* folder, FONT** fonts)
 {
     unsigned int len=0;
-    FONT** fonts = (FONT**) malloc(sizeof(FONT*));
-    fonts[0]=0;
-    fprintf(stdout, "Loading fonts\n");
-    len++;
-    fonts = (FONT**)realloc(fonts, sizeof(FONT*) * (len+1));
-    fonts[len-1] = loadFont(fontFile("basic.font"));
-    fonts[len] = 0;
+    DIR* dir;
+    struct dirent* entrees;
+    struct stat statbuf;
+    char fontPath[500];
+    if (!fonts) {
+        fonts = (FONT**) malloc(sizeof(FONT*));
+        fonts[0]=0;
+        fprintf(stdout, "Loading fonts\n");
+    }
+    while(fonts[len]) len ++;
+    if (!folder) {
+        folder = strdup(FONTDIR);
+    }
+    printf("  * reading %s\n", folder);
+
+    if ((dir = opendir(folder)) == 0) {
+		fprintf(stderr, "Could not find font path %s\n", folder);
+		return fonts;
+	}
+
+	while (entrees = readdir(dir)) {
+        sprintf(fontPath, "%s/%s", folder, entrees->d_name);
+        stat(fontPath, &statbuf);
+        if (entrees->d_name[strlen(entrees->d_name)-1] =='.') continue;
+        if (S_ISDIR(statbuf.st_mode)) {
+            loadFonts(fontPath, fonts);
+            continue;
+        }
+        if (strcmp(getExtension(entrees->d_name), "font") == 0) {
+            len++;
+            fonts = (FONT**) realloc(fonts, (len+1)*sizeof(FONT*));
+            printf("      => %d Loading %s\n", len, fontPath);
+            fonts[len-1] = loadFont(fontPath);
+            fonts[len] = 0;
+            continue;
+        }
+	}
+    printf("Done.\n");
     return fonts;
 }
 
@@ -319,6 +352,7 @@ int readCommand(FILE* pipe, char* data, size_t len)
         // treat the command
         printf("Recieving %s\n", dataBuffer);
         if (commandParse(dataBuffer, command, data, len)==0) {
+            printf("  * Command %s\n", command);
             if (strcmp(command, "goodbye")==0) {
                 returnCode = COMMAND_QUIT;
             }
@@ -394,7 +428,7 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
     char* dataBuffer;
     FILE** fifoFiles;
     ANIMATIONPLUGIN* plugAnimation;
-    void* userData = 0;
+    void* userData = malloc(sizeof(void*));
     ANIMATION_QUEUE* animations=0;
     unsigned int fontSelector=0;
     int command;
@@ -407,10 +441,19 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
     // getting animation from plugin
     plugAnimation = getPluginAnimation(plugins, "scrollV");
     if (plugAnimation) {
-        if (plugAnimation->creation) {
-            userData = (plugAnimation->creation)();
-        }
-        enqueueAnimation(animations, createAnimation(plugAnimation->runtime, 8, 0, 1, 150, userData, plugAnimation->destruction));
+        enqueueAnimation(
+            animations,
+            createAnimation(
+                plugAnimation->runtime,
+                8,
+                0,
+                1,
+                150,
+                userData,
+                plugAnimation->creation,
+                plugAnimation->destruction
+            )
+        );
     }
 
     // prepare the buffer
@@ -465,6 +508,7 @@ int mainLoop(LEDMATRIX* matrix, ANIMATIONPLUGIN** plugins, FONT** fonts)
 
     // release buffer
     free(dataBuffer);
+    free(userData);
 
     return 0;
 }

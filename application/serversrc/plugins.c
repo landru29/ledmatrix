@@ -14,22 +14,11 @@
 #include <sys/types.h>
 #include <dlfcn.h>
 #include "plugins.h"
+#include "tools.h"
 #ifdef __arm__
 #include "display.h"
 #endif
-/**
- * Donne l'extention d'un fichier
- *
- * @param  filename      nom du fichier
- *
- * @return pointer sur l'extension du fichier
- **/
-char* getExtension(char* filename)
-{
-	unsigned int i;
-	for(i=strlen(filename)-1; (i>=0) && (filename[i] != '.'); i--) ;
-	return &filename[i+1];
-}
+
 
 /**
  * Définit les functions à passer au plugin
@@ -65,7 +54,7 @@ ANIMATIONPLUGIN** loadPlugins(char* path)
 	init_function initFunction;
 	unsigned int nbPlugins = 0;
 	SHAREDFUNCTION** sharedFunctions = getHostFunctions();
-	
+
 	/* initialize result */
 	temp = (ANIMATIONPLUGIN**)malloc(sizeof(ANIMATIONPLUGIN*));
 	temp = 0;

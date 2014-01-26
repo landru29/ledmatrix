@@ -39,6 +39,8 @@ LEDMATRIX* openLedMatrix(unsigned int width, unsigned int height)
     matrix->viewportWidth = width;
     matrix->nbMatrix = width / 32;
     matrix->viewport = (unsigned char*) malloc(matrix->viewportHeight * matrix->viewportWidth);
+    matrix->currentText=strdup("");
+    matrix->previousText=strdup("");
     matrixClearViewport(matrix);
     matrix->debugMode=0;
 #ifdef __arm__

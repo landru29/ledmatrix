@@ -8,6 +8,7 @@ ledmatrixServer_SOURCES = \
     font.c \
     main.c \
     plugins.c \
+    tools.c \
     plugins/animation.c \
     daemon.h \
     process.h \
@@ -18,6 +19,7 @@ ledmatrixServer_SOURCES = \
     plugins.h \
     plugins/animation.h \
     ini.c \
-    ini.h
+    ini.h \
+    tools.h
 
 ledmatrixServer_CFLAGS=-DCONFDIR=\"${sysconfdir}/ledmatrix\" -DLIBDIR=\"${libdir}/ledmatrix/plugins\" -DFONTDIR=\"${sysconfdir}/ledmatrix/fonts\"

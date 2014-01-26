@@ -10,7 +10,11 @@
 #ifndef __ANIMATION_PLUGIN_H_
 #define __ANIMATION_PLUGIN_H_
 
-#include "../animate.h"
+#define ANIMATION_FAILURE -1
+#define ANIMATION_SUCCESS 0
+#define ANIMATION_END 1
+
+//#include "../animate.h"
 #include "../../config.h"
 #include "../ledmatrix.h"
 
@@ -37,7 +41,7 @@ typedef SHAREDFUNCTION** SHAREDFUNCTIONLIST;
  **/
 typedef struct {
 	char* name;
-	animationFrame runtime;
+	shared_function runtime;
 	shared_function creation;
 	shared_function destruction;
 	SHAREDFUNCTIONLIST functions;

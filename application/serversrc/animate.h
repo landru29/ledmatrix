@@ -38,17 +38,18 @@
 #define ANIMATION_SUCCESS 0
 #define ANIMATION_END 1
 
-typedef int (MYCALL *animationFrame) (LEDMATRIX* matrix, int frameNumber, void* userData);
-typedef void* (*userDataDestructor) ();
+//typedef int (MYCALL *animationFrame) (LEDMATRIX* matrix, int frameNumber, void* userData);
+typedef void* (*pluginFunction) ();
 
 typedef struct {
-	animationFrame animation;
 	int startFrameNumber;
 	int endFrameNumber;
 	unsigned int step;
 	unsigned int millitime;
 	void* userData;
-	userDataDestructor destructor;
+	pluginFunction destructor;
+	pluginFunction constructor;
+	pluginFunction animation;
 } ANIMATION;
 
 typedef struct {
@@ -68,8 +69,8 @@ typedef struct {
  * @param userData			User data to pass to the animation function
  * @param destructor        fonction de destruction de userData
  */
-ANIMATION* createAnimation(animationFrame animationFunction, int startFrameNumber, int endFrameNumber,
-    unsigned int step, unsigned int millitime, void* userData, userDataDestructor destructor);
+ANIMATION* createAnimation(pluginFunction animationFunction, int startFrameNumber, int endFrameNumber,
+    unsigned int step, unsigned int millitime, void* userData, pluginFunction constructor, pluginFunction destructor);
 
 /**
  * Destroy an animation

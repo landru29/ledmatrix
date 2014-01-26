@@ -24,6 +24,8 @@ typedef struct {
 	unsigned char* model;
 	unsigned char* viewport;
     unsigned int nbMatrix;
+    char* currentText;
+    char* previousText;
 	FONT* font;
 	int debugMode;
 } LEDMATRIX;
