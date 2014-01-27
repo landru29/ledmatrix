@@ -104,15 +104,10 @@ FONT* loadFont(char* filename) {
                         switch (buffer[0]) {
                                 case '[':
                                     convStr = buffer;
-                                    printf("1\n");
                                     memset(&conversionState, 0, sizeof(mbstate_t));
-                                    printf("2\n");
                                     mbsrtowcs(wideBuffer, &convStr, strlen(buffer), &conversionState);
-                                    printf("3\n");
                                     currentLetter = appendLetter(font);
-                                    printf("4\n");
                                     currentLetter->letter = wideBuffer[1];
-                                    printf("5\n");
                                     break;
                                 case 'b':
                                     appendLetterData(currentLetter, fromBinary(&buffer[1]));
