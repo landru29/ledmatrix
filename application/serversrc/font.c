@@ -223,7 +223,7 @@ void binaryPrint(unsigned char n)
 void letterDebug(LETTER letter)
 {
     unsigned int i;
-    printf("     => %d: %d [sp:%d]--> ", letter.letter, letter.length, letter.spacing);
+    printf("     => %d: %d [sp:%d]--> ", (int)letter.letter, letter.length, letter.spacing);
     for(i=0; i<letter.length; i++)
         printf("%02X ", letter.data[i]);
     printf("\n");

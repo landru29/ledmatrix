@@ -1,0 +1,1 @@
+add_executable(ledmatrix main.c)

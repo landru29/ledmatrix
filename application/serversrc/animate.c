@@ -126,12 +126,12 @@ int animateOne(LEDMATRIX* matrix, ANIMATION* animation) {
 	// Launching animation
 	if (animation->startFrameNumber > animation->endFrameNumber) {
 		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber >= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber -= animation->step) {
-			status = (animation->animation)(matrix, currentFrameNumber, animation->userData);
+			status = (int)((animation->animation)(matrix, currentFrameNumber, animation->userData));
 			usleep(1000*animationDelay);
 		}
 	} else {
 		for(currentFrameNumber=animation->startFrameNumber; ((currentFrameNumber <= (int)animation->endFrameNumber) && (status == ANIMATION_SUCCESS)); currentFrameNumber += animation->step) {
-			status = (animation->animation)(matrix, currentFrameNumber, animation->userData);
+			status = (int)((animation->animation)(matrix, currentFrameNumber, animation->userData));
 			usleep(1000*animationDelay);
 		}
 	}
