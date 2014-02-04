@@ -1,17 +1,16 @@
-cmake_minimum_required (VERSION 2.6)
-project (LedMatrix)
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+PROJECT(LedMatrix)
 
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
-message( STATUS "Architecture: ${ARCHITECTURE}" )
+MESSAGE(STATUS "Architecture: ${ARCHITECTURE}" )
 
-
-set (LIBDIR "/usr/local/ledmatrix/")
-set (CONFDIR, "/usr/local/etc/ledmatrix/")
-set (FONTDIR, "/usr/local/etc/ledmatrix/font/")
+SET (LIBDIR "/usr/local/ledmatrix/")
+SET (CONFDIR, "/usr/local/etc/ledmatrix/")
+SET (FONTDIR, "/usr/local/etc/ledmatrix/font/")
 
 # configure a header file to pass some of the CMake settings
 # to the source code
-configure_file (
+CONFIGURE_FILE (
     "${PROJECT_SOURCE_DIR}/config.h.in"
     "${PROJECT_SOURCE_DIR}/config.h"
 )
@@ -23,5 +22,5 @@ include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/clientsrc")
 include_directories("${PROJECT_SOURCE_DIR}/serversrc")
 
-add_subdirectory (clientsrc)
-add_subdirectory (serversrc)
+ADD_SUBDIRECTORY(clientsrc)
+ADD_SUBDIRECTORY(serversrc)

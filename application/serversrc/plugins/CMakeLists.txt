@@ -1,0 +1,17 @@
+ADD_LIBRARY(annimation SHARED animation.c)
+ADD_LIBRARY(blink SHARED blink.c)
+ADD_LIBRARY(example SHARED example.c)
+
+MESSAGE(STATUS "Checking for gif")
+FIND_LIBRARY(GIF_LIBRARIES NAMES gif)
+IF(GIF_LIBRARIES)
+  MESSAGE(STATUS "ok")
+  ADD_LIBRARY(gif SHARED gif.c)
+ELSE()
+  MESSAGE(STATUS "no")
+ENDIF()
+
+ADD_LIBRARY(intervalle SHARED intervalle.c)
+ADD_LIBRARY(none SHARED none.c)
+ADD_LIBRARY(scrollh SHARED scrollh.c)
+ADD_LIBRARY(scrollv SHARED scrollv.c)

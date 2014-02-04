@@ -12,8 +12,21 @@ add_executable(ledmatrixserver
 	plugins/animation.c
 )
 
-TARGET_LINK_LIBRARIES(ledmatrixserver dl)
+# Looking for dl lib
+FIND_LIBRARY(DL_LIBRARIES NAMES dl)
+IF(DL_LIBRARIES)
+  TARGET_LINK_LIBRARIES(ledmatrixserver dl)
+ELSE()
+  MESSAGE(FATAL_ERROR "could not find dl library")
+ENDIF()
 
-if( ${ARCHITECTURE} STREQUAL "armv6l" )
-    TARGET_LINK_LIBRARIES(ledmatrixserver wiringPi)
-endif()
+# looking for wiringPi lib
+FIND_LIBRARY(WIRINGPI_LIBRARIES NAMES wiringPi)
+IF(WIRINGPI_LIBRARIES)
+  MESSAGE(STATUS "Will use the real hardware")
+  TARGET_LINK_LIBRARIES(ledmatrixserver wiringPi)
+ELSE()
+  MESSAGE(STATUS "Could not find wiringPi. Will work in simulation mode")
+ENDIF()
+
+ADD_SUBDIRECTORY(plugins)
